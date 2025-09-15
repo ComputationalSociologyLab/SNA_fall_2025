@@ -1,0 +1,212 @@
+---
+title: "W3. Visualization"
+format: revealjs
+editor: visual
+filters: [webr]
+execute:
+  echo: true
+  engine: knitr    # ★ R은 knitr로 실행
+resources:
+  - "data/*"          # ★ 이 문서가 쓸 정적 파일 선언
+---
+
+# Network Visualization {#ch5-Network-Visualization-R}
+
+-   cross-sectional network data and cover basic network visualization
+-   walk through the different approaches and options in detail
+
+## note three things
+
+-   different plots are useful for different purposes
+-   only cover a relatively small number of plotting options
+-   plotting options appropriate for one network may not work for another
+
+## Setting up the Session
+
+-   The actors are students in a classroom and the relation of interest is friendship
+-   There is individual information on gender, race and grade.
+
+```{webr}
+# Load files
+path1 <- "/data/class555_edgelist.csv"
+
+class_edges <- read.csv(path1)
+warnings()
+```
+
+## Let's see how it looks like
+
+```{webr}
+# Load files
+head(class_edges)
+```
+
+## Let's also read in the attribute file.
+
+```{webr}
+path2 <- "data/class555_attributedata.csv"
+
+class_attributes <- read.csv(path2)
+```
+
+## We will begin using the **igraph** package.
+
+```{webr message=F, warning=F}
+library(igraph)
+```
+
+## Now we go ahead and construct the igraph object, using the edgelist and attribute objects as inputs.
+
+```{webr}
+class_net <- graph_from_data_frame(d = class_edges, directed = T, 
+                                   vertices = class_attributes)
+```
+
+## Detailed information on class_net
+
+```{webr}
+class_net
+```
+
+## Network Plots using igraph
+
+-   Network plots offer an intuitive way of exploring the features of the network.
+-   Of course, this is not a formal test, but looking at a picture of the network(s) is a useful starting point for an analysis.
+-   Here, we will begin by exploring gender divides in the network (i.e., how strongly does gender map onto friendship groups?).
+
+## Let's start with the default plotting in **igraph**.
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net) 
+```
+
+## And improve the graph!
+
+-   The plot also does not tell us anything about gender.
+-   We will color the nodes by gender
+
+```{webr}
+#  make boys navy blue and girls light sky blue 
+cols <- ifelse(class_attributes$gender == "Female", "lightskyblue", "navy") 
+```
+
+## Let's make sure that we coded this correctly
+
+```{webr}
+# Using a simple `table()` function, compare the values in cols and gender column in class_attributes
+table(cols, class_attributes$gender)
+```
+
+## Assign the gendered colorset to the network
+
+```{webr}
+# use a `V(g)$color` command to set the color of each node in the network 
+V(class_net)$color <- cols 
+```
+
+## And now we plot as before.
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net)
+
+# same with `plot(class_net, vertex.color = cols)`
+```
+
+## What is different?
+
+-   The network does divide along gender lines
+-   with one small group of boys and then a larger set of girls
+-   two boys are not part of the 'boy group', and are disproportionately connected to girls
+-   What else?
+
+## What if?
+
+-   A researcher may also be interested in who is popular in the class
+-   We can identify it with Network Measure
+
+```{webr}
+# Yes! indegree!
+indeg <- degree(class_net, mode = "in")
+```
+
+## Now we plot the network
+
+-   put indegree value for the size of the nodes
+
+```{webr fig.width = 6, fig.height  = 5.65}
+# set margin to -.10 to reduce some of the extra white space around the plot.
+plot(class_net, vertex.size = indeg, margin = -.10)
+```
+
+## Now we plot the network
+
+-   make all the nodes a little bigger, but the nodes are still sized by indegree
+
+```{webr fig.width = 6, fig.height  = 5.65}
+# adding a 3 to indegree
+plot(class_net, vertex.size = indeg + 3, vertex.label.color = "red", 
+     margin = -.10)
+```
+
+## Now we plot the network
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net, vertex.size = indeg + 3, vertex.label = NA, 
+     vertex.frame.color = NA, margin = -.10)
+```
+
+## Now we plot the network
+
+-   one boy (id 13) and one girl (id 24) receive a particularly high number of nominations
+-   boys in the 'boy group' tend to have low indegree, as they are only friends with each other and there are few boys in the network.
+
+## Let's improve the graph!
+
+-   change the look of the nodes
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net, 
+    vertex.size = indeg + 3, 
+    vertex.label = NA, # take out those labels using a vertex.label argument
+    vertex.frame.color = NA, # take off the black edges around the nodes
+    edge.arrow.size = .5, 
+    edge.arrow.width = .75, 
+    margin = -.10)
+```
+
+## Let's improve the graph!
+
+-   Now we change the look of the edges.
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net, 
+     vertex.size = indeg + 3, 
+     vertex.label = NA, 
+     vertex.frame.color = NA, 
+     edge.arrow.size = .5, 
+     edge.arrow.width = .75, 
+     edge.color = "light gray", # change the color of the lines to light gray,
+     layout = layout_with_mds, # alter the layout of the plot 
+     margin = -.10)
+```
+
+## Let's improve the graph!
+
+-   Now we change the look of the edges.
+
+```{webr fig.width = 6, fig.height  = 5.65}
+plot(class_net, 
+     vertex.size = indeg + 3, 
+     vertex.label = NA, 
+     vertex.frame.color = NA, 
+     edge.arrow.size = .5, 
+     edge.arrow.width = .75, 
+     edge.color = "light gray", # change the color of the lines to light gray,
+     layout = layout_with_kk, # alter the layout of the plot 
+     margin = -.10)
+```
+
+## Let's improve the graph!
+
+-   a number of other options a researcher could explore if they wanted to continue tweaking their plot.
+-   See the following help files for more options: `?plot.igraph` `?igraph.plotting`
