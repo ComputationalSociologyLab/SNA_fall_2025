@@ -1,122 +1,130 @@
 ---
 title: "W3. Visualization"
 format: revealjs
-editor: visual
-filters: [webr]
 execute:
   echo: true
-  engine: knitr    # ★ R은 knitr로 실행
-resources:
-  - "data/*"          # ★ 이 문서가 쓸 정적 파일 선언
+  engine: knitr
+  fig-align: center
+  fig-asp: null
 ---
 
 # Network Visualization {#ch5-Network-Visualization-R}
 
--   cross-sectional network data and cover basic network visualization
--   walk through the different approaches and options in detail
+-   Focus on cross-sectional network data and cover basic network visualization
+-   Walk through the different approaches and options in detail
 
-## note three things
+## Please keep in mind
 
--   different plots are useful for different purposes
--   only cover a relatively small number of plotting options
--   plotting options appropriate for one network may not work for another
+-   We only cover a relatively small number of plotting options
+-   There isn’t one "*magic*" plot that is perfect for everything (mirage...unicorn...)
+    -   If I could, I'd like to introduce R script that makes the perfect plot everytime
+    -   A plot that works well for one network might not work for another🥲
 
 ## Setting up the Session
 
 -   The actors are students in a classroom and the relation of interest is friendship
--   There is individual information on gender, race and grade.
 
-```{webr}
-# Load files
-path1 <- "/data/class555_edgelist.csv"
+```{r}
+# Load files for edge list
+url1 <- "https://computationalsociologylab.github.io/SNA_fall_2025/data/class555_edgelist.csv"
 
-class_edges <- read.csv(path1)
-warnings()
+class_edges <- read.csv(url1)
 ```
 
 ## Let's see how it looks like
 
-```{webr}
-# Load files
+```{r}
 head(class_edges)
 ```
 
 ## Let's also read in the attribute file.
 
-```{webr}
-path2 <- "data/class555_attributedata.csv"
+```{r}
+# Attributes for gender, race and grade.
+url2 <- "https://computationalsociologylab.github.io/SNA_fall_2025/data/class555_attributedata.csv"
 
-class_attributes <- read.csv(path2)
+class_attributes <- read.csv(url2)
 ```
 
-## We will begin using the **igraph** package.
+## We begin using the **igraph** package.
 
-```{webr message=F, warning=F}
+```{r message=F, warning=F}
+# import library
 library(igraph)
 ```
 
-## Now we go ahead and construct the igraph object, using the edgelist and attribute objects as inputs.
+## Now we go ahead and construct the igraph object
 
-```{webr}
+```{r}
+# the edgelist and attribute objects as inputs.
+# use 'graph_from_data_frame' function 
 class_net <- graph_from_data_frame(d = class_edges, directed = T, 
                                    vertices = class_attributes)
 ```
 
-## Detailed information on class_net
+## Detailed information of our network
 
-```{webr}
+```{r}
+# v/c : vertex attribute, character
+# v/n : vertex attribute, numeric
+# e/n : edge attribute, numeric
 class_net
 ```
 
-## Network Plots using igraph
+## Plot a network using igraph
 
--   Network plots offer an intuitive way of exploring the features of the network.
--   Of course, this is not a formal test, but looking at a picture of the network(s) is a useful starting point for an analysis.
--   Here, we will begin by exploring gender divides in the network (i.e., how strongly does gender map onto friendship groups?).
+-   Ploting network offers an intuitive way of exploring the features of the network
+-   Looking at a picture of the network is a useful starting point for an analysis.
 
 ## Let's start with the default plotting in **igraph**.
 
-```{webr fig.width = 6, fig.height  = 5.65}
+```{r fig.width = 8, fig.height  = 7.65}
 plot(class_net) 
 ```
 
 ## And improve the graph!
 
--   The plot also does not tell us anything about gender.
--   We will color the nodes by gender
+-   The plot does not tell us anything (gender, race, degree..)
+-   We begin by exploring gender divides in the network
+-   i.e., how strongly does gender map onto friendship groups?
 
-```{webr}
-#  make boys navy blue and girls light sky blue 
+## And improve the graph!
+
+-   Let's color the nodes by gender
+
+```{r}
+#  make male students navy blue and female students light sky blue 
 cols <- ifelse(class_attributes$gender == "Female", "lightskyblue", "navy") 
 ```
 
-## Let's make sure that we coded this correctly
+## And improve the graph!
 
-```{webr}
-# Using a simple `table()` function, compare the values in cols and gender column in class_attributes
+```{r}
+# Using a simple `table()` function, we made simple table 
+# 16 female students are assigned for lightskyblue color
+# 8 male students are assigned for navy color
 table(cols, class_attributes$gender)
 ```
 
 ## Assign the gendered colorset to the network
 
-```{webr}
+```{r}
 # use a `V(g)$color` command to set the color of each node in the network 
 V(class_net)$color <- cols 
 ```
 
 ## And now we plot as before.
 
-```{webr fig.width = 6, fig.height  = 5.65}
+```{r fig.width = 8, fig.height  = 7.65}
+# same result for `plot(class_net, vertex.color = cols)`
 plot(class_net)
-
-# same with `plot(class_net, vertex.color = cols)`
 ```
 
 ## What is different?
 
 -   The network does divide along gender lines
--   with one small group of boys and then a larger set of girls
--   two boys are not part of the 'boy group', and are disproportionately connected to girls
+-   With one small group of boys and then a larger set of girls
+-   Two boys are not part of the 'boy group', and are disproportionately connected to girls
 -   What else?
 
 ## What if?
@@ -124,47 +132,50 @@ plot(class_net)
 -   A researcher may also be interested in who is popular in the class
 -   We can identify it with Network Measure
 
-```{webr}
+## What if?
+
+-   A researcher may also be interested in who is popular in the class
+-   We can identify it with Network Measure
+
+```{r}
 # Yes! indegree!
+# degree : # of of neighbors in a network
+# indegree : # of incoming neighbors
+# indegree of node i : # of students who think node i is their frieds 
+# -> popularity
 indeg <- degree(class_net, mode = "in")
 ```
 
 ## Now we plot the network
 
--   put indegree value for the size of the nodes
+-   Put indegree value for the size of the nodes
 
-```{webr fig.width = 6, fig.height  = 5.65}
+```{r fig.width = 8, fig.height  = 7.65}
 # set margin to -.10 to reduce some of the extra white space around the plot.
 plot(class_net, vertex.size = indeg, margin = -.10)
 ```
 
 ## Now we plot the network
 
--   make all the nodes a little bigger, but the nodes are still sized by indegree
+-   Make all the nodes a little bigger, but the nodes are still sized by indegree
 
-```{webr fig.width = 6, fig.height  = 5.65}
-# adding a 3 to indegree
+```{r fig.width = 8, fig.height  = 7.65}
+# adding integer (here, 3) to the indegree to make the node bigger
+# change the color of label
 plot(class_net, vertex.size = indeg + 3, vertex.label.color = "red", 
      margin = -.10)
 ```
 
 ## Now we plot the network
 
-```{webr fig.width = 6, fig.height  = 5.65}
-plot(class_net, vertex.size = indeg + 3, vertex.label = NA, 
-     vertex.frame.color = NA, margin = -.10)
-```
-
-## Now we plot the network
-
--   one boy (id 13) and one girl (id 24) receive a particularly high number of nominations
--   boys in the 'boy group' tend to have low indegree, as they are only friends with each other and there are few boys in the network.
+-   One boy (id 13) and one girl (id 24) receive a particularly high number of nominations
+-   Boys in the 'boy group' tend to have low indegree, as they are only friends with each other and there are few boys in the network.
 
 ## Let's improve the graph!
 
--   change the look of the nodes
+-   Change the look of the nodes
 
-```{webr fig.width = 6, fig.height  = 5.65}
+```{r fig.width = 6, fig.height  = 5.65}
 plot(class_net, 
     vertex.size = indeg + 3, 
     vertex.label = NA, # take out those labels using a vertex.label argument
@@ -176,9 +187,25 @@ plot(class_net,
 
 ## Let's improve the graph!
 
--   Now we change the look of the edges.
+-   Now we change the layout of the graph.
+-   layout_with_mds(Multi-Dimensional Scaling)
+    -   calculate the distance between node i and j
+    -   place nodes where the distance is preserved
+    -   👉 Good for showing the overall/global structure of the network
 
-```{webr fig.width = 6, fig.height  = 5.65}
+## Let's improve the graph!
+
+-   layout_with_kk(Kamada–Kawai)
+    -   Assign the distnace between node i and j
+        -   if direct edge exists, place the nodes closer together
+        -   if not, place the nodes farther apart
+        -   👉 Good for highlighting local structures and communities
+
+## Let's improve the graph!
+
+-   Now we change layout of a network.
+
+```{r fig.width = 6, fig.height  = 5.65}
 plot(class_net, 
      vertex.size = indeg + 3, 
      vertex.label = NA, 
@@ -192,9 +219,9 @@ plot(class_net,
 
 ## Let's improve the graph!
 
--   Now we change the look of the edges.
+-   Now we change layout of a network.
 
-```{webr fig.width = 6, fig.height  = 5.65}
+```{r fig.width = 8, fig.height  = 7.65}
 plot(class_net, 
      vertex.size = indeg + 3, 
      vertex.label = NA, 
@@ -210,3 +237,17 @@ plot(class_net,
 
 -   a number of other options a researcher could explore if they wanted to continue tweaking their plot.
 -   See the following help files for more options: `?plot.igraph` `?igraph.plotting`
+
+```{r}
+?plot.igraph
+```
+
+## Done!
+
+-   Please check KLMS for the assignment of this week
+
+-   This week \[Option\] is a real fun
+
+    -   you can excercise how to draw dynamic graph!
+
+-   Questions?
