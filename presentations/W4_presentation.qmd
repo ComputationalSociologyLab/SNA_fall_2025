@@ -10,38 +10,67 @@ execute:
 
 # Ego Network Data {#ch6-Ego-Network-Data-R}
 
-In this tutorial, we will go over how to analyze ego network data in R. Unlike in Chapters 3-5, this tutorial will offer a more in-depth substantive example, where we use ego network data to answer a series of research questions. We will begin by covering the basics of ego network data, utilizing the **egor** package [@egor] to manipulate, construct and visualize ego networks (similar to the previous tutorials, but for ego network data). We will then turn to an example analysis, focusing on substantive questions related to homophily, the tendency for similar actors to interact at higher rates than dissimilar actors. We will also consider an example where the ego network properties are used to predict other outcomes of interest, like happiness.
+-   Cover the basics of ego network data, utilizing the **egor** package
+
+-   Construct and visualize ego networks
+
+-   Focus on substantive questions related to homophily
 
 ## Working with Ego Network Data
 
-Ego network data are based on a sample of individuals and are commonly used in the social sciences. Each respondent (ego) reports on the people (alters) they are connected to, providing the local network around the focal respondent. Ego network data offer only pieces of the whole network, as there is typically no way of knowing if the alters named by one respondent are the same alters named by another. Ego network data thus require a somewhat different approach than with sociocentric network data. Most clearly, we must conceptually separate the information about the egos from information about the named alters, which is typically provided by ego. Ego network data can be structured in a number of ways but will generally have 4 kinds of information:
+-   Ego network data are based on a sample of individuals and are commonly used in the social sciences.
 
--   first, demographic, behavioral, etc. information on the egos
--   second, demographic, behavioral, etc. information on the named alters
--   third, information about the relationship between ego and alter
--   fourth, information about the relationships between the alters.
+-   Each respondent (ego) reports on the people (alters) they are connected to, providing the local network around the focal respondent.
 
-Our example ego network data come from the 1985 General Social Survey ego network module. The GSS is a nationally representative survey that is fielded yearly, including basic demographic information, socio-economic measures and the like. In addition to the core survey given each year, the GSS will include rotating modules, including occasional modules on social networks. Here, we will work with ego network data from the GSS that has been preprocessed into three different files: a file with the ego attributes; a file with the alter attributes; and a file with the alter-alter ties. At the end of this tutorial, we will consider an example that uses a single file as the input data. Let's go ahead and read in the three files, starting with the ego attribute data (read in from a URL).
+-   Ego network data offer only pieces of the whole network
+
+## Working with Ego Network Data
+
+-   Ego network data can be structured in a number of ways but will generally have 4 kinds of information:
+
+    -   1, demographic, behavioral, etc. information on the egos
+
+    -   2, demographic, behavioral, etc. information on the named alters
+
+    -   3, information about the relationship between ego and alter
+
+    -   4, information about the relationships between the alters.
+
+## Working with Ego Network Data
+
+-   Work with ego network data from the GSS(General Social Survey)
+
+    -   a file with the ego attributes
+
+    -   a file with the alter(other) attributes
+
+    -   a file with the alter-alter ties
 
 ```{r}
+# a file with the ego attributes
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_ego_dat.csv"
 
 ego_dat <- read.csv(file = url1, stringsAsFactors = F) 
 ```
 
-And here we look at the first 10 rows of the ego data frame, focusing on some of the key columns of interest.
+## Load Ego Attribute
+
+First 10 rows of the ego data frame
 
 ```{r}
+# CASEID : unique ID for each respondent
+# NUMGIVEN : the number of alters named
 ego_dat[1:10, c("CASEID", "AGE", "EDUC", "RACE", "SEX", "HAPPY", "NUMGIVEN")]
 ```
 
-We see a number of variables that correspond to the attributes of ego. `CASEID`, for example, is the unique id for each respondent. We see demographic variables, like `AGE` and `EDUC`, as well as variables like `HAPPY` that correspond to important outcomes of interest. `NUMGIVEN` captures the number of alters named (capped at 6+). Note that respondents could say they had 6+ alters but were only allowed to report on 5. There are also cases in the data that have NAs for `NUMGIVEN`, which means they did not answer the network portion of the survey. Here we remove them from the data frame.
+## Load Ego Attribute
 
 ```{r}
+# check if there is empty values
 ego_dat <- ego_dat[!is.na(ego_dat$NUMGIVEN), ]
 ```
 
-Now, let's read in the alter attribute data.
+## Load Alter Attribute
 
 ```{r}
 url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alter_dat.csv"
@@ -49,17 +78,14 @@ url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/mast
 alter_dat <- read.csv(file = url2, stringsAsFactors = F)
 ```
 
-Here we look at the first ten rows and select columns of the alter attribute data.
+## Load Alter Attribute
 
 ```{r}
+# each row corresponds to a different named alter
+# Each alter is denoted by an ALTERID (CASEID : ALTERID = 1:N)
+# KIN : 1(True) if ego is relatives with that alter
+# respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego.
 alter_dat[1:10, c("CASEID", "ALTERID", "AGE", "EDUC", "RACE", "SEX", "KIN")] 
-```
-
-The data look similar to the ego data frame but there are important differences. In this case, each row corresponds to a different named alter. Each alter is denoted by an alter id (`ALTERID`), unique to that respondent (based on `CASEID`). We see similar attributes as with the ego data. There is also information on the relationship between ego and each alter. For example, the `KIN` variable shows if ego is kin with that alter. As an example, we can see that respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego. Note that the number of rows in the two data frames is not the same.
-
-```{r}
-nrow(ego_dat)
-nrow(alter_dat)
 ```
 
 We can see that there are 1531 respondents in the ego data frame and 4483 alters in the alter data frame. Finally, we read in the alter-alter tie data.
