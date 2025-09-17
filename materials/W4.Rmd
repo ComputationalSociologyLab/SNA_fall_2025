@@ -191,6 +191,10 @@ Now, let’s take a look at the first three ego networks.
 igraph_nets[1:3] 
 ```
 
+```{r}
+igraph_nets
+```
+
 We have a list of ego networks (in the igraph format), with each ego network in a different element in the list. We can see that the information on the alters was automatically passed to the igraph objects, as was the information on the weights for the alter-alter ties. Note that by default the igraph objects will not include ego. Ego is often (but not always) excluded from visualizations and calculations because ego is, by definition, tied to all alters. Including ego thus offers little additional structural information. We will consider measures below that incorporate both ego and alter information (see Section 6.3).
 
 As with all igraph objects, we can extract useful information, like the attributes of the nodes. As an example, let's extract information on sex of alters from the first ego network.
