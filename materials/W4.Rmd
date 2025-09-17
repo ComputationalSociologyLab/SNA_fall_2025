@@ -191,10 +191,6 @@ Now, let’s take a look at the first three ego networks.
 igraph_nets[1:3] 
 ```
 
-```{r}
-igraph_nets
-```
-
 We have a list of ego networks (in the igraph format), with each ego network in a different element in the list. We can see that the information on the alters was automatically passed to the igraph objects, as was the information on the weights for the alter-alter ties. Note that by default the igraph objects will not include ego. Ego is often (but not always) excluded from visualizations and calculations because ego is, by definition, tied to all alters. Including ego thus offers little additional structural information. We will consider measures below that incorporate both ego and alter information (see Section 6.3).
 
 As with all igraph objects, we can extract useful information, like the attributes of the nodes. As an example, let's extract information on sex of alters from the first ego network.
@@ -246,7 +242,7 @@ purrr::walk(igraph_nets[1:3], plotfunc_colorgender)
 
 We can see that the third ego network is homogenous in terms of gender, but the first two are quite heterogeneous. We also see different patterns of ties between the named alters. The first ego network is complete, with a tie between all alter-alter pairs. In contrast, the third ego network is less dense, with one alter (id = 5) completely disconnected from the rest of the alters.
 
-## Homophily: Ego-Alter Attributes
+## [OPTION] Homophily: Ego-Alter Attributes
 
 We now move to our substantive questions about the strength and patterning of homophily. We will focus on gender and racial homophily, comparing across kin and non-kin ties. The first part of the analysis (Section 6.3.1 and 6.3.2) will utilize the ego-alter information, looking at the level of similarity between ego and alter for each ego network.
 
@@ -561,7 +557,7 @@ oddsratio_function(egoalter_tab = sextab,
                    attribute = ego_dat$SEX[ego_dat$NUMGIVEN > 0]) 
 ```
 
-## Homophily: Alter Attributes
+## [OPTION] Homophily: Alter Attributes
 
 So far we have looked exclusively at the ego-alter data, seeing if ego is similar to the named alters on gender and race. It is also possible to focus exclusively on the alters. Here, we ignore the ego attribute and simply summarize the alter attributes within each ego network. Such measures are often used as predictors of other outcomes, like political attitudes and mental health (see below for an example). For example, we may want to know how diverse the ego network is, or how similar/different the alters are to each other. Is ego surrounded by people who are all the same? One summary measure is Shannon entropy, equal to: `-1 * (sum(pi * log(pi))` where pi is the proportion of alters in category i. This is a measure of diversity, with larger values meaning the ego network is more diverse.
 
@@ -610,7 +606,7 @@ mean_altereduc <- comp_ply(egonetlist, alt.attr = "EDUC", .f = mean,
 summary(mean_altereduc[, "result"])
 ```
 
-## Ego Networks as Predictors
+## [OPTION] Ego Networks as Predictors
 
 In the section above we examined the properties of the ego networks, focusing mostly on racial and gender homophily. There are a number of other properties we could explore in more detail, like density or network size. For example, we might want to predict network size as a function of race, gender or other demographic characteristics.
 
@@ -681,7 +677,7 @@ summary(happy_mod3 <- polr(HAPPY_FACTOR ~ NUMGIVEN + DENSITY + EDUC + AGE +
 
 Our full model offers interesting insights when compared to model 2. We see that individuals surrounded by highly educated alters tend to report higher levels of happiness. This may be the case as individuals with higher education (especially in 1985) are less stressed, have better financial resources, etc. Being surrounded by such people may make it easier to feel happy oneself. We also see that the `EDUC` variable, capturing the respondent's education, is no longer a significant predictor. This suggests that happiness is less about having higher levels of education, and more about the social context in which one lives (see, for example: @McPherson2019). Being surrounded by folks who are less stressed (for example) may lead to happiness, even if the respondent does not themself have high levels of education. We also see that the coefficient on racial diversity is negative, but it is not significant (at traditional levels). Thus, while there may be some tendency for respondents with more racially diverse networks to be less happy, our uncertainty in the estimate is too great to be sure the effect is real.
 
-## Working with One Input File
+## [OPTION] Working with One Input File
 
 We end the tutorial by demonstrating how to construct egor objects using a single file as the main input. This is directly analogous to part 1 above, but here we use data stored as a single file, rather than 3 separate files. A single file is a convenient and common way of storing ego network data. A single file does, however, make the task of constructing the egor object somewhat more difficult than with 3 separate files. Here, we will demonstrate how to take the ego network data, stored as one file, and turn into the three data frames we read in above, one for the ego information, one for the alter information, and one for the alter-alter tie information (see the `onefile_to_egor()` function for an alternative approach). Once we have the three data frames, we can use them to construct the egor object, as above.
 
@@ -892,7 +888,7 @@ egonetlist2
 
 This tutorial has walked through one analysis of ego network data in R. The remaining tutorials will generally focus on sociocentric network data (although see [Chapter 14](#ch14-Network-Diffusion-Infectious-Diseases-R) for an example using ego network data in the context of epidemiological simulations), but many of the questions and problems have a direct analogy to the ego network case. With this in mind, our next tutorial deals with dyadic and triadic processes.
 
-# [OPTION]Dyads and Triads {#ch7-Dyads-Triads-R}
+# Dyads and Triads {#ch7-Dyads-Triads-R}
 
 This tutorial walks through an analysis of dyads and triads in R. We will examine the micro processes that govern tie formation. We will begin with dyadic processes before adding a third node and considering triads. The tutorial will draw on many of the ideas introduced in the previous chapters (including basic network construction, measurement and more substantive questions about homophily). We will consider a sociocentric network based on friendship and advice ties in an organization. Our main substantive concerns are about the basic ‘rules’ that govern advice and friendship formation. For example, do we see the same behavioral rules being followed when examining advice compared to friendship? Our second main question is how these behavioral rules map onto the structure of the organization itself. In what way does the organizational structure (different departments, levels, etc.) shape the way that individual nodes form friendships and seek advice?
 
@@ -1007,7 +1003,7 @@ ggnet2(krack_friendship, node.color = "LEVEL", node.size = indeg_friendship,
 
 We can already see that the advice network is much denser than the friendship network in this organization. Otherwise, it is difficult to immediately see the key differences in the two networks, meaning we will need to dig a little deeper to answer our questions about advice, friendship and organizational structure.
 
-## Dyadic Processes
+## [OPTION] Dyadic Processes
 
 Now that we have our networks constructed, we can begin to formally identify the rules of interaction that operate in this organization. We begin with the simplest case, the dyad, involving each pair of nodes in the network.
 
