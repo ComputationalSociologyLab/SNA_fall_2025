@@ -16,7 +16,7 @@ execute:
 
 -   Cover the basics of ego network data, utilizing the **egor** package
 -   Deals with how to exract Triads in a network with **sna** package
--   [OPTION] for Triads 
+-   [OPTION] for Dyads 
 
 ## Working with Ego Network Data
 
