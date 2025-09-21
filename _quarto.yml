@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - W4_presentation.qmd
 
 website:
   title: "W4. Ego Network Data"
