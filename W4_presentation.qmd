@@ -29,11 +29,10 @@ execute:
 ## Working with Ego Network Data
 
 -   Ego network data can be structured in a number of ways but will generally have 4 kinds of information:
-
-  -   demographic, behavioral, etc. information on the **egos**
-  -   demographic, behavioral, etc. information on the named **alters**
-  -   information about the **relationship between ego and alter**
-  -   information about the **relationships between the alters**
+    -   demographic, behavioral, etc. information on the **egos**
+    -   demographic, behavioral, etc. information on the named **alters**
+    -   information about the **relationship between ego and alter**
+    -   information about the **relationships between the alters**
 
 ## Working with Ego Network Data
 
