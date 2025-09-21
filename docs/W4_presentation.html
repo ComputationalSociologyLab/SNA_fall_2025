@@ -496,11 +496,11 @@
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>igraph_nets[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`19850001`
-IGRAPH 8e37d3b UN-- 6 15 -- 
+IGRAPH a34043d UN-- 6 15 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 8e37d3b (vertex names):
++ edges from a34043d (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  
 [11] 1--ego 2--ego 3--ego 4--ego 5--ego</code></pre>
 </div>
@@ -513,29 +513,29 @@ IGRAPH 8e37d3b UN-- 6 15 --
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`19850001`
-IGRAPH 8e37d3b UN-- 6 15 -- 
+IGRAPH a34043d UN-- 6 15 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 8e37d3b (vertex names):
++ edges from a34043d (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  
 [11] 1--ego 2--ego 3--ego 4--ego 5--ego
 
 $`19850002`
-IGRAPH 85d848f UN-- 6 13 -- 
+IGRAPH 19a0634 UN-- 6 13 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 85d848f (vertex names):
++ edges from 19a0634 (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego
 [11] 3--ego 4--ego 5--ego
 
 $`19850003`
-IGRAPH 2583370 UN-- 6 11 -- 
+IGRAPH c8fec91 UN-- 6 11 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 2583370 (vertex names):
++ edges from c8fec91 (vertex names):
  [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego
 [11] 5--ego</code></pre>
 </div>
@@ -835,8 +835,8 @@ Diagonal Used: FALSE
 Replications: 1000 
 
 Observed Value: 23 
-Pr(X&gt;=Obs): 0.121 
-Pr(X&lt;=Obs): 0.92 </code></pre>
+Pr(X&gt;=Obs): 0.133 
+Pr(X&lt;=Obs): 0.911 </code></pre>
 </div>
 </div>
 <p>The story is different for friendship. Here we see that in many iterations the observed value (the count of 030T) is not above that expected in a random network of that size, density and dyad census. Using traditional statistical cutoffs, we cannot be certain that there is a difference between the observed and random expectations. This suggests that the tendency for A to be friends with B and C and C to be friends with B is not particularly strong in the friendship network, at least not above what could have arisen if people randomly formed friendships (conditioned on the density of the network and the reciprocity rate). Let’s take a closer look at the observed values and the values expected under the randomly generated networks.</p>
@@ -849,10 +849,10 @@ Pr(X&lt;=Obs): 0.92 </code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">summary</span>(cug_triads_friendship<span class="sc">$</span>rep.stat) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   5.00   15.00   18.00   18.17   21.00   35.00 </code></pre>
+   5.00   16.00   18.00   18.34   21.00   32.00 </code></pre>
 </div>
 </div>
-<p>On average, the expected count in the random network is 18.17, close to that observed in the true network (23). What if we had considered a different triad type in our friendship network? For example, let’s consider 120U (A-&gt;B&lt;-C, A&lt;-&gt;C). In this case A and C have a reciprocated friendship. They also both nominate B who does not nominate them back. There are asymmetries in such a triad, but from a balance perspective this may not be problematic. A and C are both positively linked and they have positive sentiments towards B. There is thus agreement about a third party (B) from the point of view of A and C, even if B does not consider them friends in return. Let’s do a CUG test on the count of 120U on the friendship network:</p>
+<p>On average, the expected count in the random network is 18.34, close to that observed in the true network (23). What if we had considered a different triad type in our friendship network? For example, let’s consider 120U (A-&gt;B&lt;-C, A&lt;-&gt;C). In this case A and C have a reciprocated friendship. They also both nominate B who does not nominate them back. There are asymmetries in such a triad, but from a balance perspective this may not be problematic. A and C are both positively linked and they have positive sentiments towards B. There is thus agreement about a third party (B) from the point of view of A and C, even if B does not consider them friends in return. Let’s do a CUG test on the count of 120U on the friendship network:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>cug_triads_friendship2 <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_friendship, </span>
 <span id="cb66-2"><a></a>                                   <span class="at">FUN =</span> count_triads_function, </span>
@@ -892,22 +892,22 @@ Pr(X&lt;=Obs): 1 </code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>CUG_test_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   triads obs mean_random prop_random_lte_obs
-1     003 376     319.764               1.000
-2     012 366     416.921               0.000
-3     102 143     171.430               0.004
-4    021D 114      44.373               1.000
-5    021U  34      44.145               0.056
-6    021C  35      88.075               0.000
-7    111D  39      73.756               0.000
-8    111U 101      73.607               1.000
-9    030T  23      18.164               0.911
-10   030C   0       6.039               0.004
-11    201  20      29.050               0.026
-12   120D  16       7.620               0.999
-13   120U  25       7.824               1.000
-14   120C   9      15.369               0.049
-15    210  23      12.295               0.998
-16    300   6       1.568               0.998</code></pre>
+1     003 376     320.344               1.000
+2     012 366     416.591               0.000
+3     102 143     170.679               0.002
+4    021D 114      44.188               1.000
+5    021U  34      43.882               0.049
+6    021C  35      88.313               0.000
+7    111D  39      73.763               0.000
+8    111U 101      74.100               1.000
+9    030T  23      18.087               0.917
+10   030C   0       6.107               0.002
+11    201  20      29.182               0.017
+12   120D  16       7.677               0.996
+13   120U  25       7.778               1.000
+14   120C   9      15.477               0.048
+15    210  23      12.334               1.000
+16    300   6       1.498               1.000</code></pre>
 </div>
 </div>
 <p>The outputted table has 4 columns. The first column is the triad type. The second column is the observed count in the network of interest. The third column is the mean count seen in the random networks (under the desired conditioning). The fourth column is the proportion of times where the value from the random network is less than or equal to the value in the observed network. We can use these results to explore which triads are found in higher or lower levels than what we expect by chance.</p>
