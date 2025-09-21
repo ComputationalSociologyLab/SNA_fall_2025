@@ -266,7 +266,7 @@ friends_edgelist <- friends_data_frame[friends_data_frame$friendship_tie == 1, ]
 ## Triadic Processes
 Let's take a look at the dataset, one by one 
 ```{r}
-# ego 1 said he or she gets advice from alter 2,4,8,16,21
+# ego 1 said he or she gives advice from alter 2,4,8,16,21
 head(advice_edgelist)
 ```
 ## Triadic Processes
