@@ -339,7 +339,7 @@ triad_data
 ## Triad Census
 * The underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one
 * Such a pattern of hierarchy does not emerge as clearly in the friendship network
-![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/030T_ABC.jpeg)
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/030T_ABC.jpeg){width=50%}
 
 ## Triad Census
 * The triads associated with transitive dominance relations are more likely to be present in the advice network than the friendship network
