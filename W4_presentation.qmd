@@ -18,8 +18,6 @@ execute:
 
 -   Construct and visualize ego networks
 
--   Focus on substantive questions related to homophily
-
 ## Working with Ego Network Data
 
 -   Ego network data are based on a sample of individuals and are commonly used in the social sciences.
@@ -32,13 +30,10 @@ execute:
 
 -   Ego network data can be structured in a number of ways but will generally have 4 kinds of information:
 
-    -   1, demographic, behavioral, etc. information on the egos
-
-    -   2, demographic, behavioral, etc. information on the named alters
-
-    -   3, information about the relationship between ego and alter
-
-    -   4, information about the relationships between the alters.
+  -   demographic, behavioral, etc. information on the **egos**
+  -   demographic, behavioral, etc. information on the named **alters**
+  -   information about the **relationship between ego and alter**
+  -   information about the **relationships between the alters**
 
 ## Working with Ego Network Data
 
@@ -116,9 +111,8 @@ alteralter_dat[1:10, ]
 
 ## Let's make Ego Network
 
--   The first challenge in analyzing ego network data is that we must transform traditional survey data into something that has the structure of a network, so that we can then utilize packages like igraph and sna.
--   Our survey data will not look like traditional network inputs (matrices, edgelists, etc.) and each survey is likely to be different, complicating the task of putting together the ego networks.
--   Luckily, the **egor** package has made the task of constructing ego networks from survey data much easier. We will utilize the basic functionality of the **egor** package throughout the tutorial. Let's go ahead and load the package.
+-   transforming traditional survey data into something that has the structure of a network 🤯🤯🤯🤯🤯
+-   🍀🍀**egor**🍀🍀 package has made the task of constructing ego networks from survey data much easier
 
 ```{r message=F, warning=F}
 # load a package for constructing ego network
@@ -127,10 +121,11 @@ library(egor)
 
 ## Let's make Ego Network
 
--   The basic idea is to first construct an egor object from the survey data.
+-   construct an egor object from our survey data
 
 ```{r message=F, warning=F}
-# The function we will use to construct the egor object is `egor()`. The `egor()` function assumes that you are inputting the data using three separate files.
+# `egor()` : input the data using three separate files.
+
 egonetlist <-  egor(alters = alter_dat, # alter attributes data frame
                     egos = ego_dat, # ego attributes data frame
                     aaties = alteralter_dat, # alter-alter tie data frame
@@ -141,21 +136,20 @@ egonetlist <-  egor(alters = alter_dat, # alter attributes data frame
                     ) 
 ```
 
-## Let's make Ego Network
-
-```{r}
-egonetlist
-```
-
-## Let's make Ego Network
-
-```{r}
-names(egonetlist) 
-```
-
 ## Calculate Summary Statistics
 
 -   We will begin with density, showing the proportion of alter-alter ties that exist in each ego network
+-   By the way, What is the definition of density?🤨
+
+
+## Calculate Summary Statistics
+
+-   a measure for overall level of connection among nodes in a network 
+- \(m\) = number of edges  
+- \(n\) = number of nodes  
+$$
+Dentisy = \frac{2m}{n(n-1)}
+$$
 
 ```{r message=F, warning=F}
 # use `ego_density()` function
@@ -165,16 +159,8 @@ dens <- ego_density(egonetlist)
 ## Calculate Summary Statistics
 
 ```{r}
+# we calculated the density of every ego network
 head(dens)
-```
-
-## Calculate Summary Statistics
-
-The density scores are stored in the object as `density`. For example, respondent 1 (19850001) has 5 alters and all 10 possible ties exist (density = 1), while respondent 2 (1950002) has 5 alters but only 8 ties exist (density = .8). To check:
-
-```{r}
-alteralter_dat[alteralter_dat$CASEID == 19850001, ]
-alteralter_dat[alteralter_dat$CASEID == 19850002, ]
 ```
 
 ## Plotting Ego Networks
@@ -187,28 +173,21 @@ library(igraph)
 
 ## Plotting Ego Networks
 
--   convert the egor object to igraph objects.
+-   convert the **egor** object to **igraph** objects.
 
 ```{r}
 igraph_nets <- as_igraph(egonetlist, include.ego = TRUE)
 ```
 
 ## Plotting Ego Networks
-```{r}
-igraph_nets[1]
-```
-
-## Plotting Ego Networks
-
 Now, let’s take a look at the first three ego networks.
-
 ```{r}
 igraph_nets[1:3] 
 ```
 
 ## Plotting Ego Networks
 
-Now, let's plot a couple of example networks, focusing on the first 3 ego networks.
+let's plot a couple of example networks, focusing on the first 3 ego networks.
 
 ```{r}
 # set 1 row, 3 column grid for visualization layout
@@ -253,18 +232,23 @@ par(mfrow = c(1, 3))
 purrr::walk(igraph_nets[1:3], plotfunc_colorgender)
 ```
 
-## Triadic Processes
-* We now move to more complex micro processes involving three nodes. Adding a third node adds a number of possibilities that did not exist with only two nodes. For example, there is now the possibility that one node can play the other two off each other for some gain or benefit. There is also the possibility that the relationship between two nodes (A-B) is strained because of the relationship to the third node (A likes C but B does not). The question is what kind of rules of interaction do we see in our friendship and advice networks. We also want to know if the triadic rules for friendship are different (or similar) to the triadic rules for advice. We first discuss the triad census before moving to transitivity.
+# Triads
+
+* help us study the small-scale pattern that explain why certain people connect with each other(how ties form in a network)
+* The data are based on three relations collected on workers in a single organization
+* Our main objective is what kind of rules of interaction do we see in our friendship and advice networks
+  * i.e. do we see the same behavioral rules being followed when examining advice compared to friendship? 
 
 ## Triadic Processes
 * work primarily with the **sna** package [@sna], so let's start by loading that package.
+
 ```{r message=F, warning=F}
 library(sna)
 ```
 
-
 ## Triadic Processes
-* We will now do the same thing for the friendship network. The tie information can be read in as:
+
+* download three datasets(1. friends 2. advice 3. attributes)
 
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_advice.csv"
@@ -274,78 +258,68 @@ url3 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/mast
 advice_data_frame <- read.csv(file = url1) 
 attributes <- read.csv(file = url2)
 friends_data_frame <- read.csv(file = url3)
+
+# extract only Ture relationship
 advice_edgelist <- advice_data_frame[advice_data_frame$advice_tie == 1, ]
-```
-
-## Triadic Processes
-```{r}
-head(friends_data_frame)
-```
-
-## Triadic Processes
-```{r}
-head(attributes)
-```
-
-## Triadic Processes
-Now we will subset the data to only include those dyads where a tie exists from i to j.
-
-```{r}
 friends_edgelist <- friends_data_frame[friends_data_frame$friendship_tie == 1, ]
 ```
 
 ## Triadic Processes
-We now construct the network, as before, using the `network()` function.
+Let's take a look at the dataset, one by one 
+```{r}
+# ego 1 said he or she gets advice from alter 2,4,8,16,21
+head(advice_edgelist)
+```
+## Triadic Processes
+Let's take a look at the dataset, one by one 
+```{r}
+# ego 1 said he or she is friend with alter 2,4,8,12,16
+head(friends_edgelist)
+```
+
+## Triadic Processes
+Let's take a look at the dataset, one by one 
+```{r}
+# attributes for each resopondent
+head(attributes)
+```
+
+## Triadic Processes
+* We now construct the network , as before, using the `network()` function.
+
 ```{r}
 krack_friendship <-  network(x = friends_edgelist, directed = T, 
                              vertices = attributes)
-```
-
-
-
-## Triad Census
-
-* The triad census captures the distribution of triads across 16 basic types
-![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png)
-
-## Triad Census
-* summarize the full distribution of triads using the `triad.census()` function
-* compare the triad counts across the two network relations, to see if the patterns differ for friendship compared to advice
-
-```{r}
 krack_advice <- network(x = advice_edgelist, directed = T, 
                         vertices = attributes) 
 ```
 
 ## Triad Census
-```{r}
-krack_advice
-```
+
+* The triad census captures the distribution of triads across 16 basic types, representing different patterns of interaction between the three nodes
+* There are 16 different triad types:
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png)
 
 ## Triad Census
+
+-   compare the triad counts across the two network relations, to see if the patterns differ for friendship compared to advice
+
 ```{r}
 # `triad.census()` function outputs the counts in each triad type
-triads_friendship <- triad.census(krack_friendship)
-```
-
-## Triad Census
-```{r}
-triads_friendship
-```
-
-
-## Triad Census
-And now for advice:
-```{r}
 triads_advice <- triad.census(krack_advice) 
-```
-
-```{r}
 triads_advice
 ```
 
+## Triad Census
+And now for friendship :
+```{r}
+# `triad.census()` function outputs the counts in each triad type
+triads_friendship <- triad.census(krack_friendship)
+triads_friendship
+```
 
 ## Triad Census
+
 Let's make a table to make the comparisons easier.
 
 ```{r}
@@ -354,100 +328,29 @@ triad_data <- data.frame(advice = t(triads_advice),
 ```
 
 ## Triad Census
+
 ```{r}
 triad_data
 ```
 
-Note that the total number of triads in each network is the same, making comparisons easier. There are a number of things one could highlight between the two networks, but one striking difference is in the 030T triad, A-\>B\<-C, A-\>C. The advice network has a much higher proportion of 030T triads than the friendship network, suggestive of an underlying hierarchy of advice less present in the friendship network; where A gives advice to B and C and C gives advice to B and B simply receives advice from others. The underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one. Such a pattern of hierarchy does not emerge as clearly in the friendship network. In general, the triads associated with transitive dominance relations (021D, 120D, 021U, 030T, 120U) are more likely to be present in the advice network than the friendship network. Note that we need to be a little careful in pushing that conclusion too far, as the networks have different levels of density (and possibly reciprocity) that may be driving the differences we observe in the triad count. We need to take these baseline differences into account before formally interpreting the triad counts. Here, we will utilize a CUG test to compare the triad census to what we might expect by chance, if people randomly formed ties. We discuss other, more complex, options in future chapters.
+## Triad Census
+* one striking difference : The advice network has a much higher proportion of 030T triads than the friendship network
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/030T.png)
 
-We use the same `cug.test()` function as we used above when looking at reciprocity. The main difference is that here we condition the random networks in a different way. In this case we will condition on the dyad census, to see how the counts of the triad census differ above what we expect from a network of the same size, density and dyadic tendencies (i.e., same rate of reciprocity). Our particular question is if different specific triad types show up more (or less) than we expect in a random network, conditioned on those features. To facilitate this, we will first write a function to make it easier to specify the test statistic of interest, here the counts of specific triad types. Our function will take the network of interest, calculate the triad census and output the count of the particular triad of interest. We could also write a similar function to take the weighted sum over a specified set of triads. Here we focus on one triad type at a time.
+* The underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one
+* Such a pattern of hierarchy does not emerge as clearly in the friendship network
 
-```{r}
-count_triads_function <- function(dat, triad_names){
-  # Arguments:
-  # dat: the network object
-  # triad_names: the name of the triad type
-  
-  triads <- triad.census(dat) # calculating the triad census
-  triads[1, triad_names] # grabbing counts of triad of interest
-}
-```
+## Triad Census
+* the triads associated with transitive dominance relations are more likely to be present in the advice network than the friendship network
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad_advice.jpg)
 
-Let’s see how this works before we use it in a CUG test. Let’s focus again on 030T, where A gives advice to B and C and C gives advice to B.
+* Note that we need to be a little careful in pushing that conclusion too far, as the networks have different levels of density that may be driving the differences we observe in the triad count
 
-```{r}
-count_triads_function(krack_advice, triad_names = c("030T"))
-```
 
-Now, let’s use our function to count the triad type of interest but this time compare the counts to what we expect by chance, in a random network conditioned on the dyad census. We now use the `cug.test()` function. The main inputs are the network (here for advice), the desired conditioning of the random network (cmode set to "dyad.census") and the function of interest, in this case count_triads_function. The input to that function is triad_names, here set to "030T".
 
-```{r}
-cug_triads_advice <- cug.test(krack_advice, 
-                              FUN = count_triads_function, 
-                              mode = c("digraph"), 
-                              cmode = c("dyad.census"), reps = 1000, 
-                              FUN.args = list(triad_names = c("030T"))) 
-```
+## Done!
 
-```{r}
-cug_triads_advice
-```
+-   Please check KLMS for the assignment of this week
 
-We can see that the total number of 030T triads in the observed network is above what we expect in the random network. In all 1000 random networks, the observed count is above that seen in the randomly generated network (P(X \>= Obs) is equal to 0). This means that the tendency for A to give advice to B and C and then C to give advice to B cannot be accounted for based simply on the density of advice relations and expectations of reciprocity. We now do the same analysis for the friendship network.
+-   If you want to study in-depth knowledge for the ego network, diad, and triad network, please check this week \[Option\]
 
-```{r}
-cug_triads_friendship <- cug.test(krack_friendship, 
-                                  FUN = count_triads_function, 
-                                  mode = c("digraph"), 
-                                  cmode = c("dyad.census"), reps = 1000, 
-                                  FUN.args = list(triad_names = c("030T")))
-```
-
-```{r}
-cug_triads_friendship
-```
-
-The story is different for friendship. Here we see that in many iterations the observed value (the count of 030T) is not above that expected in a random network of that size, density and dyad census. Using traditional statistical cutoffs, we cannot be certain that there is a difference between the observed and random expectations. This suggests that the tendency for A to be friends with B and C and C to be friends with B is not particularly strong in the friendship network, at least not above what could have arisen if people randomly formed friendships (conditioned on the density of the network and the reciprocity rate). Let’s take a closer look at the observed values and the values expected under the randomly generated networks.
-
-```{r}
-cug_triads_friendship$obs.stat
-summary(cug_triads_friendship$rep.stat) 
-```
-
-On average, the expected count in the random network is `r round(summary(cug_triads_friendship$rep.stat)["Mean"], 2)`, close to that observed in the true network (23). What if we had considered a different triad type in our friendship network? For example, let’s consider 120U (A-\>B\<-C, A\<-\>C). In this case A and C have a reciprocated friendship. They also both nominate B who does not nominate them back. There are asymmetries in such a triad, but from a balance perspective this may not be problematic. A and C are both positively linked and they have positive sentiments towards B. There is thus agreement about a third party (B) from the point of view of A and C, even if B does not consider them friends in return. Let’s do a CUG test on the count of 120U on the friendship network:
-
-```{r}
-cug_triads_friendship2 <- cug.test(krack_friendship, 
-                                   FUN = count_triads_function, 
-                                   mode = c("digraph"), 
-                                   cmode = c("dyad.census"), reps = 1000,
-                                   FUN.args = list(triad_names = c("120U")))
-```
-
-```{r}
-cug_triads_friendship2
-```
-
-In this case, we can see that the observed count (25) is above that expected by chance, and this is the case in all 1000 randomly generated networks. This suggests that a triad based on balanced relations, even if not completely mutual, is observed at comparatively high rates in the friendship network.
-
-Overall, it would appear that the advice network is built around dominance type relations in a way that the friendship network is not. Individuals give advice in a way that follows patterns of status; where, for example, A gives advice ‘down the line’ to B and C. In contrast, the friendship network, at least in our short analysis, is consistent with balancing relations, where if two nodes are strong friends, they will tend to agree (in terms of liking or not liking) third party nodes, even if that third party does not return the friendship. This was not captured very well in the dyadic analysis, where the reciprocity rates were pretty similar in the two networks.
-
-To explore these ideas more carefully, a researcher may want to look at all triad types for each network. As part of this book, we have written an additional function that will automatically do a CUG test for all triad types at once (rather than a single example, as above) and then output a summary table of the results. Let's read in the function:
-
-```{r}
-source("https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/R/CUGtest_alltriads.R")
-```
-
-The function is called `CUGtest_alltriads()`. The arguments are dat, the network of interest (assuming it is in the network format), mode, cmode and reps, all directly analogous to cug.test. And now we will use the function on our friendship network.
-
-```{r}
-CUG_test_table <- CUGtest_alltriads(dat = krack_friendship, 
-                                    mode = "digraph", 
-                                    cmode = "dyad.census", reps = 1000)
-```
-
-```{r}
-CUG_test_table
-```
-
-The outputted table has 4 columns. The first column is the triad type. The second column is the observed count in the network of interest. The third column is the mean count seen in the random networks (under the desired conditioning). The fourth column is the proportion of times where the value from the random network is less than or equal to the value in the observed network. We can use these results to explore which triads are found in higher or lower levels than what we expect by chance.
