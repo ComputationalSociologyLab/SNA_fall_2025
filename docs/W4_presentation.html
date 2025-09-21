@@ -1,160 +1,224 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
-<title>W4. Ego Network Data</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
-  vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-</style>
-
-
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<html lang="en"><head>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ff63373b1067ca6f91cf1456aa1f00a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
-  "copy-button": false,
-  "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
-  "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
-  }
-}</script>
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.24">
 
-
+  <title>W4. Ego Network Data</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
 </head>
-
 <body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
 
-<div id="quarto-search-results"></div>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="W4_presentation.html"><i class="bi bi-file-slides"></i>RevealJS</a></li></ul></div></div>
-<!-- main -->
-<main class="content" id="quarto-document-content">
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">W4. Ego Network Data</h1>
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">W4. Ego Network Data</h1>
+<div class="quarto-title-authors">
 </div>
 
-
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="ch6-Ego-Network-Data-R" class="level1">
+</section>
+<section>
+<section id="ch6-Ego-Network-Data-R" class="title-slide slide level1 center">
 <h1>Ego Network Data</h1>
 <ul>
 <li><p>Cover the basics of ego network data, utilizing the <strong>egor</strong> package</p></li>
 <li><p>Construct and visualize ego networks</p></li>
 <li><p>Focus on substantive questions related to homophily</p></li>
 </ul>
-<section id="working-with-ego-network-data" class="level2">
-<h2 class="anchored" data-anchor-id="working-with-ego-network-data">Working with Ego Network Data</h2>
+</section>
+<section id="working-with-ego-network-data" class="slide level2">
+<h2>Working with Ego Network Data</h2>
 <ul>
 <li><p>Ego network data are based on a sample of individuals and are commonly used in the social sciences.</p></li>
 <li><p>Each respondent (ego) reports on the people (alters) they are connected to, providing the local network around the focal respondent.</p></li>
 <li><p>Ego network data offer only pieces of the whole network</p></li>
 </ul>
 </section>
-<section id="working-with-ego-network-data-1" class="level2">
-<h2 class="anchored" data-anchor-id="working-with-ego-network-data-1">Working with Ego Network Data</h2>
+<section id="working-with-ego-network-data-1" class="slide level2">
+<h2>Working with Ego Network Data</h2>
 <ul>
 <li><p>Ego network data can be structured in a number of ways but will generally have 4 kinds of information:</p>
 <ul>
@@ -165,8 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 </section>
-<section id="working-with-ego-network-data-2" class="level2">
-<h2 class="anchored" data-anchor-id="working-with-ego-network-data-2">Working with Ego Network Data</h2>
+<section id="working-with-ego-network-data-2" class="slide level2">
+<h2>Working with Ego Network Data</h2>
 <ul>
 <li><p>Work with ego network data from the GSS(General Social Survey)</p>
 <ul>
@@ -176,19 +240,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a file with the ego attributes</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_ego_dat.csv"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>ego_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1, <span class="at">stringsAsFactors =</span> F) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># a file with the ego attributes</span></span>
+<span id="cb1-2"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_ego_dat.csv"</span></span>
+<span id="cb1-3"><a></a></span>
+<span id="cb1-4"><a></a>ego_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1, <span class="at">stringsAsFactors =</span> F) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="load-dataset-for-ego-attribute" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-ego-attribute">Load Dataset for Ego Attribute</h2>
+<section id="load-dataset-for-ego-attribute" class="slide level2">
+<h2>Load Dataset for Ego Attribute</h2>
 <p>First 10 rows of the ego data frame</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CASEID : unique ID for each respondent</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># NUMGIVEN : the number of alters named</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ego_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="fu">c</span>(<span class="st">"CASEID"</span>, <span class="st">"AGE"</span>, <span class="st">"EDUC"</span>, <span class="st">"RACE"</span>, <span class="st">"SEX"</span>, <span class="st">"HAPPY"</span>, <span class="st">"NUMGIVEN"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># CASEID : unique ID for each respondent</span></span>
+<span id="cb2-2"><a></a><span class="co"># NUMGIVEN : the number of alters named</span></span>
+<span id="cb2-3"><a></a>ego_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="fu">c</span>(<span class="st">"CASEID"</span>, <span class="st">"AGE"</span>, <span class="st">"EDUC"</span>, <span class="st">"RACE"</span>, <span class="st">"SEX"</span>, <span class="st">"HAPPY"</span>, <span class="st">"NUMGIVEN"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     CASEID AGE EDUC  RACE    SEX HAPPY NUMGIVEN
 1  19850001  33   16 white   male     2        6
@@ -204,31 +268,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="load-dataset-for-ego-attribute-1" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-ego-attribute-1">Load Dataset for Ego Attribute</h2>
+<section id="load-dataset-for-ego-attribute-1" class="slide level2">
+<h2>Load Dataset for Ego Attribute</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check if there is empty values</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>na_yn <span class="ot">&lt;-</span><span class="sc">!</span><span class="fu">is.na</span>(ego_dat<span class="sc">$</span>NUMGIVEN)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># exclude the emply values</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ego_dat <span class="ot">&lt;-</span> ego_dat[na_yn, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># check if there is empty values</span></span>
+<span id="cb4-2"><a></a>na_yn <span class="ot">&lt;-</span><span class="sc">!</span><span class="fu">is.na</span>(ego_dat<span class="sc">$</span>NUMGIVEN)</span>
+<span id="cb4-3"><a></a><span class="co"># exclude the emply values</span></span>
+<span id="cb4-4"><a></a>ego_dat <span class="ot">&lt;-</span> ego_dat[na_yn, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="load-dataset-for-alter-attribute" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-alter-attribute">Load Dataset for Alter Attribute</h2>
+<section id="load-dataset-for-alter-attribute" class="slide level2">
+<h2>Load Dataset for Alter Attribute</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alter_dat.csv"</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>alter_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2, <span class="at">stringsAsFactors =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alter_dat.csv"</span></span>
+<span id="cb5-2"><a></a></span>
+<span id="cb5-3"><a></a>alter_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2, <span class="at">stringsAsFactors =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="load-dataset-for-alter-attribute-1" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-alter-attribute-1">Load Dataset for Alter Attribute</h2>
+<section id="load-dataset-for-alter-attribute-1" class="slide level2">
+<h2>Load Dataset for Alter Attribute</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># each row corresponds to a different named alter</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Each alter is denoted by an ALTERID (CASEID : ALTERID = 1:N)</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># KIN : 1(True) if ego is relatives with that alter</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego.</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>alter_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="fu">c</span>(<span class="st">"CASEID"</span>, <span class="st">"ALTERID"</span>, <span class="st">"AGE"</span>, <span class="st">"EDUC"</span>, <span class="st">"RACE"</span>, <span class="st">"SEX"</span>, <span class="st">"KIN"</span>)] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># each row corresponds to a different named alter</span></span>
+<span id="cb6-2"><a></a><span class="co"># Each alter is denoted by an ALTERID (CASEID : ALTERID = 1:N)</span></span>
+<span id="cb6-3"><a></a><span class="co"># KIN : 1(True) if ego is relatives with that alter</span></span>
+<span id="cb6-4"><a></a><span class="co"># respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego.</span></span>
+<span id="cb6-5"><a></a>alter_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="fu">c</span>(<span class="st">"CASEID"</span>, <span class="st">"ALTERID"</span>, <span class="st">"AGE"</span>, <span class="st">"EDUC"</span>, <span class="st">"RACE"</span>, <span class="st">"SEX"</span>, <span class="st">"KIN"</span>)] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     CASEID ALTERID AGE EDUC  RACE    SEX KIN
 1  19850001       1  32   18 white   male   0
@@ -244,25 +308,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="load-dataset-for-alter-alter-tie" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-alter-alter-tie">Load Dataset for Alter-Alter Tie</h2>
+<section id="load-dataset-for-alter-alter-tie" class="slide level2">
+<h2>Load Dataset for Alter-Alter Tie</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>url3 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alteralter_dat.csv"</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>alteralter_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>url3 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alteralter_dat.csv"</span></span>
+<span id="cb8-2"><a></a></span>
+<span id="cb8-3"><a></a>alteralter_dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="load-dataset-for-alter-alter-tie-1" class="level2">
-<h2 class="anchored" data-anchor-id="load-dataset-for-alter-alter-tie-1">Load Dataset for Alter-Alter Tie</h2>
+<section id="load-dataset-for-alter-alter-tie-1" class="slide level2">
+<h2>Load Dataset for Alter-Alter Tie</h2>
 <ul>
 <li>the ties between the named alters</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `CASEID` : relevant ego </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># `ALTER1` : first alter in the dyad</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># `ALTER2` : second alter in the dyad</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># `Weight` : nature of the relationship (1 : alters know each other, 2: especially close)</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>alteralter_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># `CASEID` : relevant ego </span></span>
+<span id="cb9-2"><a></a><span class="co"># `ALTER1` : first alter in the dyad</span></span>
+<span id="cb9-3"><a></a><span class="co"># `ALTER2` : second alter in the dyad</span></span>
+<span id="cb9-4"><a></a><span class="co"># `Weight` : nature of the relationship (1 : alters know each other, 2: especially close)</span></span>
+<span id="cb9-5"><a></a>alteralter_dat[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     CASEID ALTER1 ALTER2 WEIGHT
 1  19850001      1      2      2
@@ -278,39 +342,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="lets-make-ego-network" class="level2">
-<h2 class="anchored" data-anchor-id="lets-make-ego-network">Let’s make Ego Network</h2>
+<section id="lets-make-ego-network" class="slide level2">
+<h2>Let’s make Ego Network</h2>
 <ul>
 <li>The first challenge in analyzing ego network data is that we must transform traditional survey data into something that has the structure of a network, so that we can then utilize packages like igraph and sna.</li>
 <li>Our survey data will not look like traditional network inputs (matrices, edgelists, etc.) and each survey is likely to be different, complicating the task of putting together the ego networks.</li>
 <li>Luckily, the <strong>egor</strong> package has made the task of constructing ego networks from survey data much easier. We will utilize the basic functionality of the <strong>egor</strong> package throughout the tutorial. Let’s go ahead and load the package.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load a package for constructing ego network</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(egor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># load a package for constructing ego network</span></span>
+<span id="cb11-2"><a></a><span class="fu">library</span>(egor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-make-ego-network-1" class="level2">
-<h2 class="anchored" data-anchor-id="lets-make-ego-network-1">Let’s make Ego Network</h2>
+<section id="lets-make-ego-network-1" class="slide level2">
+<h2>Let’s make Ego Network</h2>
 <ul>
 <li>The basic idea is to first construct an egor object from the survey data.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The function we will use to construct the egor object is `egor()`. The `egor()` function assumes that you are inputting the data using three separate files.</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>egonetlist <span class="ot">&lt;-</span>  <span class="fu">egor</span>(<span class="at">alters =</span> alter_dat, <span class="co"># alter attributes data frame</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">egos =</span> ego_dat, <span class="co"># ego attributes data frame</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">aaties =</span> alteralter_dat, <span class="co"># alter-alter tie data frame</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">alter_design =</span> <span class="fu">list</span>(<span class="at">max =</span> <span class="dv">5</span>), <span class="co"># list of arguments to specify nomination information from survey</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># list of variable names corresponding to key columns</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ID.vars =</span> <span class="fu">list</span>(<span class="at">ego =</span> <span class="st">"CASEID"</span>, <span class="at">alter =</span><span class="st">"ALTERID"</span>, </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">source =</span> <span class="st">"ALTER1"</span>, <span class="at">target =</span> <span class="st">"ALTER2"</span>) </span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># The function we will use to construct the egor object is `egor()`. The `egor()` function assumes that you are inputting the data using three separate files.</span></span>
+<span id="cb12-2"><a></a>egonetlist <span class="ot">&lt;-</span>  <span class="fu">egor</span>(<span class="at">alters =</span> alter_dat, <span class="co"># alter attributes data frame</span></span>
+<span id="cb12-3"><a></a>                    <span class="at">egos =</span> ego_dat, <span class="co"># ego attributes data frame</span></span>
+<span id="cb12-4"><a></a>                    <span class="at">aaties =</span> alteralter_dat, <span class="co"># alter-alter tie data frame</span></span>
+<span id="cb12-5"><a></a>                    <span class="at">alter_design =</span> <span class="fu">list</span>(<span class="at">max =</span> <span class="dv">5</span>), <span class="co"># list of arguments to specify nomination information from survey</span></span>
+<span id="cb12-6"><a></a>                    <span class="co"># list of variable names corresponding to key columns</span></span>
+<span id="cb12-7"><a></a>                    <span class="at">ID.vars =</span> <span class="fu">list</span>(<span class="at">ego =</span> <span class="st">"CASEID"</span>, <span class="at">alter =</span><span class="st">"ALTERID"</span>, </span>
+<span id="cb12-8"><a></a>                                   <span class="at">source =</span> <span class="st">"ALTER1"</span>, <span class="at">target =</span> <span class="st">"ALTER2"</span>) </span>
+<span id="cb12-9"><a></a>                    ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-make-ego-network-2" class="level2">
-<h2 class="anchored" data-anchor-id="lets-make-ego-network-2">Let’s make Ego Network</h2>
+<section id="lets-make-ego-network-2" class="slide level2">
+<h2>Let’s make Ego Network</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>egonetlist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>egonetlist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># EGO data (active): 1,531 × 13
   .egoID   AGE  EDUC RACE  SEX   RELIG AGE_CATEGORICAL EDUC_CATEGORICAL NUMGIVEN
@@ -340,29 +404,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="lets-make-ego-network-3" class="level2">
-<h2 class="anchored" data-anchor-id="lets-make-ego-network-3">Let’s make Ego Network</h2>
+<section id="lets-make-ego-network-3" class="slide level2">
+<h2>Let’s make Ego Network</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(egonetlist) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">names</span>(egonetlist) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "ego"   "alter" "aatie"</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-summary-statistics" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-summary-statistics">Calculate Summary Statistics</h2>
+<section id="calculate-summary-statistics" class="slide level2">
+<h2>Calculate Summary Statistics</h2>
 <ul>
 <li>We will begin with density, showing the proportion of alter-alter ties that exist in each ego network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use `ego_density()` function</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>dens <span class="ot">&lt;-</span> <span class="fu">ego_density</span>(egonetlist)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># use `ego_density()` function</span></span>
+<span id="cb17-2"><a></a>dens <span class="ot">&lt;-</span> <span class="fu">ego_density</span>(egonetlist)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="calculate-summary-statistics-1" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-summary-statistics-1">Calculate Summary Statistics</h2>
+<section id="calculate-summary-statistics-1" class="slide level2">
+<h2>Calculate Summary Statistics</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">head</span>(dens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 2
     .egoID density
@@ -376,11 +440,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="calculate-summary-statistics-2" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-summary-statistics-2">Calculate Summary Statistics</h2>
+<section id="calculate-summary-statistics-2" class="slide level2">
+<h2>Calculate Summary Statistics</h2>
 <p>The density scores are stored in the object as <code>density</code>. For example, respondent 1 (19850001) has 5 alters and all 10 possible ties exist (density = 1), while respondent 2 (1950002) has 5 alters but only 8 ties exist (density = .8). To check:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>alteralter_dat[alteralter_dat<span class="sc">$</span>CASEID <span class="sc">==</span> <span class="dv">19850001</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>alteralter_dat[alteralter_dat<span class="sc">$</span>CASEID <span class="sc">==</span> <span class="dv">19850001</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     CASEID ALTER1 ALTER2 WEIGHT
 1  19850001      1      2      2
@@ -394,7 +458,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 9  19850001      3      5      1
 10 19850001      4      5      1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>alteralter_dat[alteralter_dat<span class="sc">$</span>CASEID <span class="sc">==</span> <span class="dv">19850002</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>alteralter_dat[alteralter_dat<span class="sc">$</span>CASEID <span class="sc">==</span> <span class="dv">19850002</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     CASEID ALTER1 ALTER2 WEIGHT
 11 19850002      1      2      1
@@ -408,172 +472,160 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="plotting-ego-networks" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <ul>
 <li>go over how to plot the ego networks using packages like <strong>igraph</strong></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="plotting-ego-networks-1" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-1">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks-1" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <ul>
 <li>convert the egor object to igraph objects.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>igraph_nets <span class="ot">&lt;-</span> <span class="fu">as_igraph</span>(egonetlist, <span class="at">include.ego =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>igraph_nets <span class="ot">&lt;-</span> <span class="fu">as_igraph</span>(egonetlist, <span class="at">include.ego =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="plotting-ego-networks-2" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-2">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks-2" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>igraph_nets[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>igraph_nets[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`19850001`
-IGRAPH 5654cb9 UN-- 6 15 -- 
+IGRAPH bed7f75 UN-- 6 15 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 5654cb9 (vertex names):
++ edges from bed7f75 (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  
 [11] 1--ego 2--ego 3--ego 4--ego 5--ego</code></pre>
 </div>
 </div>
 </section>
-<section id="plotting-ego-networks-3" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-3">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks-3" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <p>Now, let’s take a look at the first three ego networks.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`19850001`
-IGRAPH 5654cb9 UN-- 6 15 -- 
+IGRAPH bed7f75 UN-- 6 15 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 5654cb9 (vertex names):
++ edges from bed7f75 (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  
 [11] 1--ego 2--ego 3--ego 4--ego 5--ego
 
 $`19850002`
-IGRAPH d85d6b5 UN-- 6 13 -- 
+IGRAPH ec37062 UN-- 6 13 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from d85d6b5 (vertex names):
++ edges from ec37062 (vertex names):
  [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego
 [11] 3--ego 4--ego 5--ego
 
 $`19850003`
-IGRAPH 2e5e5b5 UN-- 6 11 -- 
+IGRAPH af806c2 UN-- 6 11 -- 
 + attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),
 | SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL
 | (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)
-+ edges from 2e5e5b5 (vertex names):
++ edges from af806c2 (vertex names):
  [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego
 [11] 5--ego</code></pre>
 </div>
 </div>
 </section>
-<section id="plotting-ego-networks-4" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-4">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks-4" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <p>Now, let’s plot a couple of example networks, focusing on the first 3 ego networks.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set 1 row, 3 column grid for visualization layout</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># draw graphs in igraph_nets variable</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="W4_presentation_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># set 1 row, 3 column grid for visualization layout</span></span>
+<span id="cb30-2"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb30-3"><a></a><span class="co"># draw graphs in igraph_nets variable</span></span>
+<span id="cb30-4"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
 </div>
-</div>
-</div>
-</section>
-<section id="plotting-ego-networks-5" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-5">Plotting Ego Networks</h2>
+<img data-src="W4_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<section id="plotting-ego-networks-5" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <ul>
 <li>Let’s color the nodes based on gender</li>
 <li>so we can get a sense of the level of gender homogeneity in these ego networks</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># somewhat more difficult task than with a single network</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># defind a function to set the color for each network</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plotfunc_colorgender <span class="ot">&lt;-</span> <span class="cf">function</span>(nets){ </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Arguments: </span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># nets: ego network of interest</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># extracting the attribute from the ego network:</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(nets, <span class="st">"SEX"</span>) </span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># now we use an ifelse statement to set color,</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># light sky blue if gender equals female, blue otherwise:</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  cols <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(cols <span class="sc">==</span> <span class="st">"female"</span>, <span class="st">"lightskyblue"</span>, <span class="st">"blue"</span>)</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># plotting ego network with nodes colored based on gender:</span></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(nets, <span class="at">vertex.color =</span> cols) </span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="co"># somewhat more difficult task than with a single network</span></span>
+<span id="cb31-2"><a></a><span class="co"># defind a function to set the color for each network</span></span>
+<span id="cb31-3"><a></a>plotfunc_colorgender <span class="ot">&lt;-</span> <span class="cf">function</span>(nets){ </span>
+<span id="cb31-4"><a></a>  <span class="co"># Arguments: </span></span>
+<span id="cb31-5"><a></a>  <span class="co"># nets: ego network of interest</span></span>
+<span id="cb31-6"><a></a>  </span>
+<span id="cb31-7"><a></a>  <span class="co"># extracting the attribute from the ego network:</span></span>
+<span id="cb31-8"><a></a>  cols <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(nets, <span class="st">"SEX"</span>) </span>
+<span id="cb31-9"><a></a></span>
+<span id="cb31-10"><a></a>  <span class="co"># now we use an ifelse statement to set color,</span></span>
+<span id="cb31-11"><a></a>  <span class="co"># light sky blue if gender equals female, blue otherwise:</span></span>
+<span id="cb31-12"><a></a>  cols <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(cols <span class="sc">==</span> <span class="st">"female"</span>, <span class="st">"lightskyblue"</span>, <span class="st">"blue"</span>)</span>
+<span id="cb31-13"><a></a></span>
+<span id="cb31-14"><a></a>  <span class="co"># plotting ego network with nodes colored based on gender:</span></span>
+<span id="cb31-15"><a></a>  <span class="fu">plot</span>(nets, <span class="at">vertex.color =</span> cols) </span>
+<span id="cb31-16"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="plotting-ego-networks-6" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-ego-networks-6">Plotting Ego Networks</h2>
+<section id="plotting-ego-networks-6" class="slide level2">
+<h2>Plotting Ego Networks</h2>
 <ul>
 <li>Now let’s run <code>plotfunc_colorgender()</code> over the first three ego networks.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># third ego network is homogenous in terms of gender</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the first two are quite heterogeneous</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># first ego network is complete</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], plotfunc_colorgender)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="W4_presentation_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="co"># third ego network is homogenous in terms of gender</span></span>
+<span id="cb32-2"><a></a><span class="co"># the first two are quite heterogeneous</span></span>
+<span id="cb32-3"><a></a><span class="co"># first ego network is complete</span></span>
+<span id="cb32-4"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb32-5"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(igraph_nets[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], plotfunc_colorgender)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
 </div>
-</div>
-</div>
-</section>
-<section id="triadic-processes" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes">Triadic Processes</h2>
+<img data-src="W4_presentation_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<section id="triadic-processes" class="slide level2">
+<h2>Triadic Processes</h2>
 <ul>
 <li>We now move to more complex micro processes involving three nodes. Adding a third node adds a number of possibilities that did not exist with only two nodes. For example, there is now the possibility that one node can play the other two off each other for some gain or benefit. There is also the possibility that the relationship between two nodes (A-B) is strained because of the relationship to the third node (A likes C but B does not). The question is what kind of rules of interaction do we see in our friendship and advice networks. We also want to know if the triadic rules for friendship are different (or similar) to the triadic rules for advice. We first discuss the triad census before moving to transitivity.</li>
 </ul>
 </section>
-<section id="triadic-processes-1" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-1">Triadic Processes</h2>
+<section id="triadic-processes-1" class="slide level2">
+<h2>Triadic Processes</h2>
 <ul>
 <li>work primarily with the <strong>sna</strong> package <span class="citation" data-cites="sna">[@sna]</span>, so let’s start by loading that package.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sna)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">library</span>(sna)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triadic-processes-2" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-2">Triadic Processes</h2>
+<section id="triadic-processes-2" class="slide level2">
+<h2>Triadic Processes</h2>
 <ul>
 <li>We will now do the same thing for the friendship network. The tie information can be read in as:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_advice.csv"</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_attributes.csv"</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>url3 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_friendship.csv"</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>advice_data_frame <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1) </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>friends_data_frame <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url3)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>advice_edgelist <span class="ot">&lt;-</span> advice_data_frame[advice_data_frame<span class="sc">$</span>advice_tie <span class="sc">==</span> <span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_advice.csv"</span></span>
+<span id="cb34-2"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_attributes.csv"</span></span>
+<span id="cb34-3"><a></a>url3 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_friendship.csv"</span></span>
+<span id="cb34-4"><a></a></span>
+<span id="cb34-5"><a></a>advice_data_frame <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1) </span>
+<span id="cb34-6"><a></a>attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
+<span id="cb34-7"><a></a>friends_data_frame <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url3)</span>
+<span id="cb34-8"><a></a>advice_edgelist <span class="ot">&lt;-</span> advice_data_frame[advice_data_frame<span class="sc">$</span>advice_tie <span class="sc">==</span> <span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triadic-processes-3" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-3">Triadic Processes</h2>
+<section id="triadic-processes-3" class="slide level2">
+<h2>Triadic Processes</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(friends_data_frame)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">head</span>(friends_data_frame)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ego alter friendship_tie
 1   1     1              0
@@ -585,10 +637,10 @@ IGRAPH 2e5e5b5 UN-- 6 11 --
 </div>
 </div>
 </section>
-<section id="triadic-processes-4" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-4">Triadic Processes</h2>
+<section id="triadic-processes-4" class="slide level2">
+<h2>Triadic Processes</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">head</span>(attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ids AGE TENURE LEVEL DEPT
 1   1  33  9.333     3    4
@@ -600,42 +652,42 @@ IGRAPH 2e5e5b5 UN-- 6 11 --
 </div>
 </div>
 </section>
-<section id="triadic-processes-5" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-5">Triadic Processes</h2>
+<section id="triadic-processes-5" class="slide level2">
+<h2>Triadic Processes</h2>
 <p>Now we will subset the data to only include those dyads where a tie exists from i to j.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>friends_edgelist <span class="ot">&lt;-</span> friends_data_frame[friends_data_frame<span class="sc">$</span>friendship_tie <span class="sc">==</span> <span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>friends_edgelist <span class="ot">&lt;-</span> friends_data_frame[friends_data_frame<span class="sc">$</span>friendship_tie <span class="sc">==</span> <span class="dv">1</span>, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triadic-processes-6" class="level2">
-<h2 class="anchored" data-anchor-id="triadic-processes-6">Triadic Processes</h2>
+<section id="triadic-processes-6" class="slide level2">
+<h2>Triadic Processes</h2>
 <p>We now construct the network, as before, using the <code>network()</code> function.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>krack_friendship <span class="ot">&lt;-</span>  <span class="fu">network</span>(<span class="at">x =</span> friends_edgelist, <span class="at">directed =</span> T, </span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">vertices =</span> attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>krack_friendship <span class="ot">&lt;-</span>  <span class="fu">network</span>(<span class="at">x =</span> friends_edgelist, <span class="at">directed =</span> T, </span>
+<span id="cb40-2"><a></a>                             <span class="at">vertices =</span> attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triad-census" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census">Triad Census</h2>
+<section id="triad-census" class="slide level2">
+<h2>Triad Census</h2>
 <ul>
-<li>The triad census captures the distribution of triads across 16 basic types <img src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png" class="img-fluid" alt="The Sixteen types of traiads for directed networks"></li>
+<li>The triad census captures the distribution of triads across 16 basic types <img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png" alt="The Sixteen types of traiads for directed networks"></li>
 </ul>
 </section>
-<section id="triad-census-1" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-1">Triad Census</h2>
+<section id="triad-census-1" class="slide level2">
+<h2>Triad Census</h2>
 <ul>
 <li>summarize the full distribution of triads using the <code>triad.census()</code> function</li>
 <li>compare the triad counts across the two network relations, to see if the patterns differ for friendship compared to advice</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>krack_advice <span class="ot">&lt;-</span> <span class="fu">network</span>(<span class="at">x =</span> advice_edgelist, <span class="at">directed =</span> T, </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">vertices =</span> attributes) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>krack_advice <span class="ot">&lt;-</span> <span class="fu">network</span>(<span class="at">x =</span> advice_edgelist, <span class="at">directed =</span> T, </span>
+<span id="cb41-2"><a></a>                        <span class="at">vertices =</span> attributes) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triad-census-2" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-2">Triad Census</h2>
+<section id="triad-census-2" class="slide level2">
+<h2>Triad Census</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>krack_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>krack_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Network attributes:
   vertices = 21 
@@ -656,49 +708,49 @@ IGRAPH 2e5e5b5 UN-- 6 11 --
 </div>
 </div>
 </section>
-<section id="triad-census-3" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-3">Triad Census</h2>
+<section id="triad-census-3" class="slide level2">
+<h2>Triad Census</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `triad.census()` function outputs the counts in each triad type</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>triads_friendship <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(krack_friendship)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># `triad.census()` function outputs the counts in each triad type</span></span>
+<span id="cb44-2"><a></a>triads_friendship <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(krack_friendship)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triad-census-4" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-4">Triad Census</h2>
+<section id="triad-census-4" class="slide level2">
+<h2>Triad Census</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>triads_friendship</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>triads_friendship</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300
 [1,] 376 366 143  114   34   35   39  101   23    0  20   16   25    9  23   6</code></pre>
 </div>
 </div>
 </section>
-<section id="triad-census-5" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-5">Triad Census</h2>
+<section id="triad-census-5" class="slide level2">
+<h2>Triad Census</h2>
 <p>And now for advice:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>triads_advice <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(krack_advice) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>triads_advice <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(krack_advice) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>triads_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>triads_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300
 [1,]  74 153  90  160   86   49   59  101  190    2  72   62   78   17 107  30</code></pre>
 </div>
 </div>
 </section>
-<section id="triad-census-6" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-6">Triad Census</h2>
+<section id="triad-census-6" class="slide level2">
+<h2>Triad Census</h2>
 <p>Let’s make a table to make the comparisons easier.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>triad_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">advice =</span> <span class="fu">t</span>(triads_advice), </span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">friendship =</span> <span class="fu">t</span>(triads_friendship))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>triad_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">advice =</span> <span class="fu">t</span>(triads_advice), </span>
+<span id="cb50-2"><a></a>                         <span class="at">friendship =</span> <span class="fu">t</span>(triads_friendship))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="triad-census-7" class="level2">
-<h2 class="anchored" data-anchor-id="triad-census-7">Triad Census</h2>
+<section id="triad-census-7" class="slide level2">
+<h2>Triad Census</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>triad_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a>triad_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     advice friendship
 003      74        376
@@ -722,18 +774,18 @@ IGRAPH 2e5e5b5 UN-- 6 11 --
 <p>Note that the total number of triads in each network is the same, making comparisons easier. There are a number of things one could highlight between the two networks, but one striking difference is in the 030T triad, A-&gt;B&lt;-C, A-&gt;C. The advice network has a much higher proportion of 030T triads than the friendship network, suggestive of an underlying hierarchy of advice less present in the friendship network; where A gives advice to B and C and C gives advice to B and B simply receives advice from others. The underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one. Such a pattern of hierarchy does not emerge as clearly in the friendship network. In general, the triads associated with transitive dominance relations (021D, 120D, 021U, 030T, 120U) are more likely to be present in the advice network than the friendship network. Note that we need to be a little careful in pushing that conclusion too far, as the networks have different levels of density (and possibly reciprocity) that may be driving the differences we observe in the triad count. We need to take these baseline differences into account before formally interpreting the triad counts. Here, we will utilize a CUG test to compare the triad census to what we might expect by chance, if people randomly formed ties. We discuss other, more complex, options in future chapters.</p>
 <p>We use the same <code>cug.test()</code> function as we used above when looking at reciprocity. The main difference is that here we condition the random networks in a different way. In this case we will condition on the dyad census, to see how the counts of the triad census differ above what we expect from a network of the same size, density and dyadic tendencies (i.e., same rate of reciprocity). Our particular question is if different specific triad types show up more (or less) than we expect in a random network, conditioned on those features. To facilitate this, we will first write a function to make it easier to specify the test statistic of interest, here the counts of specific triad types. Our function will take the network of interest, calculate the triad census and output the count of the particular triad of interest. We could also write a similar function to take the weighted sum over a specified set of triads. Here we focus on one triad type at a time.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>count_triads_function <span class="ot">&lt;-</span> <span class="cf">function</span>(dat, triad_names){</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Arguments:</span></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dat: the network object</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># triad_names: the name of the triad type</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  triads <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(dat) <span class="co"># calculating the triad census</span></span>
-<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  triads[<span class="dv">1</span>, triad_names] <span class="co"># grabbing counts of triad of interest</span></span>
-<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>count_triads_function <span class="ot">&lt;-</span> <span class="cf">function</span>(dat, triad_names){</span>
+<span id="cb53-2"><a></a>  <span class="co"># Arguments:</span></span>
+<span id="cb53-3"><a></a>  <span class="co"># dat: the network object</span></span>
+<span id="cb53-4"><a></a>  <span class="co"># triad_names: the name of the triad type</span></span>
+<span id="cb53-5"><a></a>  </span>
+<span id="cb53-6"><a></a>  triads <span class="ot">&lt;-</span> <span class="fu">triad.census</span>(dat) <span class="co"># calculating the triad census</span></span>
+<span id="cb53-7"><a></a>  triads[<span class="dv">1</span>, triad_names] <span class="co"># grabbing counts of triad of interest</span></span>
+<span id="cb53-8"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Let’s see how this works before we use it in a CUG test. Let’s focus again on 030T, where A gives advice to B and C and C gives advice to B.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count_triads_function</span>(krack_advice, <span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">count_triads_function</span>(krack_advice, <span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>030T 
  190 </code></pre>
@@ -741,14 +793,14 @@ IGRAPH 2e5e5b5 UN-- 6 11 --
 </div>
 <p>Now, let’s use our function to count the triad type of interest but this time compare the counts to what we expect by chance, in a random network conditioned on the dyad census. We now use the <code>cug.test()</code> function. The main inputs are the network (here for advice), the desired conditioning of the random network (cmode set to “dyad.census”) and the function of interest, in this case count_triads_function. The input to that function is triad_names, here set to “030T”.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>cug_triads_advice <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_advice, </span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">FUN =</span> count_triads_function, </span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>, </span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>))) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>cug_triads_advice <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_advice, </span>
+<span id="cb56-2"><a></a>                              <span class="at">FUN =</span> count_triads_function, </span>
+<span id="cb56-3"><a></a>                              <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
+<span id="cb56-4"><a></a>                              <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>, </span>
+<span id="cb56-5"><a></a>                              <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>))) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>cug_triads_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>cug_triads_advice</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Univariate Conditional Uniform Graph Test
@@ -765,14 +817,14 @@ Pr(X&lt;=Obs): 1 </code></pre>
 </div>
 <p>We can see that the total number of 030T triads in the observed network is above what we expect in the random network. In all 1000 random networks, the observed count is above that seen in the randomly generated network (P(X &gt;= Obs) is equal to 0). This means that the tendency for A to give advice to B and C and then C to give advice to B cannot be accounted for based simply on the density of advice relations and expectations of reciprocity. We now do the same analysis for the friendship network.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>cug_triads_friendship <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_friendship, </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">FUN =</span> count_triads_function, </span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>, </span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a>cug_triads_friendship <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_friendship, </span>
+<span id="cb59-2"><a></a>                                  <span class="at">FUN =</span> count_triads_function, </span>
+<span id="cb59-3"><a></a>                                  <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
+<span id="cb59-4"><a></a>                                  <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>, </span>
+<span id="cb59-5"><a></a>                                  <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"030T"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>cug_triads_friendship</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>cug_triads_friendship</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Univariate Conditional Uniform Graph Test
@@ -783,33 +835,33 @@ Diagonal Used: FALSE
 Replications: 1000 
 
 Observed Value: 23 
-Pr(X&gt;=Obs): 0.136 
-Pr(X&lt;=Obs): 0.914 </code></pre>
+Pr(X&gt;=Obs): 0.117 
+Pr(X&lt;=Obs): 0.927 </code></pre>
 </div>
 </div>
 <p>The story is different for friendship. Here we see that in many iterations the observed value (the count of 030T) is not above that expected in a random network of that size, density and dyad census. Using traditional statistical cutoffs, we cannot be certain that there is a difference between the observed and random expectations. This suggests that the tendency for A to be friends with B and C and C to be friends with B is not particularly strong in the friendship network, at least not above what could have arisen if people randomly formed friendships (conditioned on the density of the network and the reciprocity rate). Let’s take a closer look at the observed values and the values expected under the randomly generated networks.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>cug_triads_friendship<span class="sc">$</span>obs.stat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>cug_triads_friendship<span class="sc">$</span>obs.stat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>030T 
   23 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cug_triads_friendship<span class="sc">$</span>rep.stat) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">summary</span>(cug_triads_friendship<span class="sc">$</span>rep.stat) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-   8.00   15.00   18.00   18.27   21.00   31.00 </code></pre>
+    8.0    15.0    18.0    17.9    20.0    32.0 </code></pre>
 </div>
 </div>
-<p>On average, the expected count in the random network is 18.27, close to that observed in the true network (23). What if we had considered a different triad type in our friendship network? For example, let’s consider 120U (A-&gt;B&lt;-C, A&lt;-&gt;C). In this case A and C have a reciprocated friendship. They also both nominate B who does not nominate them back. There are asymmetries in such a triad, but from a balance perspective this may not be problematic. A and C are both positively linked and they have positive sentiments towards B. There is thus agreement about a third party (B) from the point of view of A and C, even if B does not consider them friends in return. Let’s do a CUG test on the count of 120U on the friendship network:</p>
+<p>On average, the expected count in the random network is 17.91, close to that observed in the true network (23). What if we had considered a different triad type in our friendship network? For example, let’s consider 120U (A-&gt;B&lt;-C, A&lt;-&gt;C). In this case A and C have a reciprocated friendship. They also both nominate B who does not nominate them back. There are asymmetries in such a triad, but from a balance perspective this may not be problematic. A and C are both positively linked and they have positive sentiments towards B. There is thus agreement about a third party (B) from the point of view of A and C, even if B does not consider them friends in return. Let’s do a CUG test on the count of 120U on the friendship network:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>cug_triads_friendship2 <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_friendship, </span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">FUN =</span> count_triads_function, </span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>,</span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"120U"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>cug_triads_friendship2 <span class="ot">&lt;-</span> <span class="fu">cug.test</span>(krack_friendship, </span>
+<span id="cb66-2"><a></a>                                   <span class="at">FUN =</span> count_triads_function, </span>
+<span id="cb66-3"><a></a>                                   <span class="at">mode =</span> <span class="fu">c</span>(<span class="st">"digraph"</span>), </span>
+<span id="cb66-4"><a></a>                                   <span class="at">cmode =</span> <span class="fu">c</span>(<span class="st">"dyad.census"</span>), <span class="at">reps =</span> <span class="dv">1000</span>,</span>
+<span id="cb66-5"><a></a>                                   <span class="at">FUN.args =</span> <span class="fu">list</span>(<span class="at">triad_names =</span> <span class="fu">c</span>(<span class="st">"120U"</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>cug_triads_friendship2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>cug_triads_friendship2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Univariate Conditional Uniform Graph Test
@@ -828,446 +880,463 @@ Pr(X&lt;=Obs): 1 </code></pre>
 <p>Overall, it would appear that the advice network is built around dominance type relations in a way that the friendship network is not. Individuals give advice in a way that follows patterns of status; where, for example, A gives advice ‘down the line’ to B and C. In contrast, the friendship network, at least in our short analysis, is consistent with balancing relations, where if two nodes are strong friends, they will tend to agree (in terms of liking or not liking) third party nodes, even if that third party does not return the friendship. This was not captured very well in the dyadic analysis, where the reciprocity rates were pretty similar in the two networks.</p>
 <p>To explore these ideas more carefully, a researcher may want to look at all triad types for each network. As part of this book, we have written an additional function that will automatically do a CUG test for all triad types at once (rather than a single example, as above) and then output a summary table of the results. Let’s read in the function:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/R/CUGtest_alltriads.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">source</span>(<span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/R/CUGtest_alltriads.R"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The function is called <code>CUGtest_alltriads()</code>. The arguments are dat, the network of interest (assuming it is in the network format), mode, cmode and reps, all directly analogous to cug.test. And now we will use the function on our friendship network.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>CUG_test_table <span class="ot">&lt;-</span> <span class="fu">CUGtest_alltriads</span>(<span class="at">dat =</span> krack_friendship, </span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">mode =</span> <span class="st">"digraph"</span>, </span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">cmode =</span> <span class="st">"dyad.census"</span>, <span class="at">reps =</span> <span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>CUG_test_table <span class="ot">&lt;-</span> <span class="fu">CUGtest_alltriads</span>(<span class="at">dat =</span> krack_friendship, </span>
+<span id="cb70-2"><a></a>                                    <span class="at">mode =</span> <span class="st">"digraph"</span>, </span>
+<span id="cb70-3"><a></a>                                    <span class="at">cmode =</span> <span class="st">"dyad.census"</span>, <span class="at">reps =</span> <span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>CUG_test_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>CUG_test_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   triads obs mean_random prop_random_lte_obs
-1     003 376     319.680               1.000
-2     012 366     417.224               0.001
-3     102 143     171.342               0.004
-4    021D 114      43.654               1.000
-5    021U  34      44.248               0.044
-6    021C  35      88.237               0.000
-7    111D  39      73.801               0.000
-8    111U 101      74.030               1.000
-9    030T  23      18.132               0.917
-10   030C   0       6.064               0.004
-11    201  20      28.858               0.034
-12   120D  16       7.806               0.996
-13   120U  25       7.779               1.000
-14   120C   9      15.360               0.047
-15    210  23      12.189               0.999
-16    300   6       1.596               0.999</code></pre>
+1     003 376     319.490               1.000
+2     012 366     417.618               0.001
+3     102 143     171.367               0.001
+4    021D 114      43.888               1.000
+5    021U  34      43.911               0.042
+6    021C  35      88.551               0.000
+7    111D  39      73.611               0.000
+8    111U 101      73.670               1.000
+9    030T  23      17.896               0.922
+10   030C   0       6.131               0.004
+11    201  20      28.929               0.015
+12   120D  16       7.724               0.998
+13   120U  25       7.643               1.000
+14   120C   9      15.550               0.051
+15    210  23      12.486               0.998
+16    300   6       1.535               0.999</code></pre>
 </div>
 </div>
 <p>The outputted table has 4 columns. The first column is the triad type. The second column is the observed count in the network of interest. The third column is the mean count seen in the random networks (under the desired conditioning). The fourth column is the proportion of times where the value from the random network is less than or equal to the value in the observed network. We can use these results to explore which triads are found in higher or lower levels than what we expect by chance.</p>
 
 
-</section>
-</section>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/ComputationalSociologyLab\.github\.io\/SNA_fall_2025");
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-        }
-      }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
         },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
-    }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
       });
-    }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
         }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
             }
           }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
           }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
           }
-          return note.innerHTML;
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
         }
-      } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
         }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/ComputationalSociologyLab\.github\.io\/SNA_fall_2025");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
         }
-      }
-    }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
         }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
             }
           } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
             });
           }
-        } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
-            if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
         }
-      }, function(instance) {
       });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
-      } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
-            }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
-        });
-      }
-    }
-  });
-  </script>
-</div> <!-- /content -->
-
-
-
+      </script>
+    
 
 </body></html>

@@ -5,7 +5,8 @@ project:
 website:
   title: "W4. Ego Network Data"
   site-url: "https://ComputationalSociologyLab.github.io/SNA_fall_2025"
-  
+
 format:
-  html:
+  revealjs:
     theme: default
+
