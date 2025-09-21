@@ -1,2 +1,5 @@
 *.js*
-*presentation_files*
+#*presentation_files*
+
+/.quarto/
+**/*.quarto_ipynb
