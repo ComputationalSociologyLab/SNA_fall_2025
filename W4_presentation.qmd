@@ -297,7 +297,7 @@ krack_advice <- network(x = advice_edgelist, directed = T,
 
 * The triad census captures the distribution of triads across 16 basic types, representing different patterns of interaction between the three nodes
 * There are 16 different triad types:
-![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png)
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png){width=50%}
 
 ## Triad Census
 
