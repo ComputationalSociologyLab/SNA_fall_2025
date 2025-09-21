@@ -1,5 +1,5 @@
 ---
-title: "W4. Ego, Diad, Triad"
+title: "W4. Ego, Dyads and Triads"
 format: 
   revealjs:
     theme: default
