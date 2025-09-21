@@ -1,0 +1,6 @@
+format:
+  revealjs:
+    include-in-header:
+      text: |
+        <base href="/SNA_fall_2025/">
+
