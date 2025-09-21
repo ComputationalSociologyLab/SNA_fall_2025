@@ -1,5 +1,5 @@
 ---
-title: "W4. Ego Network Data"
+title: "W4. Ego, Diad, Triad"
 format: 
   revealjs:
     theme: default
@@ -12,11 +12,11 @@ execute:
   fig-asp: null
 ---
 
-# Ego Network Data {#ch6-Ego-Network-Data-R}
+# Ego, Dyads and Triads {#ch6-Ego-Network-Data-R}
 
 -   Cover the basics of ego network data, utilizing the **egor** package
-
--   Construct and visualize ego networks
+-   Deals with how to exract Triads in a network with **sna** package
+-   [OPTION] for Triads 
 
 ## Working with Ego Network Data
 
