@@ -57,7 +57,7 @@ First 10 rows of the ego data frame
 
 ```{r}
 # CASEID : unique ID for each respondent
-# NUMGIVEN : the number of alters named
+# NUMGIVEN : the number of alters named, Respondents could say they had 6+ alters but were only allowed to report on 5
 ego_dat[1:10, c("CASEID", "AGE", "EDUC", "RACE", "SEX", "HAPPY", "NUMGIVEN")]
 ```
 
