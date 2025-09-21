@@ -297,6 +297,7 @@ krack_advice <- network(x = advice_edgelist, directed = T,
 
 * The triad census captures the distribution of triads across 16 basic types, representing different patterns of interaction between the three nodes
 * There are 16 different triad types:
+
 ![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png){width=30%}
 
 ## Triad Census
@@ -339,13 +340,13 @@ triad_data
 ## Triad Census
 * The underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one
 * Such a pattern of hierarchy does not emerge as clearly in the friendship network
+
 ![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/030T_ABC.jpeg){width=30%}
 
 ## Triad Census
 * The triads associated with transitive dominance relations are more likely to be present in the advice network than the friendship network
-![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad_advice.jpg){width=30%}
 
-* Note that we need to be a little careful in pushing that conclusion too far, as the networks have different levels of density that may be driving the differences we observe in the triad count
+![The Sixteen types of traiads for directed networks](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad_advice.jpg){width=30%}
 
 
 
