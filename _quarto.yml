@@ -2,10 +2,10 @@ project:
   type: website
   output-dir: docs
   render:
-    - W4_presentation.qmd
+    - W5_presentation.qmd
 
 website:
-  title: "W4. Ego Network Data"
+  title: "W5. Network Cohesion and Communities"
   site-url: "https://ComputationalSociologyLab.github.io/SNA_fall_2025"
 
 metadata-files:
