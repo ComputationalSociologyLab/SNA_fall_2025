@@ -160,27 +160,16 @@ vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
 - Iteratively search for subgroups that maintain connectivity under the removal of k nodes
 - Starting from highly cohesive groups (large k) and moving down to less cohesive ones
 
-at the higher levels of k 
-A set of nodes are k-connected if it would take the removal of k nodes before all members could no longer reach other. The algorithm works by successively finding sets of nodes with higher levels of connectivity. This builds on the kinds of ideas we explored above in the cohesion section. For example, in the earlier calculation of vertex connectivity, we saw that all non-isolates were 4-connected. The function to run the cohesive blocking scheme of Moody and White is `cohesive_blocks()`.
-
 ### Cohesive Blocking
-- Let’s create an undirected network to look at vertex connectivity
-```{r}
-# set mode to the "collapse"
-# if i is tied to j or j is tied to i, there is "a" tie between i and j.
-net182_friend_und <- as_undirected(net182_friend, mode = "collapse") 
-```
-
 
 ```{r}
 friend_comm_cohesive <- cohesive_blocks(graph = net182_friend_und)
+friend_comm_cohesive #hard to interprete the result..... then...?
 ```
 
-```{r}
-friend_comm_cohesive
-```
-
-The output consists of block membership and cohesion (for each block). It looks like there are two blocks, one with vertex connectivity 0 and the second with vertex connectivity 4. We can also plot the results.
+### Cohesive Blocking
+- Visualize the result!!
+- Two blocks (one with vertex connectivity 0, second with vertex connectivity)
 
 ```{r  fig.height = 6.5, fig.width = 5.5}
 plot(friend_comm_cohesive, net182_friend_und) 
