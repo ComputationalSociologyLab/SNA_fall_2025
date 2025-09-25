@@ -89,8 +89,8 @@ edge_density(net182_friend)
 
 ## Let's see if cohesion exists
 - About a quarter of all possible ties are present in the network
-- \(m\) = number of edges  
-- \(n\) = number of nodes  
+- \(m\) = number of edges = 62
+- \(n\) = number of nodes = 16  
 - Give us the information on the volume of ties, not the pattern of ties 
 $$
 Dentisy = \frac{m}{n(n-1)} = \frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%
