@@ -176,11 +176,13 @@ plot(friend_comm_cohesive, net182_friend_und)
 
 ## 2) Walktrap
 - Detects communities through a series of short random walks 
+  - Nodes encountered on any given random walk are more likely to be within a community than not
   - The algorithm initially treats all nodes as communities of their own
-  - then merges them into larger communities, and these into still larger communities, and so on. 
+  - Merges them into larger communities, and these into still larger communities, and so on. 
+  - Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities
 
 ```{r}
-# steps :number of steps in random walk
+# steps :length of random walk (4 or 5 is recommended)
 # membership : T/F, should membership be calculated based on highest modularity score? T by default
 friend_comm_wt4 <- cluster_walktrap(graph = net182_friend_und, steps = 4, 
                                     membership = T)
@@ -188,67 +190,47 @@ friend_comm_wt4 <- cluster_walktrap(graph = net182_friend_und, steps = 4,
 
 ## 2) Walktrap
 ```{r}
-friend_comm_wt4
-```
-## 2) Walktrap
-Now let's get the membership of each node as well the modularity score based on 4 our step  solution.
-```{r}
-mems_wt_4step <- membership(friend_comm_wt4)
-mems_wt_4step
-```
-
-```{r}
-mod_wt_4step <- modularity(friend_comm_wt4)
-mod_wt_4step
+# groups: 4 → 4 community detected in the network
+# mod: 0.27 → value of modularity 
+print(friend_comm_wt4, all = TRUE)
 ```
 
 ## 2) Walktrap
 What would happen if we used 3 steps? 
 
 ```{r}
+# the modularity is slightly higher when we use 3 steps
 friend_comm_wt3 <- cluster_walktrap(graph = net182_friend_und, 
                                     steps = 3, membership = T)
-mems_wt_3step <- membership(friend_comm_wt3)
-mems_wt_3step
+friend_comm_wt3
 ```
 
 ## 2) Walktrap
+- Compare the two partitions using the `table` function: 
 
 ```{r}
-mod_wt_3step <- modularity(friend_comm_wt3)
-mod_wt_3step
+# row : results for communities when step is 4 (4 community detected)
+# col : results for communities when step is 3 (5 community detected)
+table( membership(friend_comm_wt4),  membership(friend_comm_wt3))
 ```
 
 ## 2) Walktrap
-We can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the `table` function: 
-
-```{r}
-table(mems_wt_4step, mems_wt_3step)
-```
-
-## 2) Walktrap
-- Let's also plot the network based on the found communities, comparing the two partitions. 
+- Plot the network based on the found communities, comparing the two partitions. 
 - Color the nodes based on the communities found using the walktrap algorithm. 
 
 ```{r, fig.width=7.0}
 par(mfrow = c(1, 2))
-layout <- layout.fruchterman.reingold(net182_friend) 
+layout <- layout_with_fr(net182_friend) 
 
 plot(net182_friend_und, layout = layout, #note the use of layout
-     vertex.color = mems_wt_4step, edge.color = "light gray", 
+     vertex.color =  membership(friend_comm_wt4), edge.color = "light gray", 
      vertex.size = 20, main = "Walktrap: 4 Steps")
 
 plot(net182_friend_und, layout = layout, #note the use of layout
-     vertex.color = mems_wt_3step, edge.color = "light gray", 
+     vertex.color =  membership(friend_comm_wt3), edge.color = "light gray", 
      vertex.size = 20, main = "Walktrap: 3 Steps")
 
 ```
-## 2) Walktrap
-- 2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15) 
-- one of those communities having their own internal division. 
-- Larger community is split in two: (3, 5, 6, 11) and (1, 9, 10, 12, 15)
-
-
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
