@@ -308,10 +308,10 @@
 <span id="cb8-4"><a></a>                                       <span class="at">vertices =</span> class182_attributes) </span>
 <span id="cb8-5"><a></a>net182_friend </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH dcf5c55 DN-- 16 62 -- 
+<pre><code>IGRAPH b2d70c2 DN-- 16 62 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie
 | (e/n)
-+ edges from dcf5c55 (vertex names):
++ edges from b2d70c2 (vertex names):
  [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15
 [11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 
 [21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 
@@ -433,9 +433,9 @@ $no
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>net182_friend_und <span class="ot">&lt;-</span> <span class="fu">as_undirected</span>(net182_friend, <span class="at">mode =</span> <span class="st">"collapse"</span>) </span>
 <span id="cb18-2"><a></a>net182_friend_und</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 9408f47 UN-- 16 42 -- 
+<pre><code>IGRAPH eb581a6 UN-- 16 42 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c)
-+ edges from 9408f47 (vertex names):
++ edges from eb581a6 (vertex names):
  [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 
 [11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11
 [21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14
@@ -484,13 +484,17 @@ $no
 <li>Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering</li>
 </ol></li>
 </ul>
-<h3 id="cohesive-blocking">Cohesive Blocking</h3>
+</section>
+<section id="cohesive-blocking" class="slide level2">
+<h2>1) Cohesive Blocking</h2>
 <ul>
 <li>Subset the network into groups based on vertex connectivity</li>
 <li>Iteratively search for subgroups that maintain connectivity under the removal of k nodes</li>
 <li>Starting from highly cohesive groups (large k) and moving down to less cohesive ones</li>
 </ul>
-<h3 id="cohesive-blocking-1">Cohesive Blocking</h3>
+</section>
+<section id="cohesive-blocking-1" class="slide level2">
+<h2>1) Cohesive Blocking</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>friend_comm_cohesive <span class="ot">&lt;-</span> <span class="fu">cohesive_blocks</span>(<span class="at">graph =</span> net182_friend_und)</span>
 <span id="cb22-2"><a></a>friend_comm_cohesive <span class="co">#hard to interprete the result..... then...?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -500,25 +504,20 @@ B-1      c 0, n 16
 '- B-2   c 4, n 14   ooo.oooooo ooooo. </code></pre>
 </div>
 </div>
-<h3 id="cohesive-blocking-2">Cohesive Blocking</h3>
+</section>
+<section id="cohesive-blocking-2" class="slide level2">
+<h2>1) Cohesive Blocking</h2>
 <ul>
 <li>Visualize the result!!</li>
 <li>Two blocks (one with vertex connectivity 0, second with vertex connectivity)</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">plot</span>(friend_comm_cohesive, net182_friend_und) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-14-1.png" width="528"></p>
-</figure>
+
 </div>
-</div>
-</div>
-<p>Clearly the blocking scheme first separates the isolates from the main component. Everyone in the main component is connected at cohesion level 4 so that it takes the removal of 4 people to disconnect the set. This mirrors the results we saw above.</p>
-<p>So far, we have walked through different algorithms to determine the communities in the friendship network. The results suggest that that there are likely 5 well-defined communities (including the two isolates). The cohesive blocking scheme would suggest that the main component, while potentially splitting into 3 subgroups, is itself still fairly cohesive (as all members are connected by 4 independent paths).</p>
-<p>We can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.</p>
-<h3 id="walktrap">1) Walktrap</h3>
+<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-14-1.png" width="528" class="r-stretch"></section>
+<section id="walktrap" class="slide level2">
+<h2>2) Walktrap</h2>
 <ul>
 <li>Detects communities through a series of short random walks
 <ul>
@@ -532,7 +531,9 @@ B-1      c 0, n 16
 <span id="cb25-3"><a></a>friend_comm_wt4 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">steps =</span> <span class="dv">4</span>, </span>
 <span id="cb25-4"><a></a>                                    <span class="at">membership =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<h3 id="walktrap-1">1) Walktrap</h3>
+</section>
+<section id="walktrap-1" class="slide level2">
+<h2>2) Walktrap</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>friend_comm_wt4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -551,7 +552,9 @@ B-1      c 0, n 16
   + ... omitted several groups/vertices</code></pre>
 </div>
 </div>
-<h3 id="walktrap-2">1) Walktrap</h3>
+</section>
+<section id="walktrap-2" class="slide level2">
+<h2>2) Walktrap</h2>
 <p>Now let’s get the membership of each node as well the modularity score based on 4 our step solution.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>mems_wt_4step <span class="ot">&lt;-</span> <span class="fu">membership</span>(friend_comm_wt4)</span>
@@ -568,7 +571,9 @@ B-1      c 0, n 16
 <pre><code>[1] 0.2695578</code></pre>
 </div>
 </div>
-<h3 id="walktrap-3">1) Walktrap</h3>
+</section>
+<section id="walktrap-3" class="slide level2">
+<h2>2) Walktrap</h2>
 <p>What would happen if we used 3 steps?</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>friend_comm_wt3 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, </span>
@@ -580,7 +585,9 @@ B-1      c 0, n 16
  2  1  3  4  3  3  1  1  2  2  3  2  1  1  2  5 </code></pre>
 </div>
 </div>
-<h3 id="walktrap-4">1) Walktrap</h3>
+</section>
+<section id="walktrap-4" class="slide level2">
+<h2>2) Walktrap</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>mod_wt_3step <span class="ot">&lt;-</span> <span class="fu">modularity</span>(friend_comm_wt3)</span>
 <span id="cb34-2"><a></a>mod_wt_3step</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -588,7 +595,9 @@ B-1      c 0, n 16
 <pre><code>[1] 0.2797619</code></pre>
 </div>
 </div>
-<h3 id="walktrap-5">1) Walktrap</h3>
+</section>
+<section id="walktrap-5" class="slide level2">
+<h2>2) Walktrap</h2>
 <p>We can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the <code>table</code> function:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">table</span>(mems_wt_4step, mems_wt_3step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -601,7 +610,9 @@ mems_wt_4step 1 2 3 4 5
             4 0 0 0 0 1</code></pre>
 </div>
 </div>
-<h3 id="walktrap-6">1) Walktrap</h3>
+</section>
+<section id="walktrap-6" class="slide level2">
+<h2>2) Walktrap</h2>
 <ul>
 <li>Let’s also plot the network based on the found communities, comparing the two partitions.</li>
 <li>Color the nodes based on the communities found using the walktrap algorithm.</li>
@@ -617,15 +628,11 @@ mems_wt_4step 1 2 3 4 5
 <span id="cb38-8"><a></a><span class="fu">plot</span>(net182_friend_und, <span class="at">layout =</span> layout, <span class="co">#note the use of layout</span></span>
 <span id="cb38-9"><a></a>     <span class="at">vertex.color =</span> mems_wt_3step, <span class="at">edge.color =</span> <span class="st">"light gray"</span>, </span>
 <span id="cb38-10"><a></a>     <span class="at">vertex.size =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"Walktrap: 3 Steps"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-22-1.png" width="672"></p>
-</figure>
+
 </div>
-</div>
-</div>
-<h3 id="walktrap-7">1) Walktrap</h3>
+<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-22-1.png" width="672" class="r-stretch"></section>
+<section id="walktrap-7" class="slide level2">
+<h2>2) Walktrap</h2>
 <ul>
 <li>2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15)</li>
 <li>one of those communities having their own internal division.</li>
@@ -635,8 +642,8 @@ mems_wt_4step 1 2 3 4 5
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
-<li><p>Please check KLMS for the assignment of this week(til Friday)</p></li>
-<li><p>If you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week [Option] in the assignment</p></li>
+<li>Please check KLMS for the assignment of this week(til Friday)</li>
+<li>If you want to study in-depth knowledge for algorithms for community detectionthe ego network, dyad, and triad network, please check this week [Option] in the assignment</li>
 </ul>
 
 

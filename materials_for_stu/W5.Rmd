@@ -274,7 +274,7 @@ plot(as.dendrogram(friend_comm_eb))
 
 This is a dendrogram plot for the edge betweenness results. The y-axis captures the order that the communities are split, with higher values indicating that nodes (in separate branches) are split out early in the process of edge removal (and are thus less likely to be placed in a community). The dendrogram is hierarchical, showing the composition of the communities at different levels of disaggregation. For example, 4 and 16 are split out first, followed by splitting (11, 6, 5, 3, 15, 12, 10, 9, 1) and (14, 13, 8, 7, 2). The next level splits (11, 6, 5, 3) and (15, 12, 10, 9, 1). We can use the dendrogram to visually examine the communities at different levels of disaggregation. As we move down the dendrogram, we look at more disaggregated solutions, with a higher number of communities.
 
-### Scree Plots
+### \[OPTION\] Scree Plots
 
 We will often want to go beyond visual inspection and more formally examine the clustering solutions at different levels of dissaggregation. This amounts to asking how the fit changes as the number of communities increases. The goal is to produce a figure where the modularity scores are plotted against the number of communities. We can use these scree plots as a means of deciding what range of solutions are worth looking at in more detail. In this way, we can do a little better than automatically using the solution with the highest modularity score. This is especially important for larger networks, as there are many possible partitions, and many solutions will offer similar modularity scores.
 
@@ -390,7 +390,7 @@ mems_eb4
 
 As it turns out, this is the same set of communities using the walktrap algorithm, using 4 steps.
 
-### Multi-level Clustering
+### \[OPTION\] Multi-level Clustering
 
 Another commonly used approach is multi-level clustering, or multi-level modularity optimization. The basic idea is to begin with each node in its own community. Each vertex is then moved to a community to increase modularity the most (or, for each node i, the algorithm selects the move that will increase modularity the most). If no gain is positive it stays in its own community. This phase continues until a local maxima of modularity is reached. The process then begins again based on the newly merged communities, where the new nodes are the communities found in the previous phase. See @Blondel2008. The function in igraph is `cluster_louvain()`.
 
@@ -469,7 +469,7 @@ So far, we have walked through different algorithms to determine the communities
 
 We can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.
 
-## Demographic Characteristics
+## \[OPTION\] ## Demographic Characteristics
 
 For the sake of simplicity, we will use the communities based on the edge betweenness algorithm and focus on a single characteristic, racial identification. The question is how salient is race in this classroom. Does race map strongly onto the communities? Or are the communities organized around something else? We will begin by plotting the network again, but this time we want to color the nodes by race. We first set the color for the nodes based on race: blue if black and white if white.
 

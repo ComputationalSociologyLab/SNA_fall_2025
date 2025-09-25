@@ -32,7 +32,7 @@
     "href": "W5_presentation.html#create-frienship-network-1",
     "title": "W5. Network Cohesion and Communities",
     "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH dcf5c55 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from dcf5c55 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH b2d70c2 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from b2d70c2 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
@@ -95,7 +95,7 @@
     "href": "W5_presentation.html#lets-see-if-cohesion-exists-8",
     "title": "W5. Network Cohesion and Communities",
     "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as_undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 9408f47 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 9408f47 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as_undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH eb581a6 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from eb581a6 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-9",
@@ -123,13 +123,90 @@
     "href": "W5_presentation.html#community-or-group-detection-2",
     "title": "W5. Network Cohesion and Communities",
     "section": "Community (or Group) Detection",
-    "text": "Community (or Group) Detection\n\nMany different ways to detect communities.\n\nCohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering\n\n\nCohesive Blocking\n\nSubset the network into groups based on vertex connectivity\nIteratively search for subgroups that maintain connectivity under the removal of k nodes\nStarting from highly cohesive groups (large k) and moving down to less cohesive ones\n\nCohesive Blocking\n\nfriend_comm_cohesive &lt;- cohesive_blocks(graph = net182_friend_und)\nfriend_comm_cohesive #hard to interprete the result..... then...?\n\nCohesive block structure:\nB-1      c 0, n 16\n'- B-2   c 4, n 14   ooo.oooooo ooooo. \n\n\nCohesive Blocking\n\nVisualize the result!!\nTwo blocks (one with vertex connectivity 0, second with vertex connectivity)\n\n\nplot(friend_comm_cohesive, net182_friend_und) \n\n\n\n\n\n\n\n\nClearly the blocking scheme first separates the isolates from the main component. Everyone in the main component is connected at cohesion level 4 so that it takes the removal of 4 people to disconnect the set. This mirrors the results we saw above.\nSo far, we have walked through different algorithms to determine the communities in the friendship network. The results suggest that that there are likely 5 well-defined communities (including the two isolates). The cohesive blocking scheme would suggest that the main component, while potentially splitting into 3 subgroups, is itself still fairly cohesive (as all members are connected by 4 independent paths).\nWe can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.\n1) Walktrap\n\nDetects communities through a series of short random walks\n\nThe algorithm initially treats all nodes as communities of their own\nthen merges them into larger communities, and these into still larger communities, and so on.\n\n\n\n# steps :number of steps in random walk\n# membership : T/F, should membership be calculated based on highest modularity score? T by default\nfriend_comm_wt4 &lt;- cluster_walktrap(graph = net182_friend_und, steps = 4, \n                                    membership = T)\n\n1) Walktrap\n\nfriend_comm_wt4\n\nIGRAPH clustering walktrap, groups: 4, mod: 0.27\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"3\"  \"5\"  \"6\"  \"9\"  \"10\" \"11\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"4\"\n  \n  $`4`\n  + ... omitted several groups/vertices\n\n\n1) Walktrap\nNow let’s get the membership of each node as well the modularity score based on 4 our step solution.\n\nmems_wt_4step &lt;- membership(friend_comm_wt4)\nmems_wt_4step\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 2  1  2  3  2  2  1  1  2  2  2  2  1  1  2  4 \n\n\n\nmod_wt_4step &lt;- modularity(friend_comm_wt4)\nmod_wt_4step\n\n[1] 0.2695578\n\n\n1) Walktrap\nWhat would happen if we used 3 steps?\n\nfriend_comm_wt3 &lt;- cluster_walktrap(graph = net182_friend_und, \n                                    steps = 3, membership = T)\nmems_wt_3step &lt;- membership(friend_comm_wt3)\nmems_wt_3step\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 2  1  3  4  3  3  1  1  2  2  3  2  1  1  2  5 \n\n\n1) Walktrap\n\nmod_wt_3step &lt;- modularity(friend_comm_wt3)\nmod_wt_3step\n\n[1] 0.2797619\n\n\n1) Walktrap\nWe can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the table function:\n\ntable(mems_wt_4step, mems_wt_3step)\n\n             mems_wt_3step\nmems_wt_4step 1 2 3 4 5\n            1 5 0 0 0 0\n            2 0 5 4 0 0\n            3 0 0 0 1 0\n            4 0 0 0 0 1\n\n\n1) Walktrap\n\nLet’s also plot the network based on the found communities, comparing the two partitions.\nColor the nodes based on the communities found using the walktrap algorithm.\n\n\npar(mfrow = c(1, 2))\nlayout &lt;- layout.fruchterman.reingold(net182_friend) \n\nplot(net182_friend_und, layout = layout, #note the use of layout\n     vertex.color = mems_wt_4step, edge.color = \"light gray\", \n     vertex.size = 20, main = \"Walktrap: 4 Steps\")\n\nplot(net182_friend_und, layout = layout, #note the use of layout\n     vertex.color = mems_wt_3step, edge.color = \"light gray\", \n     vertex.size = 20, main = \"Walktrap: 3 Steps\")\n\n\n\n\n\n\n\n\n1) Walktrap\n\n2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15)\none of those communities having their own internal division.\nLarger community is split in two: (3, 5, 6, 11) and (1, 9, 10, 12, 15)"
+    "text": "Community (or Group) Detection\n\nMany different ways to detect communities.\n\nCohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering"
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking",
+    "href": "W5_presentation.html#cohesive-blocking",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nSubset the network into groups based on vertex connectivity\nIteratively search for subgroups that maintain connectivity under the removal of k nodes\nStarting from highly cohesive groups (large k) and moving down to less cohesive ones"
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking-1",
+    "href": "W5_presentation.html#cohesive-blocking-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nfriend_comm_cohesive &lt;- cohesive_blocks(graph = net182_friend_und)\nfriend_comm_cohesive #hard to interprete the result..... then...?\n\nCohesive block structure:\nB-1      c 0, n 16\n'- B-2   c 4, n 14   ooo.oooooo ooooo."
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking-2",
+    "href": "W5_presentation.html#cohesive-blocking-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nVisualize the result!!\nTwo blocks (one with vertex connectivity 0, second with vertex connectivity)\n\n\nplot(friend_comm_cohesive, net182_friend_und)"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap",
+    "href": "W5_presentation.html#walktrap",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nDetects communities through a series of short random walks\n\nThe algorithm initially treats all nodes as communities of their own\nthen merges them into larger communities, and these into still larger communities, and so on.\n\n\n\n# steps :number of steps in random walk\n# membership : T/F, should membership be calculated based on highest modularity score? T by default\nfriend_comm_wt4 &lt;- cluster_walktrap(graph = net182_friend_und, steps = 4, \n                                    membership = T)"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-1",
+    "href": "W5_presentation.html#walktrap-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nfriend_comm_wt4\n\nIGRAPH clustering walktrap, groups: 4, mod: 0.27\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"3\"  \"5\"  \"6\"  \"9\"  \"10\" \"11\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"4\"\n  \n  $`4`\n  + ... omitted several groups/vertices"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-2",
+    "href": "W5_presentation.html#walktrap-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\nNow let’s get the membership of each node as well the modularity score based on 4 our step solution.\n\nmems_wt_4step &lt;- membership(friend_comm_wt4)\nmems_wt_4step\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 2  1  2  3  2  2  1  1  2  2  2  2  1  1  2  4 \n\n\n\nmod_wt_4step &lt;- modularity(friend_comm_wt4)\nmod_wt_4step\n\n[1] 0.2695578"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-3",
+    "href": "W5_presentation.html#walktrap-3",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\nWhat would happen if we used 3 steps?\n\nfriend_comm_wt3 &lt;- cluster_walktrap(graph = net182_friend_und, \n                                    steps = 3, membership = T)\nmems_wt_3step &lt;- membership(friend_comm_wt3)\nmems_wt_3step\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 2  1  3  4  3  3  1  1  2  2  3  2  1  1  2  5"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-4",
+    "href": "W5_presentation.html#walktrap-4",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nmod_wt_3step &lt;- modularity(friend_comm_wt3)\nmod_wt_3step\n\n[1] 0.2797619"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-5",
+    "href": "W5_presentation.html#walktrap-5",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\nWe can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the table function:\n\ntable(mems_wt_4step, mems_wt_3step)\n\n             mems_wt_3step\nmems_wt_4step 1 2 3 4 5\n            1 5 0 0 0 0\n            2 0 5 4 0 0\n            3 0 0 0 1 0\n            4 0 0 0 0 1"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-6",
+    "href": "W5_presentation.html#walktrap-6",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nLet’s also plot the network based on the found communities, comparing the two partitions.\nColor the nodes based on the communities found using the walktrap algorithm.\n\n\npar(mfrow = c(1, 2))\nlayout &lt;- layout.fruchterman.reingold(net182_friend) \n\nplot(net182_friend_und, layout = layout, #note the use of layout\n     vertex.color = mems_wt_4step, edge.color = \"light gray\", \n     vertex.size = 20, main = \"Walktrap: 4 Steps\")\n\nplot(net182_friend_und, layout = layout, #note the use of layout\n     vertex.color = mems_wt_3step, edge.color = \"light gray\", \n     vertex.size = 20, main = \"Walktrap: 3 Steps\")"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-7",
+    "href": "W5_presentation.html#walktrap-7",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\n2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15)\none of those communities having their own internal division.\nLarger community is split in two: (3, 5, 6, 11) and (1, 9, 10, 12, 15)"
   },
   {
     "objectID": "W5_presentation.html#done",
     "href": "W5_presentation.html#done",
     "title": "W5. Network Cohesion and Communities",
     "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week [Option] in the assignment"
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for algorithms for community detectionthe ego network, dyad, and triad network, please check this week [Option] in the assignment"
   }
 ]

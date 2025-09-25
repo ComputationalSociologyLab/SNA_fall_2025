@@ -154,20 +154,20 @@ vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
 - Many different ways to detect communities. 
 - 1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering
 
-### Cohesive Blocking
+## 1) Cohesive Blocking
  
 - Subset the network into groups based on vertex connectivity
 - Iteratively search for subgroups that maintain connectivity under the removal of k nodes
 - Starting from highly cohesive groups (large k) and moving down to less cohesive ones
 
-### Cohesive Blocking
+## 1) Cohesive Blocking
 
 ```{r}
 friend_comm_cohesive <- cohesive_blocks(graph = net182_friend_und)
 friend_comm_cohesive #hard to interprete the result..... then...?
 ```
 
-### Cohesive Blocking
+## 1) Cohesive Blocking
 - Visualize the result!!
 - Two blocks (one with vertex connectivity 0, second with vertex connectivity)
 
@@ -175,14 +175,7 @@ friend_comm_cohesive #hard to interprete the result..... then...?
 plot(friend_comm_cohesive, net182_friend_und) 
 ```
 
-Clearly the blocking scheme first separates the isolates from the main component. Everyone in the main component is connected at cohesion level 4 so that it takes the removal of 4 people to disconnect the set. This mirrors the results we saw above.
-
-So far, we have walked through different algorithms to determine the communities in the friendship network. The results suggest that that there are likely 5 well-defined communities (including the two isolates). The cohesive blocking scheme would suggest that the main component, while potentially splitting into 3 subgroups, is itself still fairly cohesive (as all members are connected by 4 independent paths).
-
-We can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.
-
-
-### 1) Walktrap
+## 2) Walktrap
 - Detects communities through a series of short random walks 
   - The algorithm initially treats all nodes as communities of their own
   - then merges them into larger communities, and these into still larger communities, and so on. 
@@ -194,11 +187,11 @@ friend_comm_wt4 <- cluster_walktrap(graph = net182_friend_und, steps = 4,
                                     membership = T)
 ```
 
-### 1) Walktrap
+## 2) Walktrap
 ```{r}
 friend_comm_wt4
 ```
-### 1) Walktrap
+## 2) Walktrap
 Now let's get the membership of each node as well the modularity score based on 4 our step  solution.
 ```{r}
 mems_wt_4step <- membership(friend_comm_wt4)
@@ -210,7 +203,7 @@ mod_wt_4step <- modularity(friend_comm_wt4)
 mod_wt_4step
 ```
 
-### 1) Walktrap
+## 2) Walktrap
 What would happen if we used 3 steps? 
 
 ```{r}
@@ -220,21 +213,21 @@ mems_wt_3step <- membership(friend_comm_wt3)
 mems_wt_3step
 ```
 
-### 1) Walktrap
+## 2) Walktrap
 
 ```{r}
 mod_wt_3step <- modularity(friend_comm_wt3)
 mod_wt_3step
 ```
 
-### 1) Walktrap
+## 2) Walktrap
 We can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the `table` function: 
 
 ```{r}
 table(mems_wt_4step, mems_wt_3step)
 ```
 
-### 1) Walktrap
+## 2) Walktrap
 - Let's also plot the network based on the found communities, comparing the two partitions. 
 - Color the nodes based on the communities found using the walktrap algorithm. 
 
@@ -251,7 +244,7 @@ plot(net182_friend_und, layout = layout, #note the use of layout
      vertex.size = 20, main = "Walktrap: 3 Steps")
 
 ```
-### 1) Walktrap
+## 2) Walktrap
 - 2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15) 
 - one of those communities having their own internal division. 
 - Larger community is split in two: (3, 5, 6, 11) and (1, 9, 10, 12, 15)
@@ -260,6 +253,5 @@ plot(net182_friend_und, layout = layout, #note the use of layout
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
-
--   If you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for algorithms for community detectionthe ego network, dyad, and triad network, please check this week \[Option\] in the assignment
 
