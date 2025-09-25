@@ -1,0 +1,320 @@
+---
+title: "W5. Network Cohesion and Communities"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Network Cohesion and Communities 
+
+- Based on the two example network
+  - examine cohesion, capturing how robust the network is to being fragmented
+  - cover community structure, capturing which sets of actors form a group 
+
+
+## First Example Network
+For this session we will work primarily with the **igraph** package. We will also load **ggplot2** to draw a network. 
+
+```{r message=F, warning=F}
+library(igraph)
+library(ggplot2)
+```
+
+## First Example Network
+Let's first read in the classroom network data (from a URL) and take a look at the first six rows:
+
+```{r}
+# load edge list dataset
+# from adolescent data on the different kinds of interactions occurring in one classroom. 
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
+
+class182_networkdata <- read.csv(file = url1)
+```
+
+## First Example Network
+```{r}
+# information for three relationship : friendship, social interaction, task interaction 
+# 2 = best friend, 1 = friend, 0 = not friend
+# Social/task interaction is measured as each interaction per hour
+head(class182_networkdata) 
+```
+
+
+## First Example Network
+```{r}
+# load attribute dataset
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"
+
+class182_attributes <- read.csv(file = url2)
+```
+
+## First Example Network
+```{r}
+class182_attributes
+```
+
+## First Example Network
+Let's create an edgelist based on the friendship relation
+
+```{r}
+# edge as any case where the friendship value is greater than 0. 
+edge_value <- class182_networkdata$friend_tie
+edgelist_friendship <- class182_networkdata[edge_value > 0, 
+                                            c("ego", "alter", "friend_tie")]
+```
+
+## First Example Network
+```{r}
+head(edgelist_friendship)
+```
+## First Example Network
+Create our igraph object using the edgelist and attribute data frames.
+
+```{r}
+# Note that the network is directed and has an edge attribute, `friend_tie`
+# showing the strength of the relationship.
+net182_friend <- graph_from_data_frame(d = edgelist_friendship, directed = T, 
+                                       vertices = class182_attributes) 
+net182_friend 
+```
+
+
+
+## Let's see if cohesion exists in the first example network
+- Begin by doing a quick plot of the friendship network
+
+```{r fig.height = 6.5, fig.width = 5.5}
+# Is there any cohision in this network??
+plot(net182_friend, vertex.label = NA, vertex.size = 10,
+     edge.arrow.size = .25, edge.arrow.width = 1, 
+     edge.color = "light gray", vertex.frame.color = NA)
+```
+
+## Let's see if cohesion exists in the first example network
+- The classroom network is fairly cohesive (ignoring the two isolates)
+- Although it does appear to roughly split into two groups. 
+- Let’s more formally explore some of the properties of the network, starting with density.  
+
+## Let's see if cohesion exists in the first example network
+```{r}
+# What does it mean?
+edge_density(net182_friend)
+```
+
+## Let's see if cohesion exists in the first example network
+- An indication of high levels of cohesion, 
+- However density only captures something about the volume of ties, not the pattern of ties 
+- Other measures can capture cohesion directly! 
+- `components()` :  Detect all connected groups (components) in the network
+
+```{r}
+# "strong" mode : find components where node i and j are mutual reachable
+# "weak" mode : find components where node i and j are in the same group if there is any path connecting them
+# *Note* : mode argument is ignored in the case of undirected networks.  
+components_friendship <- components(graph = net182_friend, mode = "weak")
+```
+
+## Let's see if cohesion exists in the first example network
+```{r}
+# membership : component membership of each node
+# csize : size of component
+# no : component number
+components_friendship
+```
+## Let's see if cohesion exists in the first example network
+- Let’s calculate the proportion of nodes in each component. 
+```{r}
+# 87.5% of the nodes fall in the largest componen
+# two isolates are each in their own component
+components_friendship$csize / sum(components_friendship$csize) 
+```
+To be consistent with the component and bicomponent calculations above, let’s create an undirected network to look at vertex connectivity. We set mode to the "collapse" option, which uses a 'weak' rule, so if i is tied to j or j is tied to i, there is a tie between i and j.
+
+```{r}
+net182_friend_und <- as_undirected(net182_friend, mode = "collapse") 
+```
+
+## Community (or Group) Detection 
+- Zoom in, asking about the communities (or groups) within the larger cohesive set. 
+- The goal is to identify sets of nodes that have high internal density and few ties to outside members. 
+- Even in a cohesive network, there may be important communities (or dense regions) within the larger network. 
+
+## Community (or Group) Detection 
+- Solve the questions below by utilizing community detection
+  - Does the network divide into a number of small communities? 
+  - Does race map strongly onto the found communities? 
+  - How do the communities (and the ties between) contribute or detract from the overall cohesion of the network? 
+
+## Community (or Group) Detection 
+- Many different ways to detect communities. 
+- 1) walktrap, 2) edge-betweenness
+- Important to consider how they portray communities and consider which one(s) afford a sensible view of the social world as cohesively organized. 
+
+
+### Cohesive Blocking
+
+As a fourth example, we consider the cohesive blocking scheme of Moody and White to look at cohesive groups in the friendship network [@Moody2003]. The idea is to hierarchically subset the network into groups based on vertex connectivity. A set of nodes are k-connected if it would take the removal of k nodes before all members could no longer reach other. The algorithm works by successively finding sets of nodes with higher levels of connectivity. This builds on the kinds of ideas we explored above in the cohesion section. For example, in the earlier calculation of vertex connectivity, we saw that all non-isolates were 4-connected. The function to run the cohesive blocking scheme of Moody and White is `cohesive_blocks()`.
+
+```{r}
+friend_comm_cohesive <- cohesive_blocks(graph = net182_friend_und)
+```
+
+```{r}
+friend_comm_cohesive
+```
+
+The output consists of block membership and cohesion (for each block). It looks like there are two blocks, one with vertex connectivity 0 and the second with vertex connectivity 4. We can also plot the results.
+
+```{r  fig.height = 6.5, fig.width = 5.5}
+plot(friend_comm_cohesive, net182_friend_und) 
+```
+
+Clearly the blocking scheme first separates the isolates from the main component. Everyone in the main component is connected at cohesion level 4 so that it takes the removal of 4 people to disconnect the set. This mirrors the results we saw above.
+
+So far, we have walked through different algorithms to determine the communities in the friendship network. The results suggest that that there are likely 5 well-defined communities (including the two isolates). The cohesive blocking scheme would suggest that the main component, while potentially splitting into 3 subgroups, is itself still fairly cohesive (as all members are connected by 4 independent paths).
+
+We can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.
+
+
+### 1) Walktrap
+- Detects communities through a series of short random walks 
+  - The algorithm initially treats all nodes as communities of their own
+  - then merges them into larger communities, and these into still larger communities, and so on. 
+
+```{r}
+# steps :number of steps in random walk
+# membership : T/F, should membership be calculated based on highest modularity score? T by default
+friend_comm_wt4 <- cluster_walktrap(graph = net182_friend_und, steps = 4, 
+                                    membership = T)
+```
+
+### 1) Walktrap
+```{r}
+friend_comm_wt4
+```
+### 1) Walktrap
+Now let's get the membership of each node as well the modularity score based on 4 our step  solution.
+```{r}
+mems_wt_4step <- membership(friend_comm_wt4)
+mems_wt_4step
+```
+
+```{r}
+mod_wt_4step <- modularity(friend_comm_wt4)
+mod_wt_4step
+```
+
+### 1) Walktrap
+What would happen if we used 3 steps? 
+
+```{r}
+friend_comm_wt3 <- cluster_walktrap(graph = net182_friend_und, 
+                                    steps = 3, membership = T)
+mems_wt_3step <- membership(friend_comm_wt3)
+mems_wt_3step
+```
+
+### 1) Walktrap
+
+```{r}
+mod_wt_3step <- modularity(friend_comm_wt3)
+mod_wt_3step
+```
+
+### 1) Walktrap
+We can see that the modularity is slightly higher when we use 3 steps. We can compare the two partitions using the `table` function: 
+
+```{r}
+table(mems_wt_4step, mems_wt_3step)
+```
+
+### 1) Walktrap
+- Let's also plot the network based on the found communities, comparing the two partitions. 
+- Color the nodes based on the communities found using the walktrap algorithm. 
+
+```{r, fig.width=7.0}
+par(mfrow = c(1, 2))
+layout <- layout.fruchterman.reingold(net182_friend) 
+
+plot(net182_friend_und, layout = layout, #note the use of layout
+     vertex.color = mems_wt_4step, edge.color = "light gray", 
+     vertex.size = 20, main = "Walktrap: 4 Steps")
+
+plot(net182_friend_und, layout = layout, #note the use of layout
+     vertex.color = mems_wt_3step, edge.color = "light gray", 
+     vertex.size = 20, main = "Walktrap: 3 Steps")
+
+```
+### 1) Walktrap
+- 2 basic communities (2, 7, 8, 13, 14 and 1, 3, 5, 6, 9, 10, 11, 12, 15) 
+- one of those communities having their own internal division. 
+- Larger community is split in two: (3, 5, 6, 11) and (1, 9, 10, 12, 15)
+
+## Community Overlap
+- Examine the level of contact between our communities. 
+- How many friendships are within (or across) communities? 
+- Tell us about the interconnections (or lack thereof) between the found communities. 
+- As the connections between communities largely structure how cohesive the network is as a whole. We will begin by creating a table of within and between community friendship ties (and non-ties). This necessitates having two pieces of information for each dyad: first, if i-j are friends; and second, if i-j are in the same community. Let's first grab the dyad data frame from above.
+
+## Community Overlap
+```{r}
+class182_dyads <- class182_networkdata[, c("ego", "alter")]
+head(class182_dyads)
+```
+
+## Community Overlap
+- Now, let's get a vector showing if ego and alter are tied together. First, we grab the matrix. We then put a NA on the diagonal as we don't want to consider ties to oneself. We then take the matrix and string out into a vector, using a transpose to make sure the order is correct, running from rows to columns: 1-2; 1-3...
+ 
+```{r}
+# grab the matrix
+mat182_friend <- as_adjacency_matrix(net182_friend_und, sparse = F)
+# put a NA on the diagonal as we don't want to consider ties to oneself
+diag(mat182_friend) <- NA 
+# take the matrix and string out
+friend <- c(t(mat182_friend))  
+```
+
+## Community Overlap
+```{r}
+# 1 means that i and j are friends and 0 means that i and j are not friends
+head(friend) 
+```
+
+## Community Overlap
+- Make a vector showing if each dyad is in the same community or not. 
+- For this example, we will use the membership based on the multilevel solution with 4 communities, `mems_mult_level2`. The following bit of code takes the membership based on the multilevel solution, subsets it by ego (`class_182_dyads$ego`), subsets it by alter (`class_182_dyads$alter`), and then asks if ego and alter are in the same community or not.
+
+```{r}
+ego_community <- mems_mult_level2[class182_dyads$ego]
+alter_community <- mems_mult_level2[class182_dyads$alter]
+
+same_comm <- ego_community == alter_community
+```
+
+Putting this together, we are now in a position to create a table of community status (are  i and j in the same community?) by friendship (are i and j friends?). We divide by 2 as the ij information is the same as the ji information and there is no reason to double count. 
+
+```{r}
+table(same_comm, friend) / 2
+```
+
+The table suggests that 67 dyads are not friends and are not in the same community; 11 are not friends but are in the same community; 7 are friends but are in different communities; and 35 are friends and in the same community. Given this kind of table, we can calculate various statistics of interest. Here we will calculate an odds ratio, showing the odds of two people in the same community choosing each other as friends (compared to the odds of two people in different communities choosing each other as friends). 
+
+```{r}
+(35 * 67) / (7 * 11)
+```
+
+Clearly there are many more ties within groups than between groups. But, as we have seen throughout the analysis, there are enough cross-group ties (coupled with the small size of the network) to make the overall network quite cohesive. Similarly, we see that race does, by and large, map onto the groups. Such mapping of demographics onto social groups does not really pose a strong threat to the overall solidarity of the classroom, however, as the groups themselves are interconnected. 
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+
+-   If you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week \[Option\] in the assignment
+
