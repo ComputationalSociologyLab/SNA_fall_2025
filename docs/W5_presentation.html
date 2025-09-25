@@ -308,10 +308,10 @@
 <span id="cb8-4"><a></a>                                       <span class="at">vertices =</span> class182_attributes) </span>
 <span id="cb8-5"><a></a>net182_friend </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 80810c3 DN-- 16 62 -- 
+<pre><code>IGRAPH 4bf3ac5 DN-- 16 62 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie
 | (e/n)
-+ edges from 80810c3 (vertex names):
++ edges from 4bf3ac5 (vertex names):
  [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15
 [11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 
 [21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 
@@ -416,14 +416,14 @@ $no
 </div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-7" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
+<section id="lets-see-if-cohesion-exists-with-vertex-connectivity" class="slide level2">
+<h2>Let’s see if cohesion exists with vertex connectivity</h2>
 <ul>
-<li>Explore the connectivity of specific pairs of nodes in the network(vertex connectivity)</li>
-<li>The output is the number of nodes that would need to be <strong>removed</strong> so that i can no longer reach j</li>
+<li>Explore the connectivity of specific pairs of nodes in the network</li>
+<li><code>vertex connectivity</code> give us the number of nodes that would need to be <strong>removed</strong> so that i can no longer reach j</li>
 </ul>
 </section>
-<section id="lets-see-if-cohesion-exists-8" class="slide level2">
+<section id="lets-see-if-cohesion-exists-7" class="slide level2">
 <h2>Let’s see if cohesion exists</h2>
 <ul>
 <li>Utilize the vertex connectivity with undirected network</li>
@@ -432,9 +432,9 @@ $no
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>net182_friend_und <span class="ot">&lt;-</span> <span class="fu">as_undirected</span>(net182_friend, <span class="at">mode =</span> <span class="st">"collapse"</span>) </span>
 <span id="cb18-2"><a></a>net182_friend_und</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH c89f288 UN-- 16 42 -- 
+<pre><code>IGRAPH 6d919ed UN-- 16 42 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c)
-+ edges from c89f288 (vertex names):
++ edges from 6d919ed (vertex names):
  [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 
 [11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11
 [21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14
@@ -443,16 +443,15 @@ $no
 </div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-9" class="slide level2">
+<section id="lets-see-if-cohesion-exists-8" class="slide level2">
 <h2>Let’s see if cohesion exists</h2>
 <ul>
 <li>calculate vertex connectivity for two example nodes, 1 and 9:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># get the connectivity for the entire network</span></span>
-<span id="cb20-2"><a></a><span class="co"># need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group </span></span>
-<span id="cb20-3"><a></a><span class="co"># `vertex_connectivity()` return minimum number of nodes that would need to be removed to disconnect the network </span></span>
-<span id="cb20-4"><a></a><span class="fu">vertex_disjoint_paths</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">source =</span> <span class="dv">1</span>, <span class="at">target =</span> <span class="dv">9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group </span></span>
+<span id="cb20-2"><a></a><span class="co"># `vertex_connectivity()` return minimum number of nodes that would need to be removed to disconnect the network </span></span>
+<span id="cb20-3"><a></a><span class="fu">vertex_disjoint_paths</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">source =</span> <span class="dv">1</span>, <span class="at">target =</span> <span class="dv">9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5</code></pre>
 </div>
@@ -480,7 +479,7 @@ $no
 <ul>
 <li>Many different ways to detect communities.</li>
 <li><ol type="1">
-<li>Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering</li>
+<li>Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness</li>
 </ol></li>
 </ul>
 </section>
@@ -496,7 +495,7 @@ $no
 <h2>1) Cohesive Blocking</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>friend_comm_cohesive <span class="ot">&lt;-</span> <span class="fu">cohesive_blocks</span>(<span class="at">graph =</span> net182_friend_und)</span>
-<span id="cb22-2"><a></a>friend_comm_cohesive <span class="co">#hard to interprete the result..... then...?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-2"><a></a>friend_comm_cohesive <span class="co"># hard to interprete the result..... then...?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Cohesive block structure:
 B-1      c 0, n 16

@@ -121,9 +121,9 @@ components_friendship
 components_friendship$csize / sum(components_friendship$csize) 
 ```
 
-## Let's see if cohesion exists
-- Explore the connectivity of specific pairs of nodes in the network(vertex connectivity)
-- The output is the number of nodes that would need to be **removed** so that i can no longer reach j
+## Let's see if cohesion exists with vertex connectivity
+- Explore the connectivity of specific pairs of nodes in the network
+- `vertex connectivity` give us the number of nodes that would need to be **removed** so that i can no longer reach j
 
 ## Let's see if cohesion exists
 - Utilize the vertex connectivity with undirected network 
@@ -135,7 +135,6 @@ net182_friend_und
 ## Let's see if cohesion exists
 - calculate vertex connectivity for two example nodes, 1 and 9:
 ```{r}
-# get the connectivity for the entire network
 # need to remove 5 other nodes -> highly interconnected, likely part of the same social group 
 # `vertex_connectivity()` return minimum number of nodes that would need to be removed to disconnect the network 
 vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
@@ -152,7 +151,7 @@ vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
 
 ## Community (or Group) Detection 
 - Many different ways to detect communities. 
-- 1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness 4) [OPTION] Multi-level Clustering
+- 1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness
 
 ## 1) Cohesive Blocking
  
@@ -164,7 +163,7 @@ vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
 
 ```{r}
 friend_comm_cohesive <- cohesive_blocks(graph = net182_friend_und)
-friend_comm_cohesive #hard to interprete the result..... then...?
+friend_comm_cohesive # hard to interprete the result..... then...?
 ```
 
 ## 1) Cohesive Blocking

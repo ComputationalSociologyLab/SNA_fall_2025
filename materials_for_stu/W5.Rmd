@@ -390,61 +390,6 @@ mems_eb4
 
 As it turns out, this is the same set of communities using the walktrap algorithm, using 4 steps.
 
-### \[OPTION\] Multi-level Clustering
-
-Another commonly used approach is multi-level clustering, or multi-level modularity optimization. The basic idea is to begin with each node in its own community. Each vertex is then moved to a community to increase modularity the most (or, for each node i, the algorithm selects the move that will increase modularity the most). If no gain is positive it stays in its own community. This phase continues until a local maxima of modularity is reached. The process then begins again based on the newly merged communities, where the new nodes are the communities found in the previous phase. See @Blondel2008. The function in igraph is `cluster_louvain()`.
-
-We can set a resolution argument, which determines the resolution that the algorithm will use when looking for communities; higher values will yield a larger number of smaller communities, while lower values will yield a smaller number of larger communities. Here we will set it at 1, the default, but we might also want to run this over multiple values and explore the results under fewer/greater numbers of communities (similar to the analysis above). We will also set a seed to help replicate the results.
-
-```{r}
-set.seed(100)
-friend_comm_multi <- leiden(graph = net182_friend_und)
-```
-
-Let's look at the multi-level community structure.
-
-```{r}
-friend_comm_multi$membership 
-```
-
-```{r}
-str(friend_comm_multi)
-```
-
-We can see that there are two rows, or levels. We can think of this as looking at the community/group structure at two different levels of granularity. The output is organized from least aggregated (row 1) to most aggregated (row 2). Let's do a quick table to see how individuals at one level are nested at the second level.
-
-```{r}
-mems_mult_level1 <- cut_at(friend_comm_multi, no = 2) 
-mems_mult_level2 <- cut_at(friend_comm_multi, no = 4) 
-table(mems_mult_level1, mems_mult_level2) 
-```
-
-We can see that everyone in community 1 at the second level is split into two communities at the first level. We can also look at the modularity associated with each solution:
-
-```{r}
-friend_comm_multi$modularity
-```
-
-And now we plot the two solutions.
-
-```{r, fig.width=7.0}
-par(mfrow = c(1, 2))
-
-#4 communities
-plot(net182_friend_und, layout = layout, vertex.color = mems_mult_level2, 
-     edge.color = "light gray", vertex.size = 20,
-     main = "Level 2 Community Membership")
-
-#5 communities
-plot(net182_friend_und, layout = layout, vertex.color = mems_mult_level1, 
-     edge.color = "light gray", vertex.size = 20,
-     main = "Level 1 Community Membership")
-```
-
-This is similar to what we saw with the edge betweenness at different levels of aggregation, although the 5 community solution here is a little different (and offers a somewhat lower modularity score). More generally, the edge betweenness and multilevel algorithms agree on the basic divides in the network (when there are 4 communities), but not on how to divide the network further (looking within the larger communities).
-
-Note that other algorithms, like fast and greedy and label propagation offer similar results, although that will not always be the case. See other options: `?cluster_fast_greedy` `?cluster_label_prop` `?cluster_spinglass`
-
 ### Cohesive Blocking
 
 As a fourth example, we consider the cohesive blocking scheme of Moody and White to look at cohesive groups in the friendship network [@Moody2003]. The idea is to hierarchically subset the network into groups based on vertex connectivity. A set of nodes are k-connected if it would take the removal of k nodes before all members could no longer reach other. The algorithm works by successively finding sets of nodes with higher levels of connectivity. This builds on the kinds of ideas we explored above in the cohesion section. For example, in the earlier calculation of vertex connectivity, we saw that all non-isolates were 4-connected. The function to run the cohesive blocking scheme of Moody and White is `cohesive_blocks()`.
@@ -469,7 +414,7 @@ So far, we have walked through different algorithms to determine the communities
 
 We can take the results of the community analysis and do further analysis to tease out the substantive implications of the found communities. We could ask about behavioral norms across communities (e.g., deviant behaviors), the identities mapped onto each community, the relationships between communities (i.e., do members of one group dislike another?), and so on. Here we will look at how demographic characteristics do (or do not) map onto the communities. We will then look at the relationships between communities.
 
-## \[OPTION\] ## Demographic Characteristics
+## \[OPTION\] Demographic Characteristics
 
 For the sake of simplicity, we will use the communities based on the edge betweenness algorithm and focus on a single characteristic, racial identification. The question is how salient is race in this classroom. Does race map strongly onto the communities? Or are the communities organized around something else? We will begin by plotting the network again, but this time we want to color the nodes by race. We first set the color for the nodes based on race: blue if black and white if white.
 
@@ -545,53 +490,6 @@ table(class182_attributes$race)
 ```
 
 In this case, with 8 people identifying as black and 8 as white we would expect .50 of each community to be black and .50 to be white. Clearly, the actual results deviate from this random baseline, particularly in community 2 and 3, which are predominately black and white respectively. Community 1, the 'mixed' community, is right at what we would expect if individuals were randomly forming communities, with no sorting based on race. Communities 4 and 5 are both isolated nodes and thus no variation is possible. We could, of course, also use simulation to generate the null hypothesis; where through a series of draws, we randomly assign individuals to communities, calculate the proportion white/black in each community and compare those values to the observed values (on the actual network).
-
-## Community Overlap
-
-Here we examine the level of contact between our communities. How many friendships are within (or across) communities? This will tell us about the interconnections (or lack thereof) between the found communities. This combines aspects of community detection with more general questions about cohesion; as the connections between communities largely structure how cohesive the network is as a whole. We will begin by creating a table of within and between community friendship ties (and non-ties). This necessitates having two pieces of information for each dyad: first, if i-j are friends; and second, if i-j are in the same community. Let's first grab the dyad data frame from above.
-
-```{r}
-class182_dyads <- class182_networkdata[, c("ego", "alter")]
-```
-
-```{r}
-head(class182_dyads)
-```
-
-Now, let's get a vector showing if ego and alter are tied together. First, we grab the matrix. We then put a NA on the diagonal as we don't want to consider ties to oneself. We then take the take the matrix and string it out into a vector, using a transpose to make sure the order is correct, running from rows to columns: 1-2; 1-3...
-
-```{r}
-mat182_friend <- as_adjacency_matrix(net182_friend_und, sparse = F)
-diag(mat182_friend) <- NA 
-friend <- c(t(mat182_friend))  
-```
-
-```{r}
-head(friend) 
-```
-
-A 1 means that i and j are friends and 0 means that i and j are not friends. Now, we make a vector showing if each dyad is in the same community or not. For this example, we will use the membership based on the multilevel solution with 4 communities, `mems_mult_level2`. The following bit of code takes the membership based on the multilevel solution, subsets it by ego (`class_182_dyads$ego`), subsets it by alter (`class_182_dyads$alter`), and then asks if ego and alter are in the same community or not.
-
-```{r}
-ego_community <- mems_mult_level2[class182_dyads$ego]
-alter_community <- mems_mult_level2[class182_dyads$alter]
-
-same_comm <- ego_community == alter_community
-```
-
-Putting this together, we are now in a position to create a table of community status (are i and j in the same community?) by friendship (are i and j friends?). We divide by 2 as the ij information is the same as the ji information and there is no reason to double count.
-
-```{r}
-table(same_comm, friend) / 2
-```
-
-The table suggests that 67 dyads are not friends and are not in the same community; 11 are not friends but are in the same community; 7 are friends but are in different communities; and 35 are friends and in the same community. Given this kind of table, we can calculate various statistics of interest. Here we will calculate an odds ratio, showing the odds of two people in the same community choosing each other as friends (compared to the odds of two people in different communities choosing each other as friends).
-
-```{r}
-(35 * 67) / (7 * 11)
-```
-
-Clearly there are many more ties within groups than between groups. But, as we have seen throughout the analysis, there are enough cross-group ties (coupled with the small size of the network) to make the overall network quite cohesive. Similarly, we see that race does, by and large, map onto the groups. Such mapping of demographics onto social groups does not really pose a strong threat to the overall solidarity of the classroom, however, as the groups themselves are interconnected.
 
 ## \[OPTION\] Big Data Example
 
