@@ -112,9 +112,10 @@ edge_density(net182_friend)
 
 ## Let's see if cohesion exists
 
--   `components()` : Detect all connected components in the network
-    -   "strong" mode : find components where node i and j are mutual reachable
-    -   "weak" mode : find components where node i and j are in the same group if there is any path connecting them
+-   `components()` : Detect all connected node in the network
+    - If the nodes are connected, then they belong to the same component.
+    - "strong" mode : find components where node i and j are mutual reachable
+    - "weak" mode : find components where node i and j are in the same group if there is any path connecting them
 
 ```{r}
 # *Note* : mode argument is ignored in the case of undirected networks.  
