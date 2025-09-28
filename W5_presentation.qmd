@@ -16,7 +16,7 @@ execute:
 
 -   examine cohesion, capturing how robust the network is to being fragmented
 -   cover community structure, capturing which sets of actors form a group
--   apply from adolescent data collected
+-   apply from student relationship dataset
 -   the different kinds of interactions occurring in one classroom(small, only 16 actors)
 
 ## Load dataset
