@@ -266,12 +266,10 @@ layout <- layout_with_fr(net182_friend)
 ## 2) Walktrap
 
 ```{r, fig.width=7.0}
-#note the use of layout 
-plot(net182_friend_und, layout = layout,
-     vertex.color = membership(friend_comm_wt4), 
-     edge.color = "light gray", vertex.size = 20, main = "Walktrap: 4 Steps")
-plot(net182_friend_und, layout = layout,
-     vertex.color = membership(friend_comm_wt3), edge.color = "light gray", vertex.size = 20, main = "Walktrap: 3 Steps")
+par(mfrow = c(1, 2))
+layout <- layout_with_fr(net182_friend) 
+plot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt4),edge.color = "light gray", vertex.size = 20, main = "Walktrap: 4 Steps")
+plot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt3), edge.color = "light gray", vertex.size = 20, main = "Walktrap: 3 Steps")
 ```
 
 ## Done!
