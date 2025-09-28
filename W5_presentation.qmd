@@ -181,12 +181,6 @@ vertex_connectivity(net182_friend_und)
 
 ## Community (or Group) Detection
 
--   Solve the questions below by utilizing community detection
-    -   Do male and female students form separate communities?
-    -   How do the detected communities influence overall network cohesion?
-
-## Community (or Group) Detection
-
 -   Many different ways to detect communities.
     -   1\) Cohesive Blocking, 2) Walktrap, 3) \[OPTION\] Edge Betweenness ...
 
@@ -265,12 +259,6 @@ table( membership(friend_comm_wt4),  membership(friend_comm_wt3))
 
 -   Plot the network based on the found communities, comparing the two partitions.
 -   Color the nodes based on the communities found using the walktrap algorithm.
-
-```{r}
-# set layout (1 row 2 colume)
-par(mfrow = c(1, 2))
-layout <- layout_with_fr(net182_friend) 
-```
 
 ## 2) Walktrap
 
