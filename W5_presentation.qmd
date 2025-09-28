@@ -256,18 +256,21 @@ table( membership(friend_comm_wt4),  membership(friend_comm_wt3))
 -   Plot the network based on the found communities, comparing the two partitions.
 -   Color the nodes based on the communities found using the walktrap algorithm.
 
-```{r, fig.width=7.0}
+```{r}
+# set layout (1 row 2 colume)
 par(mfrow = c(1, 2))
 layout <- layout_with_fr(net182_friend) 
+```
 
-plot(net182_friend_und, layout = layout, #note the use of layout
-     vertex.color =  membership(friend_comm_wt4), edge.color = "light gray", 
-     vertex.size = 20, main = "Walktrap: 4 Steps")
+## 2) Walktrap
 
-plot(net182_friend_und, layout = layout, #note the use of layout
-     vertex.color =  membership(friend_comm_wt3), edge.color = "light gray", 
-     vertex.size = 20, main = "Walktrap: 3 Steps")
-
+```{r, fig.width=7.0}
+#note the use of layout 
+plot(net182_friend_und, layout = layout,
+     vertex.color = membership(friend_comm_wt4), 
+     edge.color = "light gray", vertex.size = 20, main = "Walktrap: 4 Steps")
+plot(net182_friend_und, layout = layout,
+     vertex.color = membership(friend_comm_wt3), edge.color = "light gray", vertex.size = 20, main = "Walktrap: 3 Steps")
 ```
 
 ## Done!
