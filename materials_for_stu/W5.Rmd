@@ -127,7 +127,7 @@ Building on the ideas of bicomponent size and component size, we can also explor
 To be consistent with the component and bicomponent calculations above, let’s create an undirected network to look at vertex connectivity. We set mode to the "collapse" option, which uses a 'weak' rule, so if i is tied to j or j is tied to i, there is a tie between i and j.
 
 ```{r}
-net182_friend_und <- as_undirected(net182_friend, mode = "collapse") 
+net182_friend_und <- as.undirected(net182_friend, mode = "collapse") 
 ```
 
 ```{r}

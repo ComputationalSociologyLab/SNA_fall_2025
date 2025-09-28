@@ -161,8 +161,17 @@ net182_friend_und
 
 ```{r}
 # need to remove 5 other nodes -> highly interconnected, likely part of the same social group 
-# `vertex_connectivity()` return minimum number of nodes that would need to be removed to disconnect the network 
 vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
+```
+
+## Let's see if cohesion exists
+
+-   calculate vertex connectivity for a network
+
+```{r}
+# returns the minimum number of vertices that must be removed to make the graph disconnected 
+# (i.e., split into at least two components)
+vertex_connectivity(net182_friend_und)
 ```
 
 ## Community (or Group) Detection
