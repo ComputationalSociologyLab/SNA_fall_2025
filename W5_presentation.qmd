@@ -284,4 +284,4 @@ plot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_w
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for algorithms for community detectionthe ego network, dyad, and triad network, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week \[Option\] in the assignment
