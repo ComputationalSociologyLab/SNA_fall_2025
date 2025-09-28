@@ -150,7 +150,7 @@ components_friendship$csize / sum(components_friendship$csize)
 -   Utilize the vertex connectivity with undirected network
 
 ```{r}
-net182_friend_und <- as_undirected(net182_friend, mode = "collapse") 
+net182_friend_und <- as.undirected(net182_friend, mode = "collapse") 
 net182_friend_und
 ```
 
