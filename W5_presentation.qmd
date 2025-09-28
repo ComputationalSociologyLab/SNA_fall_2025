@@ -173,8 +173,8 @@ vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
 ## Community (or Group) Detection
 
 -   Solve the questions below by utilizing community detection
-    -   Does race map strongly onto the found communities?
-    -   How do the communities contribute or detract from the overall cohesion of the network?
+    -   Do male and female students form separate communities?
+    -   How do the detected communities influence overall network cohesion?
 
 ## Community (or Group) Detection
 
