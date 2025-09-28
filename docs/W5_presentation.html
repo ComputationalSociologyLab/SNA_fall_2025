@@ -308,10 +308,10 @@
 <span id="cb8-4"><a></a>                                       <span class="at">vertices =</span> class182_attributes) </span>
 <span id="cb8-5"><a></a>net182_friend </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 9004494 DN-- 16 62 -- 
+<pre><code>IGRAPH 2f0abf9 DN-- 16 62 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie
 | (e/n)
-+ edges from 9004494 (vertex names):
++ edges from 2f0abf9 (vertex names):
  [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15
 [11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 
 [21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 
@@ -432,9 +432,9 @@ $no
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>net182_friend_und <span class="ot">&lt;-</span> <span class="fu">as.undirected</span>(net182_friend, <span class="at">mode =</span> <span class="st">"collapse"</span>) </span>
 <span id="cb18-2"><a></a>net182_friend_und</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 47845de UN-- 16 42 -- 
+<pre><code>IGRAPH 965c25c UN-- 16 42 -- 
 + attr: name (v/c), race (v/c), grade (v/n), gender (v/c)
-+ edges from 47845de (vertex names):
++ edges from 965c25c (vertex names):
  [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 
 [11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11
 [21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14
@@ -521,7 +521,15 @@ B-1      c 0, n 16
 <ul>
 <li>Nodes encountered on any given random walk are more likely to be within a community than not</li>
 <li>The algorithm initially treats all nodes as communities of their own</li>
-<li>Merges them into larger communities, and these into still larger communities, and so on.</li>
+<li>Merges them into larger communities, and these into still larger communities, and so on</li>
+</ul></li>
+</ul>
+</section>
+<section id="walktrap-1" class="slide level2">
+<h2>2) Walktrap</h2>
+<ul>
+<li><p>Detects communities through a series of short random walks</p>
+<ul>
 <li>Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities</li>
 </ul></li>
 </ul>
@@ -532,7 +540,7 @@ B-1      c 0, n 16
 <span id="cb25-4"><a></a>                                    <span class="at">membership =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="walktrap-1" class="slide level2">
+<section id="walktrap-2" class="slide level2">
 <h2>2) Walktrap</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># groups: 4 → 4 community detected in the network</span></span>
@@ -555,7 +563,7 @@ B-1      c 0, n 16
 </div>
 </div>
 </section>
-<section id="walktrap-2" class="slide level2">
+<section id="walktrap-3" class="slide level2">
 <h2>2) Walktrap</h2>
 <p>What would happen if we used 3 steps?</p>
 <div class="cell">
@@ -580,7 +588,7 @@ B-1      c 0, n 16
 </div>
 </div>
 </section>
-<section id="walktrap-3" class="slide level2">
+<section id="walktrap-4" class="slide level2">
 <h2>2) Walktrap</h2>
 <ul>
 <li>Compare the two partitions using the <code>table</code> function:</li>
@@ -599,7 +607,7 @@ B-1      c 0, n 16
 </div>
 </div>
 </section>
-<section id="walktrap-4" class="slide level2">
+<section id="walktrap-5" class="slide level2">
 <h2>2) Walktrap</h2>
 <ul>
 <li>Plot the network based on the found communities, comparing the two partitions.</li>

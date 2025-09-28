@@ -207,7 +207,12 @@ plot(friend_comm_cohesive, net182_friend_und)
 -   Detects communities through a series of short random walks
     -   Nodes encountered on any given random walk are more likely to be within a community than not
     -   The algorithm initially treats all nodes as communities of their own
-    -   Merges them into larger communities, and these into still larger communities, and so on.
+    -   Merges them into larger communities, and these into still larger communities, and so on
+
+## 2) Walktrap
+
+-   Detects communities through a series of short random walks
+
     -   Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities
 
 ```{r}
