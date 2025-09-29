@@ -283,7 +283,7 @@ plot(s641_social, vertex.size = central_social$between / 5,
 
 ```
 
-### Correlations between Centrality Measures
+### [OPTION] Correlations between Centrality Measures
 We have so far seen which nodes are the most central on different measures. We now want to formalize this a bit more by computing the correlations between the centrality scores, showing how closely these measures of centrality are interrelated. More substantively, we want to know which measures tend to yield the same nodes as central and which tend to disagree on the most important nodes. Here we generate a table of pairwise correlations. Again, we take out the first column of ids and the second column showing the network type when doing the correlation matrix (we also round the values in the correlation matrix when printing).
 
 ```{r}
@@ -300,7 +300,7 @@ Betweenness shows the highest correlation with outdegree, followed by indegree. 
 
 Thus, if the process that we thought was most important was about information flow based on shortest paths, we may think that node 19 is well positioned to influence the rest of the network. If, however, the key is being the bridge itself, then 19 is clearly not as important as node 22. Thus, while there is much agreement between the centrality scores (with nodes 22, 16, 18 and 19 showing up consistently as central) it is possible for a node to be high on one measure and low on another. 
 
-### Centrality for Task Interactions
+### [OPTION] Centrality for Task Interactions
 We now repeat the analysis for the task interaction network. Note that the in and out measures will be the same as the network is undirected, meaning that we only need one calculation for measures like degree or closeness. It also means that we do not need to set mode as an argument.
 
 ```{r warning=F}
@@ -349,7 +349,7 @@ plot(s641_task, vertex.size = central_task$degree,
 
 ```
 
-### Task/Social Correlations 
+### [OPTION] Task/Social Correlations 
 We have seen that node 22 dominates task interactions in a way that was less clear-cut in the social interactions network. Let's explore the similarities/differences between the two networks by doing a quick bar plot comparing four centrality measures (degree, closeness2, betweenness and eigen) on social and task centrality. We will first rearrange the task centrality data frame, as we did with the social centrality data frame, to make it in a long format. 
 
 ```{r}
