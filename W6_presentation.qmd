@@ -1,0 +1,275 @@
+---
+title: "W5. Network Cohesion and Communities"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Network Cohesion and Communities
+
+-   examine cohesion, capturing how robust the network is to being fragmented
+-   cover community structure, capturing which sets of actors form a group
+-   apply from student relationship dataset
+-   the different kinds of interactions occurring in one classroom(small, only 16 actors)
+
+## Load dataset
+
+-   use primarily with the **igraph** package. We will also load **ggplot2** to draw a network.
+
+```{r message=F, warning=F}
+library(igraph)
+library(ggplot2)
+```
+
+## Load dataset
+
+-   read in the classroom network data (edgelist dataset)
+
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
+class182_networkdata <- read.csv(file = url1)
+# contains information for three relationship : friendship, social interaction, task interaction 
+# 2 = best friend, 1 = friend, 0 = not friend
+# Social/task interaction is measured as each interaction per hour
+head(class182_networkdata) 
+```
+
+## Load dataset
+
+-   read in the classroom network data (attribute dataset)
+
+```{r}
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"
+class182_attributes <- read.csv(file = url2)
+class182_attributes
+```
+
+## Create Frienship Network
+
+-   Extract the friends within the dataset
+
+```{r}
+# edges with a friendship value greater than zero
+edge_value <- class182_networkdata$friend_tie
+edgelist_friendship <- class182_networkdata[edge_value > 0, 
+                                            c("ego", "alter", "friend_tie")]
+head(edgelist_friendship)
+```
+
+## Create Frienship Network
+
+-   Create a igraph object using the edgelist and attribute data frames.
+
+```{r}
+# directed network
+# have the strength of the relationship
+net182_friend <- graph_from_data_frame(d = edgelist_friendship, directed = T, 
+                                       vertices = class182_attributes) 
+net182_friend 
+```
+
+## Let's see if cohesion exists
+
+-   Start with a quick plot of the friendship network
+-   Is there any cohision in this network??
+
+```{r fig.height = 6.5, fig.width = 5.5}
+plot(net182_friend, vertex.label = NA, vertex.size = 10,
+     edge.arrow.size = .25, edge.arrow.width = 1, 
+     edge.color = "light gray", vertex.frame.color = NA)
+```
+
+## Let's see if cohesion exists
+
+-   The classroom network is fairly cohesive (ignoring the two isolates)
+-   Hard to split the central group into two groups.
+
+## Let's see if cohesion exists
+
+-   explore some of the properties of the network, starting with density.\
+-   What does it mean?
+
+```{r}
+edge_density(net182_friend)
+```
+
+## Let's see if cohesion exists
+
+-   About a quarter of all possible ties are present in the network
+-   \(m\) = number of edges = 62
+-   \(n\) = number of nodes = 16\
+    $$
+    Dentisy = \frac{m}{n(n-1)} = \frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%
+    $$
+-   Give us the information on the volume of ties, not the pattern of ties
+
+## Let's see if cohesion exists
+
+-   `components()` : Detect all connected node in the network
+    - If the nodes are connected, then they belong to the same component.
+    - "strong" mode : find components where node i and j are mutual reachable
+    - "weak" mode : find components where node i and j are in the same group if there is any path connecting them
+
+```{r}
+# *Note* : mode argument is ignored in the case of undirected networks.  
+components_friendship <- components(graph = net182_friend, mode = "weak")
+```
+
+## Let's see if cohesion exists
+
+```{r}
+# membership : component membership of each node
+# csize : size of component
+# no : component number
+components_friendship
+```
+
+## Let's see if cohesion exists
+
+-   Let’s calculate the proportion of nodes in each component.
+
+```{r}
+# 87.5% of the nodes fall in the largest component
+# two isolates are each in their own component
+components_friendship$csize / sum(components_friendship$csize) 
+```
+
+## Let's see if cohesion exists with vertex connectivity
+
+-   Explore the connectivity of specific pairs of nodes in the network
+-   `vertex connectivity` give us the number of nodes that would need to be **removed** so that i can no longer reach j
+
+## Let's see if cohesion exists
+
+-   Utilize the vertex connectivity with undirected network
+
+```{r}
+net182_friend_und <- as.undirected(net182_friend, mode = "collapse") 
+net182_friend_und
+```
+
+## Let's see if cohesion exists
+
+-   calculate vertex connectivity for two example nodes, 1 and 9:
+
+```{r}
+# need to remove 5 other nodes -> highly interconnected, likely part of the same social group 
+vertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)
+```
+
+## Let's see if cohesion exists
+
+-   calculate vertex connectivity for a network
+
+```{r}
+# returns the minimum number of vertices that must be removed to make the graph disconnected 
+# (i.e., split into at least two components)
+vertex_connectivity(net182_friend_und)
+```
+
+## Community (or Group) Detection
+
+-   Find the communities (or groups) within the larger cohesive set.
+-   The goal is to identify sets of nodes that have high internal density and few ties to outside members.
+
+## Community (or Group) Detection
+
+-   Many different ways to detect communities.
+    -   1\) Cohesive Blocking, 2) Walktrap, 3) \[OPTION\] Edge Betweenness ...
+
+## 1) Cohesive Blocking
+
+-   Subset the network into groups based on vertex connectivity
+-   Iteratively search for subgroups that maintain connectivity under the removal of k nodes
+-   Starting from highly cohesive groups (large k) and moving down to less cohesive ones
+
+## 1) Cohesive Blocking
+
+```{r}
+friend_comm_cohesive <- cohesive_blocks(graph = net182_friend_und)
+friend_comm_cohesive # hard to interprete the result..... then...?
+```
+
+## 1) Cohesive Blocking
+
+-   Visualize the result!!
+-   Two blocks (one with vertex connectivity 0, second with vertex connectivity)
+
+```{r  fig.height = 6.5, fig.width = 5.5}
+plot(friend_comm_cohesive, net182_friend_und) 
+```
+
+## 2) Walktrap
+
+-   Detects communities through a series of short random walks
+    -   Nodes encountered on any given random walk are more likely to be within a community than not
+    -   The algorithm initially treats all nodes as communities of their own
+    -   Merges them into larger communities, and these into still larger communities, and so on
+
+## 2) Walktrap
+
+-   Detects communities through a series of short random walks
+
+    -   Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities
+
+```{r}
+# steps :length of random walk (4 or 5 is recommended)
+# membership : T/F, should membership be calculated based on highest modularity score? T by default
+friend_comm_wt4 <- cluster_walktrap(graph = net182_friend_und, steps = 4, 
+                                    membership = T)
+```
+
+## 2) Walktrap
+
+```{r}
+# groups: 4 → 4 community detected in the network
+# mod: 0.27 → value of modularity 
+print(friend_comm_wt4, all = TRUE)
+```
+
+## 2) Walktrap
+
+What would happen if we used 3 steps?
+
+```{r}
+# the modularity is slightly higher when we use 3 steps
+friend_comm_wt3 <- cluster_walktrap(graph = net182_friend_und, 
+                                    steps = 3, membership = T)
+friend_comm_wt3
+```
+
+## 2) Walktrap
+
+-   Compare the two partitions using the `table` function:
+
+```{r}
+# row : results for communities when step is 4 (4 community detected)
+# col : results for communities when step is 3 (5 community detected)
+table( membership(friend_comm_wt4),  membership(friend_comm_wt3))
+```
+
+## 2) Walktrap
+
+-   Plot the network based on the found communities, comparing the two partitions.
+-   Color the nodes based on the communities found using the walktrap algorithm.
+
+## 2) Walktrap
+
+```{r, fig.width=7.0}
+par(mfrow = c(1, 2))
+layout <- layout_with_fr(net182_friend) 
+plot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt4),edge.color = "light gray", vertex.size = 20, main = "Walktrap: 4 Steps")
+plot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt3), edge.color = "light gray", vertex.size = 20, main = "Walktrap: 3 Steps")
+```
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week \[Option\] in the assignment
