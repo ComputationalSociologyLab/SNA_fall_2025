@@ -1,0 +1,62 @@
+# W5. Discussion Exercise (feat. Kadusin, 1995)
+
+## Setting up the Session
+We will work primarily with the **igraph** package for this exercise. 
+
+```{r message=F, warning=F}
+library(igraph)
+```
+
+load the edge list dataset
+```{r}
+url1 <- "https://github.com/ComputationalSociologyLab/SNA_fall_2025/raw/main/data/Kadusin_1995_edge_list.csv"
+
+edge_list <- read.csv(file = url1)
+```
+
+Looking at the first six rows:
+
+```{r}
+head(edge_list) 
+```
+
+load the dataset for nodes
+```{r}
+url1 <- "https://github.com/ComputationalSociologyLab/SNA_fall_2025/raw/main/data/Kadusin_1995_node_list.csv"
+
+node_list <- read.csv(file = url1)
+```
+
+Looking at the first six rows:
+
+```{r}
+head(node_list) 
+```
+
+Let's construct the network with the two dataset 
+
+```{r}
+sociogram <- graph_from_data_frame(d = edge_list, directed = F, 
+                                     vertices = node_list) 
+sociogram
+```
+How does it looks like?
+
+```{r}
+coords_mds <- layout_with_mds(sociogram)
+
+coords_adj <- layout_with_fr(
+  sociogram,
+  coords = coords_mds,
+  niter = 300
+)
+
+plot(
+  sociogram,
+  layout = coords_adj,
+  vertex.size = 20,
+  vertex.label.cex = 0.6,
+  vertex.label.color = "black"
+)
+```
+
