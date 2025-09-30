@@ -48,7 +48,7 @@ coords_mds <- layout_with_mds(sociogram)
 coords_adj <- layout_with_fr(
   sociogram,
   coords = coords_mds,
-  niter = 300
+  niter = 10000
 )
 
 plot(
