@@ -187,6 +187,7 @@ C_D(G) =
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 {\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 $$
+
 ## Centralization
 - Calculate indegree centralization for the social interaction network 
 ```{r}
@@ -222,7 +223,6 @@ cent_task
 ```{r}
 den_social <- density(indegree_social, from = 0) 
 den_social
-den_task <- density(degree_task, from = 0)
 ```
 
 ## Centralization
