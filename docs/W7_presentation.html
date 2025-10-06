@@ -10,7 +10,7 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.533">
 
-  <title>W5. Network Cohesion and Communities</title>
+  <title>W5. Network Cohesion and Communities - W7.Centrality and Hierarchy</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -393,439 +393,322 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">W5. Network Cohesion and Communities</h1>
+  <h1 class="title">W7.Centrality and Hierarchy</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
 <section>
-<section id="network-cohesion-and-communities" class="title-slide slide level1 center">
-<h1>Network Cohesion and Communities</h1>
+<section id="centrality-and-hierarchy" class="title-slide slide level1 center">
+<h1>Centrality and Hierarchy</h1>
 <ul>
-<li>examine cohesion, capturing how robust the network is to being fragmented</li>
-<li>cover community structure, capturing which sets of actors form a group</li>
-<li>apply from student relationship dataset</li>
-<li>the different kinds of interactions occurring in one classroom(small, only 16 actors)</li>
+<li>Looking at various centrality measures</li>
+<li>Explore network-level measures of hierarchy</li>
+<li>Apply the same student relationship dataset (social tie and task tie btw students)</li>
 </ul>
 </section>
-<section id="load-dataset" class="slide level2">
-<h2>Load dataset</h2>
+<section id="setting-up-the-session" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>use primarily with the <strong>igraph</strong> package. We will also load <strong>ggplot2</strong> to draw a network.</li>
+<li>Import <strong>igraph</strong> package for network analysis</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(igraph)</span>
-<span id="cb1-2"><a></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="load-dataset-1" class="slide level2">
-<h2>Load dataset</h2>
+<section id="setting-up-the-session-1" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>read in the classroom network data (edgelist dataset)</li>
+<li>Load edgelist dataset where there exists social tie between students</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"</span></span>
-<span id="cb2-2"><a></a>class182_networkdata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1)</span>
-<span id="cb2-3"><a></a><span class="co"># contains information for three relationship : friendship, social interaction, task interaction </span></span>
-<span id="cb2-4"><a></a><span class="co"># 2 = best friend, 1 = friend, 0 = not friend</span></span>
-<span id="cb2-5"><a></a><span class="co"># Social/task interaction is measured as each interaction per hour</span></span>
-<span id="cb2-6"><a></a><span class="fu">head</span>(class182_networkdata) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/social_interactions_s641.csv"</span></span>
+<span id="cb2-2"><a></a>social_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1)</span>
+<span id="cb2-3"><a></a>edgelist_social <span class="ot">&lt;-</span> social_data[social_data<span class="sc">$</span>social_tie <span class="sc">&gt;</span> <span class="dv">0</span>, ] </span>
+<span id="cb2-4"><a></a><span class="fu">head</span>(social_data) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  ego alter friend_tie social_tie task_tie
-1   1     1          0        0.0      0.0
-2   1     2          0        0.0      0.0
-3   1     3          0        0.0      0.0
-4   1     4          0        0.0      0.0
-5   1     5          0        1.2      0.3
-6   1     6          0        0.0      0.0</code></pre>
+<pre><code>  ego alter social_tie
+1   1     1      0.000
+2   1     2      0.000
+3   1     3      0.000
+4   1     4      0.000
+5   1     5      5.625
+6   1     6      1.500</code></pre>
 </div>
 </div>
 </section>
-<section id="load-dataset-2" class="slide level2">
-<h2>Load dataset</h2>
+<section id="setting-up-the-session-2" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>read in the classroom network data (attribute dataset)</li>
+<li>Create a network… by the way…</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"</span></span>
-<span id="cb4-2"><a></a>class182_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
-<span id="cb4-3"><a></a>class182_attributes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># vertices = (id = 1:22), what does it mean...?</span></span>
+<span id="cb4-2"><a></a>s641_social <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> edgelist_social, <span class="at">directed =</span> T, </span>
+<span id="cb4-3"><a></a>                                     <span class="at">vertices =</span> (<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">22</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="setting-up-the-session-3" class="slide level2">
+<h2>Setting up the Session</h2>
+<ul>
+<li>If you want to delete the all isolated nodes, then,</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>net641_social_noisolates <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> edgelist_social, </span>
+<span id="cb5-2"><a></a>                                                  <span class="at">directed =</span> T) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="setting-up-the-session-4" class="slide level2">
+<h2>Setting up the Session</h2>
+<ul>
+<li>Read in the task data</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/task_interactions_s641.csv"</span></span>
+<span id="cb6-2"><a></a>task_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
+<span id="cb6-3"><a></a><span class="fu">head</span>(task_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   ids  race grade gender
-1    1 white    10   male
-2    2 black    10 female
-3    3 white    10 female
-4    4 white    11 female
-5    5 white    10   male
-6    6 white    10 female
-7    7 black    10 female
-8    8 black    10 female
-9    9 white    10 female
-10  10 black    11   male
-11  11 white    10   male
-12  12 black    11 female
-13  13 white    10 female
-14  14 black    10 female
-15  15 black    10 female
-16  16 black    13   male</code></pre>
+<pre><code>  ego alter task_tie
+1   1     1        0
+2   1     2        0
+3   1     3        0
+4   1     4        0
+5   1     5        0
+6   1     6        0</code></pre>
 </div>
 </div>
 </section>
-<section id="create-frienship-network" class="slide level2">
-<h2>Create Frienship Network</h2>
+<section id="setting-up-the-session-5" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>Extract the friends within the dataset</li>
+<li>The <code>task_tie</code> variable shows the frequency of task-based interactions between nodes i and j</li>
+<li>Construct <code>task_tie</code> related network, by the way…</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># edges with a friendship value greater than zero</span></span>
-<span id="cb6-2"><a></a>edge_value <span class="ot">&lt;-</span> class182_networkdata<span class="sc">$</span>friend_tie</span>
-<span id="cb6-3"><a></a>edgelist_friendship <span class="ot">&lt;-</span> class182_networkdata[edge_value <span class="sc">&gt;</span> <span class="dv">0</span>, </span>
-<span id="cb6-4"><a></a>                                            <span class="fu">c</span>(<span class="st">"ego"</span>, <span class="st">"alter"</span>, <span class="st">"friend_tie"</span>)]</span>
-<span id="cb6-5"><a></a><span class="fu">head</span>(edgelist_friendship)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   ego alter friend_tie
-17   2     1          1
-23   2     7          1
-24   2     8          1
-29   2    13          2
-30   2    14          1
-37   3     5          1</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>edgelist_task <span class="ot">&lt;-</span> task_data[task_data<span class="sc">$</span>task_tie <span class="sc">&gt;</span> <span class="dv">0</span>, ] </span>
+<span id="cb8-2"><a></a>edgelist_task <span class="ot">&lt;-</span> edgelist_task[edgelist_task<span class="sc">$</span>ego <span class="sc">&lt;</span> edgelist_task<span class="sc">$</span>alter, ] <span class="co"># ?????????</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="create-frienship-network-1" class="slide level2">
-<h2>Create Frienship Network</h2>
+<section id="setting-up-the-session-6" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>Create a igraph object using the edgelist and attribute data frames.</li>
+<li>Delete duplicated edges</li>
+<li>If there are tie1(2-5) and tie2(5-2), then delete the second tie</li>
+<li>Is it a right way to handle the edge list data?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># directed network</span></span>
-<span id="cb8-2"><a></a><span class="co"># have the strength of the relationship</span></span>
-<span id="cb8-3"><a></a>net182_friend <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> edgelist_friendship, <span class="at">directed =</span> T, </span>
-<span id="cb8-4"><a></a>                                       <span class="at">vertices =</span> class182_attributes) </span>
-<span id="cb8-5"><a></a>net182_friend </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 397b800 DN-- 16 62 -- 
-+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie
-| (e/n)
-+ edges from 397b800 (vertex names):
- [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15
-[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 
-[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 
-[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 
-[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15
-[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 
-[61] 15-&gt;9  15-&gt;12</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>edgelist_task <span class="ot">&lt;-</span> edgelist_task[edgelist_task<span class="sc">$</span>ego <span class="sc">&lt;</span> edgelist_task<span class="sc">$</span>alter, ]</span>
+<span id="cb9-2"><a></a>s641_task <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> edgelist_task, <span class="at">directed =</span> F, <span class="at">vertices =</span> (<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">22</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
+<section id="setting-up-the-session-7" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>Start with a quick plot of the friendship network</li>
-<li>Is there any cohision in this network??</li>
+<li>plot both networks.</li>
+<li>what is the difference between the two networks?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">plot</span>(net182_friend, <span class="at">vertex.label =</span> <span class="cn">NA</span>, <span class="at">vertex.size =</span> <span class="dv">10</span>,</span>
-<span id="cb10-2"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">25</span>, <span class="at">edge.arrow.width =</span> <span class="dv">1</span>, </span>
-<span id="cb10-3"><a></a>     <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)) </span>
+<span id="cb10-2"><a></a></span>
+<span id="cb10-3"><a></a><span class="fu">plot</span>(s641_social, <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>, <span class="at">edge.arrow.size =</span> .<span class="dv">25</span>, <span class="at">vertex.size =</span> <span class="dv">8</span>, <span class="at">main =</span> <span class="st">"Social Interactions"</span>, <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">08</span>)</span>
+<span id="cb10-4"><a></a><span class="fu">plot</span>(s641_task, <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>, <span class="at">edge.arrow.size =</span> .<span class="dv">25</span>, <span class="at">vertex.size =</span> <span class="dv">8</span>, <span class="at">main =</span> <span class="st">"Task Interactions"</span>, <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">08</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-6-1.png" width="528" class="r-stretch"></section>
-<section id="lets-see-if-cohesion-exists-1" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
+<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-8-1.png" width="672" class="r-stretch"></section>
+<section id="centrality" class="slide level2">
+<h2>Centrality</h2>
 <ul>
-<li>The classroom network is fairly cohesive (ignoring the two isolates)</li>
-<li>Hard to split the central group into two groups.</li>
+<li>Capture something about which nodes are most important to the network</li>
+<li>Used as predictors of other outcomes, like attitudes, behaviors, etc.</li>
 </ul>
 </section>
-<section id="lets-see-if-cohesion-exists-2" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
+<section id="indegree-centrality" class="slide level2">
+<h2>Indegree Centrality</h2>
 <ul>
-<li>explore some of the properties of the network, starting with density.<br>
+<li>Measures how many ties each node receives</li>
+<li>The number of people that talks to node i in a social way.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># 3 people talk to node 1, 1 person talks to node 2</span></span>
+<span id="cb11-2"><a></a>indegree_social <span class="ot">&lt;-</span> <span class="fu">degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>)</span>
+<span id="cb11-3"><a></a>indegree_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 
+ 3  1  0  1  3  3  1  1  1  2  2  3  0  0  1  5  4  7  5  3  5  6 </code></pre>
+</div>
+</div>
+</section>
+<section id="outdegree-centrality" class="slide level2">
+<h2>Outdegree Centrality</h2>
+<ul>
+<li>Measures how many ties the node sends out</li>
+<li>The number of people that the node talks to in a social way</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># node 1 talk to 3 people, node 2 talks to 1 person </span></span>
+<span id="cb13-2"><a></a>outdegree_social <span class="ot">&lt;-</span> <span class="fu">degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"out"</span>)</span>
+<span id="cb13-3"><a></a>outdegree_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 
+ 3  1  0  1  3  3  1  1  1  2  1  3  0  0  1  5  4  6  6  3  4  8 </code></pre>
+</div>
+</div>
+</section>
+<section id="closeness-centrality" class="slide level2">
+<h2>Closeness Centrality</h2>
+<ul>
+<li>the inverse of the mean distance in shortest path between a given node and all other nodes.</li>
+<li>where:</li>
+<li><span class="math inline">\(n\)</span> is the number of nodes in the network<br>
 </li>
-<li>What does it mean?</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">edge_density</span>(net182_friend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2583333</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-3" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>About a quarter of all possible ties are present in the network</li>
-<li>(m) = number of edges = 62</li>
-<li>(n) = number of nodes = 16<br>
+<li><span class="math inline">\(d(v, u)\)</span> is the geodesic distance (shortest path length) between node <span class="math inline">\(v\)</span> and node <span class="math inline">\(u\)</span><br>
 <span class="math display">\[
-Dentisy = \frac{m}{n(n-1)} = \frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%
+C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 \]</span></li>
-<li>Give us the information on the volume of ties, not the pattern of ties</li>
 </ul>
 </section>
-<section id="lets-see-if-cohesion-exists-4" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li><code>components()</code> : Detect all connected node in the network
-<ul>
-<li>If the nodes are connected, then they belong to the same component.</li>
-<li>“strong” mode : find components where node i and j are mutual reachable</li>
-<li>“weak” mode : find components where node i and j are in the same group if there is any path connecting them</li>
-</ul></li>
-</ul>
+<section id="closeness-centrality-1" class="slide level2">
+<h2>Closeness Centrality</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># *Note* : mode argument is ignored in the case of undirected networks.  </span></span>
-<span id="cb13-2"><a></a>components_friendship <span class="ot">&lt;-</span> <span class="fu">components</span>(<span class="at">graph =</span> net182_friend, <span class="at">mode =</span> <span class="st">"weak"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># mode = "in", or "out"</span></span>
+<span id="cb15-2"><a></a><span class="co"># normalized = T/F, should scores be normalized? (divided by n-1, where n is the number of people in the network)</span></span>
+<span id="cb15-3"><a></a>outcloseness_social <span class="ot">&lt;-</span> <span class="fu">closeness</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"out"</span>,</span>
+<span id="cb15-4"><a></a>                                 <span class="at">normalized =</span> T)</span>
+<span id="cb15-5"><a></a><span class="fu">head</span>(outcloseness_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        1         2         3         4         5         6 
+0.4210526 0.3720930       NaN 1.0000000 0.4210526 0.3200000 </code></pre>
+</div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-5" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
+<section id="closeness-centrality-2" class="slide level2">
+<h2>Closeness Centrality</h2>
+<ul>
+<li>We can interpret those values as the inverse of the mean distance of each node to all other nodes that the focal node can reach. Isolates are assigned an NA value. Now we will do the same thing for in-closeness.</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># membership : component membership of each node</span></span>
-<span id="cb14-2"><a></a><span class="co"># csize : size of component</span></span>
-<span id="cb14-3"><a></a><span class="co"># no : component number</span></span>
-<span id="cb14-4"><a></a>components_friendship</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># why the closeness centrality is NaN for node 3?</span></span>
+<span id="cb17-2"><a></a>incloseness_social <span class="ot">&lt;-</span> <span class="fu">closeness</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
+<span id="cb17-3"><a></a>                                <span class="at">normalized =</span> T)</span>
+<span id="cb17-4"><a></a><span class="fu">head</span>(incloseness_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$membership
- 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 
- 1  1  1  2  1  1  1  1  1  1  1  1  1  1  1  3 
+<pre><code>        1         2         3         4         5         6 
+0.4117647 0.3589744       NaN 1.0000000 0.4117647 0.3181818 </code></pre>
+</div>
+</div>
+</section>
+<section id="closeness-centrality-3" class="slide level2">
+<h2>Closeness Centrality</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>degree_task <span class="ot">&lt;-</span> <span class="fu">degree</span>(s641_task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="centralization" class="slide level2">
+<h2>Centralization</h2>
+<ul>
+<li>We have so far seen which nodes are most important in the classroom using different definitions of centrality.</li>
+<li>We have also seen how this differs across social and task interactions.</li>
+<li>To flesh out the story more clearly, it will be useful to formally summarize the distribution of the centrality measures, telling us something about the network as a whole.</li>
+<li>For example, a network with one node capturing the vast majority of ties is highly centralized, or highly unequal, as all of the activity in the network is focused on a particular node. A highly centralized network is also relatively fragile, as removing the one central node would greatly reduce the connectivity of the network. We could examine the distribution of any of the centrality scores we calculated above. Here, let’s focus on degree as a way of exploring the level of centralization in the two networks. Let’s start with a summary of the degree distributions (indegree for social and degree for task).</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   2.500   2.591   3.750   7.000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">summary</span>(degree_task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   1.000   2.182   2.000  17.000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.03912</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">sd</span>(degree_task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.459099</code></pre>
+</div>
+</div>
+</section>
+<section id="centralization-1" class="slide level2">
+<h2>Centralization</h2>
+<ul>
+<li>To calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).</li>
+</ul>
+<p><strong>igraph</strong> has different centralization functions for each centrality score. For degree the function is <code>cent_degree()</code>. The arguments are graph (network of interest), mode (in, out, total) loops (T/F should self-loops be considered), and normalized (T/F should divide by theoretical max?) Here we calculate indegree centralization for the social interaction network, ignoring self loops and dividing by the theoretical max.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>cent_social <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
+<span id="cb28-2"><a></a>                            <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-3"><a></a>cent_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$res
+ [1] 3 1 0 1 3 3 1 1 1 2 2 3 0 0 1 5 4 7 5 3 5 6
 
-$csize
-[1] 14  1  1
+$centralization
+[1] 0.2199546
 
-$no
-[1] 3</code></pre>
+$theoretical_max
+[1] 441</code></pre>
 </div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-6" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>Let’s calculate the proportion of nodes in each component.</li>
-</ul>
+<section id="centralization-2" class="slide level2">
+<h2>Centralization</h2>
+<p>We could also calculate this directly by doing:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># 87.5% of the nodes fall in the largest component</span></span>
-<span id="cb16-2"><a></a><span class="co"># two isolates are each in their own component</span></span>
-<span id="cb16-3"><a></a>components_friendship<span class="sc">$</span>csize <span class="sc">/</span> <span class="fu">sum</span>(components_friendship<span class="sc">$</span>csize) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">sum</span>(<span class="fu">max</span>(indegree_social) <span class="sc">-</span> indegree_social) <span class="sc">/</span> <span class="fu">sum</span>(<span class="dv">21</span> <span class="sc">-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">21</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8750 0.0625 0.0625</code></pre>
+<pre><code>[1] 0.2199546</code></pre>
 </div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-with-vertex-connectivity" class="slide level2">
-<h2>Let’s see if cohesion exists with vertex connectivity</h2>
-<ul>
-<li>Explore the connectivity of specific pairs of nodes in the network</li>
-<li><code>vertex connectivity</code> give us the number of nodes that would need to be <strong>removed</strong> so that i can no longer reach j</li>
-</ul>
-</section>
-<section id="lets-see-if-cohesion-exists-7" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>Utilize the vertex connectivity with undirected network</li>
-</ul>
+<section id="centralization-3" class="slide level2">
+<h2>Centralization</h2>
+<p>And now we do the same thing for the task network.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>net182_friend_und <span class="ot">&lt;-</span> <span class="fu">as.undirected</span>(net182_friend, <span class="at">mode =</span> <span class="st">"collapse"</span>) </span>
-<span id="cb18-2"><a></a>net182_friend_und</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>cent_task <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_task,</span>
+<span id="cb32-2"><a></a>                          <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-3"><a></a>cent_task</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH bff07a2 UN-- 16 42 -- 
-+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)
-+ edges from bff07a2 (vertex names):
- [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 
-[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11
-[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14
-[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15
-[41] 10--15 12--15</code></pre>
+<pre><code>$res
+ [1]  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17
+
+$centralization
+[1] 0.7761905
+
+$theoretical_max
+[1] 420</code></pre>
 </div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-8" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>calculate vertex connectivity for two example nodes, 1 and 9:</li>
-</ul>
+<section id="centralization-4" class="slide level2">
+<h2>Centralization</h2>
+<p>Now, let’s do a simple plot of the two degree distributions. We will put degree on the x-axis and plot a smoothed density curve for each distribution. First, we need to get the density curves for each network, starting with the social interaction network (we set from to 0 in the <code>density()</code> function as indegree cannot be less than 0).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group </span></span>
-<span id="cb20-2"><a></a><span class="fu">vertex_disjoint_paths</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">source =</span> <span class="dv">1</span>, <span class="at">target =</span> <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
+<span id="cb34-2"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="lets-see-if-cohesion-exists-9" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>calculate vertex connectivity for a network</li>
-</ul>
+<section id="centralization-5" class="slide level2">
+<h2>Centralization</h2>
+<p>And now we set up the plot, plot the two lines and add a legend.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># returns the minimum number of vertices that must be removed to make the graph disconnected </span></span>
-<span id="cb22-2"><a></a><span class="co"># (i.e., split into at least two components)</span></span>
-<span id="cb22-3"><a></a><span class="fu">vertex_connectivity</span>(net182_friend_und)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-</div>
-</section>
-<section id="community-or-group-detection" class="slide level2">
-<h2>Community (or Group) Detection</h2>
-<ul>
-<li>Find the communities (or groups) within the larger cohesive set.</li>
-<li>The goal is to identify sets of nodes that have high internal density and few ties to outside members.</li>
-</ul>
-</section>
-<section id="community-or-group-detection-1" class="slide level2">
-<h2>Community (or Group) Detection</h2>
-<ul>
-<li>Many different ways to detect communities.
-<ul>
-<li>1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness …</li>
-</ul></li>
-</ul>
-</section>
-<section id="cohesive-blocking" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
-<ul>
-<li>Subset the network into groups based on vertex connectivity</li>
-<li>Iteratively search for subgroups that maintain connectivity under the removal of k nodes</li>
-<li>Starting from highly cohesive groups (large k) and moving down to less cohesive ones</li>
-</ul>
-</section>
-<section id="cohesive-blocking-1" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>friend_comm_cohesive <span class="ot">&lt;-</span> <span class="fu">cohesive_blocks</span>(<span class="at">graph =</span> net182_friend_und)</span>
-<span id="cb24-2"><a></a>friend_comm_cohesive <span class="co"># hard to interprete the result..... then...?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Cohesive block structure:
-B-1      c 0, n 16
-'- B-2   c 4, n 14   ooo.oooooo ooooo. </code></pre>
-</div>
-</div>
-</section>
-<section id="cohesive-blocking-2" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
-<ul>
-<li>Visualize the result!!</li>
-<li>Two blocks (one with vertex connectivity 0, second with vertex connectivity)</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">plot</span>(friend_comm_cohesive, net182_friend_und) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">plot</span>(<span class="fu">range</span>(den_social<span class="sc">$</span>x, den_task<span class="sc">$</span>x), <span class="fu">range</span>(den_social<span class="sc">$</span>y, den_task<span class="sc">$</span>y), </span>
+<span id="cb35-2"><a></a>     <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">"degree"</span>, </span>
+<span id="cb35-3"><a></a>     <span class="at">ylab =</span> <span class="st">"density"</span>, </span>
+<span id="cb35-4"><a></a>     <span class="at">main =</span> <span class="st">"Degree Distribution for Social and Task Networks"</span>)</span>
+<span id="cb35-5"><a></a></span>
+<span id="cb35-6"><a></a><span class="fu">lines</span>(den_social, <span class="at">col =</span> <span class="st">"red"</span> , <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-7"><a></a><span class="fu">lines</span>(den_task, <span class="at">col =</span> <span class="st">"light blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb35-8"><a></a></span>
+<span id="cb35-9"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Social"</span>, <span class="st">"Task"</span>),</span>
+<span id="cb35-10"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"light blue"</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-15-1.png" width="528" class="r-stretch"></section>
-<section id="walktrap" class="slide level2">
-<h2>2) Walktrap</h2>
-<ul>
-<li>Detects communities through a series of short random walks
-<ul>
-<li>Nodes encountered on any given random walk are more likely to be within a community than not</li>
-<li>The algorithm initially treats all nodes as communities of their own</li>
-<li>Merges them into larger communities, and these into still larger communities, and so on</li>
-</ul></li>
-</ul>
-</section>
-<section id="walktrap-1" class="slide level2">
-<h2>2) Walktrap</h2>
-<ul>
-<li><p>Detects communities through a series of short random walks</p>
-<ul>
-<li>Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co"># steps :length of random walk (4 or 5 is recommended)</span></span>
-<span id="cb27-2"><a></a><span class="co"># membership : T/F, should membership be calculated based on highest modularity score? T by default</span></span>
-<span id="cb27-3"><a></a>friend_comm_wt4 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">steps =</span> <span class="dv">4</span>, </span>
-<span id="cb27-4"><a></a>                                    <span class="at">membership =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="walktrap-2" class="slide level2">
-<h2>2) Walktrap</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># groups: 4 → 4 community detected in the network</span></span>
-<span id="cb28-2"><a></a><span class="co"># mod: 0.27 → value of modularity </span></span>
-<span id="cb28-3"><a></a><span class="fu">print</span>(friend_comm_wt4, <span class="at">all =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH clustering walktrap, groups: 4, mod: 0.27
-+ groups:
-  $`1`
-  [1] "2"  "7"  "8"  "13" "14"
-  
-  $`2`
-  [1] "1"  "3"  "5"  "6"  "9"  "10" "11" "12" "15"
-  
-  $`3`
-  [1] "4"
-  
-  $`4`
-  + ... omitted several groups/vertices</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-3" class="slide level2">
-<h2>2) Walktrap</h2>
-<p>What would happen if we used 3 steps?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># the modularity is slightly higher when we use 3 steps</span></span>
-<span id="cb30-2"><a></a>friend_comm_wt3 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, </span>
-<span id="cb30-3"><a></a>                                    <span class="at">steps =</span> <span class="dv">3</span>, <span class="at">membership =</span> T)</span>
-<span id="cb30-4"><a></a>friend_comm_wt3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH clustering walktrap, groups: 5, mod: 0.28
-+ groups:
-  $`1`
-  [1] "2"  "7"  "8"  "13" "14"
-  
-  $`2`
-  [1] "1"  "9"  "10" "12" "15"
-  
-  $`3`
-  [1] "3"  "5"  "6"  "11"
-  
-  $`4`
-  + ... omitted several groups/vertices</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-4" class="slide level2">
-<h2>2) Walktrap</h2>
-<ul>
-<li>Compare the two partitions using the <code>table</code> function:</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="co"># row : results for communities when step is 4 (4 community detected)</span></span>
-<span id="cb32-2"><a></a><span class="co"># col : results for communities when step is 3 (5 community detected)</span></span>
-<span id="cb32-3"><a></a><span class="fu">table</span>( <span class="fu">membership</span>(friend_comm_wt4),  <span class="fu">membership</span>(friend_comm_wt3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   
-    1 2 3 4 5
-  1 5 0 0 0 0
-  2 0 5 4 0 0
-  3 0 0 0 1 0
-  4 0 0 0 0 1</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-5" class="slide level2">
-<h2>2) Walktrap</h2>
-<ul>
-<li>Plot the network based on the found communities, comparing the two partitions.</li>
-<li>Color the nodes based on the communities found using the walktrap algorithm.</li>
-</ul>
-</section>
-<section id="walktrap-6" class="slide level2">
-<h2>2) Walktrap</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb34-2"><a></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(net182_friend) </span>
-<span id="cb34-3"><a></a><span class="fu">plot</span>(net182_friend_und, <span class="at">layout =</span> layout, <span class="at">vertex.color =</span> <span class="fu">membership</span>(friend_comm_wt4),<span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.size =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"Walktrap: 4 Steps"</span>)</span>
-<span id="cb34-4"><a></a><span class="fu">plot</span>(net182_friend_und, <span class="at">layout =</span> layout, <span class="at">vertex.color =</span> <span class="fu">membership</span>(friend_comm_wt3), <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.size =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"Walktrap: 3 Steps"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="672" class="r-stretch"></section>
+<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

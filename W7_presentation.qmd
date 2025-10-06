@@ -16,18 +16,17 @@ execute:
 
 - Looking at various centrality measures
 - Explore network-level measures of hierarchy
-- Apply the same student relationship dataset
-- Build directly on the material from previous tutorials ([Chapter 3](#ch3-Network-Data-R), [Chapter 7](#ch7-Dyads-Triads-R))
+- Apply the same student relationship dataset (social tie and task tie btw students)
 
 ## Setting up the Session
-- import **igraph** package for network analysis 
+- Import **igraph** package for network analysis 
 
 ```{r message=F, warning=F}
 library(igraph)
 ```
 
 ## Setting up the Session
-- load edgelist dataset where there exists social tie between students
+- Load edgelist dataset where there exists social tie between students
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/social_interactions_s641.csv"
 social_data <- read.csv(file = url1)
@@ -36,16 +35,22 @@ head(social_data)
 ```
 
 ## Setting up the Session
-- create a network 
+- Create a network... by the way...
 ```{r}
-# The size of the network is 22, so we will set the vertices input to define the ids of the nodes exclude isolated nodes
+# vertices = (id = 1:22), what does it mean...?
 s641_social <- graph_from_data_frame(d = edgelist_social, directed = T, 
                                      vertices = (id = 1:22)) 
 ```
 
 ## Setting up the Session
-- read in the task data
+- If you want to delete the all isolated nodes, then, 
+```{r}
+net641_social_noisolates <- graph_from_data_frame(d = edgelist_social, 
+                                                  directed = T) 
+```
 
+## Setting up the Session
+- Read in the task data
 ```{r}
 url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/task_interactions_s641.csv"
 task_data <- read.csv(file = url2)
@@ -54,53 +59,71 @@ head(task_data)
 
 ## Setting up the Session
 - The `task_tie` variable shows the frequency of task-based interactions between nodes i and j
-- Construct `task_tie` related network
+- Construct `task_tie` related network, by the way...
 
 ```{r}
 edgelist_task <- task_data[task_data$task_tie > 0, ] 
-# delete duplicated edges (2-5/5-2)
+edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ] # ?????????
+```
+
+
+## Setting up the Session
+- Delete duplicated edges 
+- If there are tie1(2-5) and tie2(5-2), then delete the second tie
+- Is it a right way to handle the edge list data?
+
+```{r}
 edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ]
 s641_task <- graph_from_data_frame(d = edgelist_task, directed = F, vertices = (id = 1:22)) 
 ```
 
 ## Setting up the Session
 - plot both networks.
-- what is the difference between the two networks
+- what is the difference between the two networks?
 
 ```{r fig.height=4.0, fig.width=7.0}
 par(mfrow = c(1, 2)) 
 
 plot(s641_social, vertex.frame.color = NA, edge.arrow.size = .25, vertex.size = 8, main = "Social Interactions", margin = -.08)
-
 plot(s641_task, vertex.frame.color = NA, edge.arrow.size = .25, vertex.size = 8, main = "Task Interactions", margin = -.08)
 ```
 
 ## Centrality 
-- capture something about which nodes are most important to the network
-- These node-level measures can be used as predictors of other outcomes, like attitudes, behaviors, etc. 
-- The centrality scores can also be used as the main outcome of interest
-- Here, we will walk through the code to calculate a number of commonly used measures, 
+- Capture something about which nodes are most important to the network
+- Used as predictors of other outcomes, like attitudes, behaviors, etc. 
 
 ## Indegree Centrality 
-- Indegree centrality measures how many ties each node receives, in this case the number of people that talks to node i in a social way. 
+- Measures how many ties each node receives
+- The number of people that talks to node i in a social way. 
 
 ```{r}
+# 3 people talk to node 1, 1 person talks to node 2
 indegree_social <- degree(graph = s641_social, mode = "in")
-head(indegree_social) 
+indegree_social
 ```
 
 ## Outdegree Centrality 
-This means that 3 people talk to node 1, 1 person talks to node 2, and so on. Outdegree centrality measures how many ties the node sends out, in this case the number of people that the node talks to in a social way. For outdegree we set mode to "out". 
+- Measures how many ties the node sends out
+- The number of people that the node talks to in a social way
 
 ```{r}
+# node 1 talk to 3 people, node 2 talks to 1 person 
 outdegree_social <- degree(graph = s641_social, mode = "out")
-head(outdegree_social)
+outdegree_social
 ```
 
 
 ## Closeness Centrality 
-- the inverse of the mean geodesic distance between a given node and all other nodes. 
+- the inverse of the mean distance in shortest path between a given node and all other nodes. 
+- where:
+- $n$ is the number of nodes in the network  
+- $d(v, u)$ is the geodesic distance (shortest path length) between node $v$ and node $u$  
+$$
+C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
+$$
 
+
+## Closeness Centrality 
 ```{r warning=F}
 # mode = "in", or "out"
 # normalized = T/F, should scores be normalized? (divided by n-1, where n is the number of people in the network)
@@ -113,6 +136,7 @@ head(outcloseness_social)
 - We can interpret those values as the inverse of the mean distance of each node to all other nodes that the focal node can reach. Isolates are assigned an NA value. Now we will do the same thing for in-closeness.
 
 ```{r warning=F}
+# why the closeness centrality is NaN for node 3?
 incloseness_social <- closeness(graph = s641_social, mode = "in", 
                                 normalized = T)
 head(incloseness_social)
@@ -138,7 +162,7 @@ sd(degree_task)
 
 ```
 ## Centralization
-To calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).
+- To calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).
 
 **igraph** has different centralization functions for each centrality score. For degree the function is `cent_degree()`. The arguments are graph (network of interest), mode (in, out, total) loops (T/F should self-loops be considered), and normalized (T/F should divide by theoretical max?) Here we calculate indegree centralization for the social interaction network, ignoring self loops and dividing by the theoretical max. 
 
@@ -187,94 +211,6 @@ lines(den_task, col = "light blue", lty = 2, lwd = 2)
 legend("topright", c("Social", "Task"),
        col = c("red", "light blue"), lty = 2, lwd = 2) 
 ```
-
-## Clustering and Hierarchy
-- want to know if the groups that exist in our classroom are themselves hierarchically arranged. 
-- To explore hierarchy at the group-level, it will be useful to consider other kinds of measures. 
-- Here, we will use the tau statistic. The tau statistic captures how micro processes aggregate to create different macro structures.
-
-## Clustering and Hierarchy
-- transform our network from an igraph object into a network object using the **intergraph** package 
-
-```{r message=F, warning=F}
-library(intergraph)
-```
-
-## Clustering and Hierarchy
-- For this analysis we will focus on the social interaction network. 
-
-```{r}
-s641_social_network <- asNetwork(s641_social)
-```
-
-## Clustering and Hierarchy
-- Here we read in a function to calculate the tau statistic.
-
-```{r}
-source(file = "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/R/tau_functions.R")
-```
-
-## Clustering and Hierarchy
-- Now we load the **ergm** and **sna** packages which is used by the tau function read in above. 
-
-```{r message=F, warning=F}
-library(ergm)
-library(sna)
-```
-
-## Clustering and Hierarchy
-- Let's test different hypotheses about the distribution of triads in the network, telling us something about the macro structure in terms of hierarchy. We will consider a ranked clustering hypothesis, a clustering hypothesis and a balance hypothesis. Each hypothesis is represented by a vector, indicating which triads should be summed up and compared to our baseline expectations.  The triad types are:
-![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/triad.png){width=30%}
-
-## Clustering and Hierarchy
-
-```{r}
-weights_rankedcluster <- c(1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1)
-weights_cluster       <- c(1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)
-weights_balance       <- c(0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1)
-```
-
-
-## Clustering and Hierarchy
-- The function is `tau_stat_function()`. The arguments are network and weight.vector (the vector of weights). For ranked clustering:
-
-```{r}
-tau_rankedcluster <- tau_stat_function(network = s641_social_network, weight.vector = weights_rankedcluster)
-tau_rankedcluster 
-```
-
-## Clustering and Hierarchy
-- The output is a list, with the first element the tau statistic and the second a data frame with the observed and expected triads, as well as the weighting vector. Now for the clustering hypothesis:
-
-```{r}
-tau_cluster <- tau_stat_function(network = s641_social_network, weight.vector = weights_cluster)
-tau_cluster
-```
-
-## Clustering and Hierarchy
-Now for the balance hypothesis:
-
-```{r}
-tau_balance <- tau_stat_function(network = s641_social_network,  weight.vector = weights_balance)
-tau_balance
-```
-
-## Clustering and Hierarchy
-In general, larger values offer support for the hypothesis in question. We can see here that there is little support for the balance hypothesis compared to the other hypotheses. This suggests that the balance hypothesis is too simple. More specifically, it looks like there are many more null triads (003) than we would expect in a network where everyone falls into two groups (under the balance hypothesis). The tau statistics are similar between the ranked clustering and clustering hypotheses. A value of 2.968 (for ranked clustering) suggests that the observed (summed) counts are about 3 standard deviations away from what we expect under the null. Values over 2 offer support for the hypothesis in question under traditional hypothesis testing criteria.
-
-Let's take a closer look at the results for the ranked clustering model. We will focus on the expected and observed triad counts, particularly those triads that are in the ranked clustering model but not the clustering model (021D, 021U, 030T, 120D, 120U). The idea is to grab the data frame from the ranked cluster results, only keeping those rows for certain triads.
-
-```{r}
-triad_names <- c("triadcensus.021D", "triadcensus.021U", "triadcensus.030T",
-                 "triadcensus.120D","triadcensus.120U")
-
-tau_rankedcluster[[2]][rownames(tau_rankedcluster[[2]]) %in% triad_names, ]
-```
-
-In every case but 021D, the observed counts are basically the same as that expected by the null model. In fact, we see 0 observed triads for 021U, 030T, 120D and 120U. This would suggest that the ranked clustering model really isn't offering much over the clustering model. The ranked clustering model offers similar fit to the clustering model but is more complicated, adding 5 triads that do not seem to deviate much from chance expectations. We may then have good reason to interpret the network in terms of the clustering model, where there are multiple groups but few asymmetries. 
-
-Overall, the analysis shows that the social interaction network is best characterized as a network with multiple groups without a clear hierarchical arrangement. Given the very high levels of reciprocity in social interactions, asymmetries are rare and do not consistently emerge between groups. The tau statistic reinforces our story of the social interaction network consisting of distinct social groups with one bridge and no clear hierarchy. Compare this to the task network, which has a clear hub and spoke structure, but no emergent groups.  
-
 
 
 ## Done!

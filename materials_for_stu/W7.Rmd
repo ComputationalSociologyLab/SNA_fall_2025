@@ -97,7 +97,7 @@ indegree_social <- degree(graph = s641_social, mode = "in")
 
 Let's look at first 6 values:
 ```{r}
-head(indegree_social) 
+indegree_social
 ```
 
 This means that 3 people talk to node 1, 1 person talks to node 2, and so on. Outdegree centrality measures how many ties the node sends out, in this case the number of people that the node talks to in a social way. For outdegree we set mode to "out". 
@@ -107,7 +107,7 @@ outdegree_social <- degree(graph = s641_social, mode = "out")
 ```
 
 ```{r}
-head(outdegree_social)
+outdegree_social
 ```
 
 Closeness is the inverse of the mean geodesic distance between a given node and all other nodes. In a directed network, we can think of in-closeness centrality as the average number of steps one would have to go through to get TO a given node FROM all other reachable nodes in the network. Out-closeness centrality measures the same thing with the directionality reversed (average number of steps to get from i to all other j nodes). We invert the mean distance to make it a closeness measure, where higher values mean the nodes are more central (i.e., closer to other nodes). When calculating closeness, igraph (at least more recent versions of the package) will only include nodes that actor i can reach in the calculation, and so is most easily interpreted for fully connected graphs, where all nodes can reach all other nodes. The function is `closeness()` and the arguments are:

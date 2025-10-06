@@ -26,7 +26,7 @@ execute:
 
 ```{r}
 # Load files for edge list
-url1 <- "https://computationalsociologylab.github.io/SNA_fall_2025/data/class555_edgelist.csv"
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_edgelist.csv"
 
 class_edges <- read.csv(url1)
 ```
@@ -41,7 +41,7 @@ head(class_edges)
 
 ```{r}
 # Attributes for gender, race and grade.
-url2 <- "https://computationalsociologylab.github.io/SNA_fall_2025/data/class555_attributedata.csv"
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_attributedata.csv"
 
 class_attributes <- read.csv(url2)
 ```

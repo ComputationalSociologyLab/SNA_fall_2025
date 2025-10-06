@@ -2,7 +2,7 @@ project:
   type: website
   output-dir: docs
   render:
-    - W5_presentation.qmd
+    - ./*.qmd
 
 website:
   title: "W5. Network Cohesion and Communities"

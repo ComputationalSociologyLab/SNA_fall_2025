@@ -10,7 +10,7 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.4.533">
 
-  <title>W5. Network Cohesion and Communities</title>
+  <title>W5. Network Cohesion and Communities - W3. Visualization</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -98,8 +98,6 @@
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
-  <link href="site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
   <style type="text/css">
 
@@ -393,444 +391,326 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">W5. Network Cohesion and Communities</h1>
+  <h1 class="title">W3. Visualization</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
 <section>
-<section id="network-cohesion-and-communities" class="title-slide slide level1 center">
-<h1>Network Cohesion and Communities</h1>
+<section id="ch5-Network-Visualization-R" class="title-slide slide level1 center">
+<h1>Network Visualization</h1>
 <ul>
-<li>examine cohesion, capturing how robust the network is to being fragmented</li>
-<li>cover community structure, capturing which sets of actors form a group</li>
-<li>apply from student relationship dataset</li>
-<li>the different kinds of interactions occurring in one classroom(small, only 16 actors)</li>
+<li>Focus on cross-sectional network data and cover basic network visualization</li>
+<li>Walk through the different approaches and options in detail</li>
 </ul>
 </section>
-<section id="load-dataset" class="slide level2">
-<h2>Load dataset</h2>
+<section id="please-keep-in-mind" class="slide level2">
+<h2>Please keep in mind</h2>
 <ul>
-<li>use primarily with the <strong>igraph</strong> package. We will also load <strong>ggplot2</strong> to draw a network.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(igraph)</span>
-<span id="cb1-2"><a></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="load-dataset-1" class="slide level2">
-<h2>Load dataset</h2>
+<li>We only cover a relatively small number of plotting options</li>
+<li>There isn’t one “<em>magic</em>” plot that is perfect for everything (mirage…unicorn…)
 <ul>
-<li>read in the classroom network data (edgelist dataset)</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"</span></span>
-<span id="cb2-2"><a></a>class182_networkdata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1)</span>
-<span id="cb2-3"><a></a><span class="co"># contains information for three relationship : friendship, social interaction, task interaction </span></span>
-<span id="cb2-4"><a></a><span class="co"># 2 = best friend, 1 = friend, 0 = not friend</span></span>
-<span id="cb2-5"><a></a><span class="co"># Social/task interaction is measured as each interaction per hour</span></span>
-<span id="cb2-6"><a></a><span class="fu">head</span>(class182_networkdata) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  ego alter friend_tie social_tie task_tie
-1   1     1          0        0.0      0.0
-2   1     2          0        0.0      0.0
-3   1     3          0        0.0      0.0
-4   1     4          0        0.0      0.0
-5   1     5          0        1.2      0.3
-6   1     6          0        0.0      0.0</code></pre>
-</div>
-</div>
-</section>
-<section id="load-dataset-2" class="slide level2">
-<h2>Load dataset</h2>
-<ul>
-<li>read in the classroom network data (attribute dataset)</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"</span></span>
-<span id="cb4-2"><a></a>class182_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
-<span id="cb4-3"><a></a>class182_attributes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   ids  race grade gender
-1    1 white    10   male
-2    2 black    10 female
-3    3 white    10 female
-4    4 white    11 female
-5    5 white    10   male
-6    6 white    10 female
-7    7 black    10 female
-8    8 black    10 female
-9    9 white    10 female
-10  10 black    11   male
-11  11 white    10   male
-12  12 black    11 female
-13  13 white    10 female
-14  14 black    10 female
-15  15 black    10 female
-16  16 black    13   male</code></pre>
-</div>
-</div>
-</section>
-<section id="create-frienship-network" class="slide level2">
-<h2>Create Frienship Network</h2>
-<ul>
-<li>Extract the friends within the dataset</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># edges with a friendship value greater than zero</span></span>
-<span id="cb6-2"><a></a>edge_value <span class="ot">&lt;-</span> class182_networkdata<span class="sc">$</span>friend_tie</span>
-<span id="cb6-3"><a></a>edgelist_friendship <span class="ot">&lt;-</span> class182_networkdata[edge_value <span class="sc">&gt;</span> <span class="dv">0</span>, </span>
-<span id="cb6-4"><a></a>                                            <span class="fu">c</span>(<span class="st">"ego"</span>, <span class="st">"alter"</span>, <span class="st">"friend_tie"</span>)]</span>
-<span id="cb6-5"><a></a><span class="fu">head</span>(edgelist_friendship)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   ego alter friend_tie
-17   2     1          1
-23   2     7          1
-24   2     8          1
-29   2    13          2
-30   2    14          1
-37   3     5          1</code></pre>
-</div>
-</div>
-</section>
-<section id="create-frienship-network-1" class="slide level2">
-<h2>Create Frienship Network</h2>
-<ul>
-<li>Create a igraph object using the edgelist and attribute data frames.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="co"># directed network</span></span>
-<span id="cb8-2"><a></a><span class="co"># have the strength of the relationship</span></span>
-<span id="cb8-3"><a></a>net182_friend <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> edgelist_friendship, <span class="at">directed =</span> T, </span>
-<span id="cb8-4"><a></a>                                       <span class="at">vertices =</span> class182_attributes) </span>
-<span id="cb8-5"><a></a>net182_friend </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH 397b800 DN-- 16 62 -- 
-+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie
-| (e/n)
-+ edges from 397b800 (vertex names):
- [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15
-[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 
-[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 
-[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 
-[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15
-[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 
-[61] 15-&gt;9  15-&gt;12</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>Start with a quick plot of the friendship network</li>
-<li>Is there any cohision in this network??</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">plot</span>(net182_friend, <span class="at">vertex.label =</span> <span class="cn">NA</span>, <span class="at">vertex.size =</span> <span class="dv">10</span>,</span>
-<span id="cb10-2"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">25</span>, <span class="at">edge.arrow.width =</span> <span class="dv">1</span>, </span>
-<span id="cb10-3"><a></a>     <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-6-1.png" width="528" class="r-stretch"></section>
-<section id="lets-see-if-cohesion-exists-1" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>The classroom network is fairly cohesive (ignoring the two isolates)</li>
-<li>Hard to split the central group into two groups.</li>
-</ul>
-</section>
-<section id="lets-see-if-cohesion-exists-2" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>explore some of the properties of the network, starting with density.<br>
-</li>
-<li>What does it mean?</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">edge_density</span>(net182_friend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2583333</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-3" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>About a quarter of all possible ties are present in the network</li>
-<li>(m) = number of edges = 62</li>
-<li>(n) = number of nodes = 16<br>
-<span class="math display">\[
-Dentisy = \frac{m}{n(n-1)} = \frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%
-\]</span></li>
-<li>Give us the information on the volume of ties, not the pattern of ties</li>
-</ul>
-</section>
-<section id="lets-see-if-cohesion-exists-4" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li><code>components()</code> : Detect all connected node in the network
-<ul>
-<li>If the nodes are connected, then they belong to the same component.</li>
-<li>“strong” mode : find components where node i and j are mutual reachable</li>
-<li>“weak” mode : find components where node i and j are in the same group if there is any path connecting them</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># *Note* : mode argument is ignored in the case of undirected networks.  </span></span>
-<span id="cb13-2"><a></a>components_friendship <span class="ot">&lt;-</span> <span class="fu">components</span>(<span class="at">graph =</span> net182_friend, <span class="at">mode =</span> <span class="st">"weak"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-5" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># membership : component membership of each node</span></span>
-<span id="cb14-2"><a></a><span class="co"># csize : size of component</span></span>
-<span id="cb14-3"><a></a><span class="co"># no : component number</span></span>
-<span id="cb14-4"><a></a>components_friendship</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$membership
- 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 
- 1  1  1  2  1  1  1  1  1  1  1  1  1  1  1  3 
-
-$csize
-[1] 14  1  1
-
-$no
-[1] 3</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-6" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>Let’s calculate the proportion of nodes in each component.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># 87.5% of the nodes fall in the largest component</span></span>
-<span id="cb16-2"><a></a><span class="co"># two isolates are each in their own component</span></span>
-<span id="cb16-3"><a></a>components_friendship<span class="sc">$</span>csize <span class="sc">/</span> <span class="fu">sum</span>(components_friendship<span class="sc">$</span>csize) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8750 0.0625 0.0625</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-with-vertex-connectivity" class="slide level2">
-<h2>Let’s see if cohesion exists with vertex connectivity</h2>
-<ul>
-<li>Explore the connectivity of specific pairs of nodes in the network</li>
-<li><code>vertex connectivity</code> give us the number of nodes that would need to be <strong>removed</strong> so that i can no longer reach j</li>
-</ul>
-</section>
-<section id="lets-see-if-cohesion-exists-7" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>Utilize the vertex connectivity with undirected network</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>net182_friend_und <span class="ot">&lt;-</span> <span class="fu">as.undirected</span>(net182_friend, <span class="at">mode =</span> <span class="st">"collapse"</span>) </span>
-<span id="cb18-2"><a></a>net182_friend_und</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH bff07a2 UN-- 16 42 -- 
-+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)
-+ edges from bff07a2 (vertex names):
- [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 
-[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11
-[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14
-[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15
-[41] 10--15 12--15</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-8" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>calculate vertex connectivity for two example nodes, 1 and 9:</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group </span></span>
-<span id="cb20-2"><a></a><span class="fu">vertex_disjoint_paths</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">source =</span> <span class="dv">1</span>, <span class="at">target =</span> <span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-</div>
-</section>
-<section id="lets-see-if-cohesion-exists-9" class="slide level2">
-<h2>Let’s see if cohesion exists</h2>
-<ul>
-<li>calculate vertex connectivity for a network</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># returns the minimum number of vertices that must be removed to make the graph disconnected </span></span>
-<span id="cb22-2"><a></a><span class="co"># (i.e., split into at least two components)</span></span>
-<span id="cb22-3"><a></a><span class="fu">vertex_connectivity</span>(net182_friend_und)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-</div>
-</section>
-<section id="community-or-group-detection" class="slide level2">
-<h2>Community (or Group) Detection</h2>
-<ul>
-<li>Find the communities (or groups) within the larger cohesive set.</li>
-<li>The goal is to identify sets of nodes that have high internal density and few ties to outside members.</li>
-</ul>
-</section>
-<section id="community-or-group-detection-1" class="slide level2">
-<h2>Community (or Group) Detection</h2>
-<ul>
-<li>Many different ways to detect communities.
-<ul>
-<li>1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness …</li>
+<li>If I could, I’d like to introduce R script that makes the perfect plot everytime</li>
+<li>A plot that works well for one network might not work for another🥲</li>
 </ul></li>
 </ul>
 </section>
-<section id="cohesive-blocking" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
+<section id="setting-up-the-session" class="slide level2">
+<h2>Setting up the Session</h2>
 <ul>
-<li>Subset the network into groups based on vertex connectivity</li>
-<li>Iteratively search for subgroups that maintain connectivity under the removal of k nodes</li>
-<li>Starting from highly cohesive groups (large k) and moving down to less cohesive ones</li>
+<li>The actors are students in a classroom and the relation of interest is friendship</li>
 </ul>
-</section>
-<section id="cohesive-blocking-1" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>friend_comm_cohesive <span class="ot">&lt;-</span> <span class="fu">cohesive_blocks</span>(<span class="at">graph =</span> net182_friend_und)</span>
-<span id="cb24-2"><a></a>friend_comm_cohesive <span class="co"># hard to interprete the result..... then...?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># Load files for edge list</span></span>
+<span id="cb1-2"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_edgelist.csv"</span></span>
+<span id="cb1-3"><a></a></span>
+<span id="cb1-4"><a></a>class_edges <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lets-see-how-it-looks-like" class="slide level2">
+<h2>Let’s see how it looks like</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">head</span>(class_edges)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Cohesive block structure:
-B-1      c 0, n 16
-'- B-2   c 4, n 14   ooo.oooooo ooooo. </code></pre>
+<pre><code>  sender receiver weight
+1      1        3      1
+2      1        5      1
+3      1        7      1
+4      1       21      1
+5      2        3      1
+6      2        6      1</code></pre>
 </div>
 </div>
 </section>
-<section id="cohesive-blocking-2" class="slide level2">
-<h2>1) Cohesive Blocking</h2>
-<ul>
-<li>Visualize the result!!</li>
-<li>Two blocks (one with vertex connectivity 0, second with vertex connectivity)</li>
-</ul>
+<section id="lets-also-read-in-the-attribute-file." class="slide level2">
+<h2>Let’s also read in the attribute file.</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">plot</span>(friend_comm_cohesive, net182_friend_und) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># Attributes for gender, race and grade.</span></span>
+<span id="cb4-2"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_attributedata.csv"</span></span>
+<span id="cb4-3"><a></a></span>
+<span id="cb4-4"><a></a>class_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="we-begin-using-the-igraph-package." class="slide level2">
+<h2>We begin using the <strong>igraph</strong> package.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># import library</span></span>
+<span id="cb5-2"><a></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="now-we-go-ahead-and-construct-the-igraph-object" class="slide level2">
+<h2>Now we go ahead and construct the igraph object</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="co"># the edgelist and attribute objects as inputs.</span></span>
+<span id="cb6-2"><a></a><span class="co"># use 'graph_from_data_frame' function </span></span>
+<span id="cb6-3"><a></a>class_net <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(<span class="at">d =</span> class_edges, <span class="at">directed =</span> T, </span>
+<span id="cb6-4"><a></a>                                   <span class="at">vertices =</span> class_attributes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="detailed-information-of-our-network" class="slide level2">
+<h2>Detailed information of our network</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="co"># v/c : vertex attribute, character</span></span>
+<span id="cb7-2"><a></a><span class="co"># v/n : vertex attribute, numeric</span></span>
+<span id="cb7-3"><a></a><span class="co"># e/n : edge attribute, numeric</span></span>
+<span id="cb7-4"><a></a>class_net</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>IGRAPH b4307f9 DNW- 24 77 -- 
++ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)
++ edges from b4307f9 (vertex names):
+ [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24
+[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 
+[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24
+[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10
+[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13
+[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20
+[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13
+[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-a-network-using-igraph" class="slide level2">
+<h2>Plot a network using igraph</h2>
+<ul>
+<li>Ploting network offers an intuitive way of exploring the features of the network</li>
+<li>Looking at a picture of the network is a useful starting point for an analysis.</li>
+</ul>
+</section>
+<section id="lets-start-with-the-default-plotting-in-igraph." class="slide level2">
+<h2>Let’s start with the default plotting in <strong>igraph</strong>.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">plot</span>(class_net) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-15-1.png" width="528" class="r-stretch"></section>
-<section id="walktrap" class="slide level2">
-<h2>2) Walktrap</h2>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-7-1.png" width="768" class="r-stretch"></section>
+<section id="and-improve-the-graph" class="slide level2">
+<h2>And improve the graph!</h2>
 <ul>
-<li>Detects communities through a series of short random walks
+<li>The plot does not tell us anything (gender, race, degree..)</li>
+<li>We begin by exploring gender divides in the network</li>
+<li>i.e., how strongly does gender map onto friendship groups?</li>
+</ul>
+</section>
+<section id="and-improve-the-graph-1" class="slide level2">
+<h2>And improve the graph!</h2>
 <ul>
-<li>Nodes encountered on any given random walk are more likely to be within a community than not</li>
-<li>The algorithm initially treats all nodes as communities of their own</li>
-<li>Merges them into larger communities, and these into still larger communities, and so on</li>
+<li>Let’s color the nodes by gender</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="co">#  make male students navy blue and female students light sky blue </span></span>
+<span id="cb10-2"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(class_attributes<span class="sc">$</span>gender <span class="sc">==</span> <span class="st">"Female"</span>, <span class="st">"lightskyblue"</span>, <span class="st">"navy"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="and-improve-the-graph-2" class="slide level2">
+<h2>And improve the graph!</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># Using a simple `table()` function, we made simple table </span></span>
+<span id="cb11-2"><a></a><span class="co"># 16 female students are assigned for lightskyblue color</span></span>
+<span id="cb11-3"><a></a><span class="co"># 8 male students are assigned for navy color</span></span>
+<span id="cb11-4"><a></a><span class="fu">table</span>(cols, class_attributes<span class="sc">$</span>gender)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              
+cols           Female Male
+  lightskyblue     16    0
+  navy              0    8</code></pre>
+</div>
+</div>
+</section>
+<section id="assign-the-gendered-colorset-to-the-network" class="slide level2">
+<h2>Assign the gendered colorset to the network</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># use a `V(g)$color` command to set the color of each node in the network </span></span>
+<span id="cb13-2"><a></a><span class="fu">V</span>(class_net)<span class="sc">$</span>color <span class="ot">&lt;-</span> cols </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="and-now-we-plot-as-before." class="slide level2">
+<h2>And now we plot as before.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># same result for `plot(class_net, vertex.color = cols)`</span></span>
+<span id="cb14-2"><a></a><span class="fu">plot</span>(class_net)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-11-1.png" width="768" class="r-stretch"></section>
+<section id="what-is-different" class="slide level2">
+<h2>What is different?</h2>
+<ul>
+<li>The network does divide along gender lines</li>
+<li>With one small group of boys and then a larger set of girls</li>
+<li>Two boys are not part of the ‘boy group’, and are disproportionately connected to girls</li>
+<li>What else?</li>
+</ul>
+</section>
+<section id="what-if" class="slide level2">
+<h2>What if?</h2>
+<ul>
+<li>A researcher may also be interested in who is popular in the class</li>
+<li>We can identify it with Network Measure</li>
+</ul>
+</section>
+<section id="what-if-1" class="slide level2">
+<h2>What if?</h2>
+<ul>
+<li>A researcher may also be interested in who is popular in the class</li>
+<li>We can identify it with Network Measure</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># Yes! indegree!</span></span>
+<span id="cb15-2"><a></a><span class="co"># degree : # of of neighbors in a network</span></span>
+<span id="cb15-3"><a></a><span class="co"># indegree : # of incoming neighbors</span></span>
+<span id="cb15-4"><a></a><span class="co"># indegree of node i : # of students who think node i is their frieds </span></span>
+<span id="cb15-5"><a></a><span class="co"># -&gt; popularity</span></span>
+<span id="cb15-6"><a></a>indeg <span class="ot">&lt;-</span> <span class="fu">degree</span>(class_net, <span class="at">mode =</span> <span class="st">"in"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="now-we-plot-the-network" class="slide level2">
+<h2>Now we plot the network</h2>
+<ul>
+<li>Put indegree value for the size of the nodes</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># set margin to -.10 to reduce some of the extra white space around the plot.</span></span>
+<span id="cb16-2"><a></a><span class="fu">plot</span>(class_net, <span class="at">vertex.size =</span> indeg, <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-13-1.png" width="768" class="r-stretch"></section>
+<section id="now-we-plot-the-network-1" class="slide level2">
+<h2>Now we plot the network</h2>
+<ul>
+<li>Make all the nodes a little bigger, but the nodes are still sized by indegree</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># adding integer (here, 3) to the indegree to make the node bigger</span></span>
+<span id="cb17-2"><a></a><span class="co"># change the color of label</span></span>
+<span id="cb17-3"><a></a><span class="fu">plot</span>(class_net, <span class="at">vertex.size =</span> indeg <span class="sc">+</span> <span class="dv">3</span>, <span class="at">vertex.label.color =</span> <span class="st">"red"</span>, </span>
+<span id="cb17-4"><a></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-14-1.png" width="768" class="r-stretch"></section>
+<section id="now-we-plot-the-network-2" class="slide level2">
+<h2>Now we plot the network</h2>
+<ul>
+<li>One boy (id 13) and one girl (id 24) receive a particularly high number of nominations</li>
+<li>Boys in the ‘boy group’ tend to have low indegree, as they are only friends with each other and there are few boys in the network.</li>
+</ul>
+</section>
+<section id="lets-improve-the-graph" class="slide level2">
+<h2>Let’s improve the graph!</h2>
+<ul>
+<li>Change the look of the nodes</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">plot</span>(class_net, </span>
+<span id="cb18-2"><a></a>    <span class="at">vertex.size =</span> indeg <span class="sc">+</span> <span class="dv">3</span>, </span>
+<span id="cb18-3"><a></a>    <span class="at">vertex.label =</span> <span class="cn">NA</span>, <span class="co"># take out those labels using a vertex.label argument</span></span>
+<span id="cb18-4"><a></a>    <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>, <span class="co"># take off the black edges around the nodes</span></span>
+<span id="cb18-5"><a></a>    <span class="at">edge.arrow.size =</span> .<span class="dv">5</span>, </span>
+<span id="cb18-6"><a></a>    <span class="at">edge.arrow.width =</span> .<span class="dv">75</span>, </span>
+<span id="cb18-7"><a></a>    <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-15-1.png" width="576" class="r-stretch"></section>
+<section id="lets-improve-the-graph-1" class="slide level2">
+<h2>Let’s improve the graph!</h2>
+<ul>
+<li>Now we change the layout of the graph.</li>
+<li>layout_with_mds(Multi-Dimensional Scaling)
+<ul>
+<li>calculate the distance between node i and j</li>
+<li>place nodes where the distance is preserved</li>
+<li>👉 Good for showing the overall/global structure of the network</li>
 </ul></li>
 </ul>
 </section>
-<section id="walktrap-1" class="slide level2">
-<h2>2) Walktrap</h2>
+<section id="lets-improve-the-graph-2" class="slide level2">
+<h2>Let’s improve the graph!</h2>
 <ul>
-<li><p>Detects communities through a series of short random walks</p>
+<li>layout_with_kk(Kamada–Kawai)
 <ul>
-<li>Unlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities</li>
+<li>Assign the distnace between node i and j
+<ul>
+<li>if direct edge exists, place the nodes closer together</li>
+<li>if not, place the nodes farther apart</li>
+<li>👉 Good for highlighting local structures and communities</li>
+</ul></li>
 </ul></li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co"># steps :length of random walk (4 or 5 is recommended)</span></span>
-<span id="cb27-2"><a></a><span class="co"># membership : T/F, should membership be calculated based on highest modularity score? T by default</span></span>
-<span id="cb27-3"><a></a>friend_comm_wt4 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, <span class="at">steps =</span> <span class="dv">4</span>, </span>
-<span id="cb27-4"><a></a>                                    <span class="at">membership =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
-<section id="walktrap-2" class="slide level2">
-<h2>2) Walktrap</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># groups: 4 → 4 community detected in the network</span></span>
-<span id="cb28-2"><a></a><span class="co"># mod: 0.27 → value of modularity </span></span>
-<span id="cb28-3"><a></a><span class="fu">print</span>(friend_comm_wt4, <span class="at">all =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH clustering walktrap, groups: 4, mod: 0.27
-+ groups:
-  $`1`
-  [1] "2"  "7"  "8"  "13" "14"
-  
-  $`2`
-  [1] "1"  "3"  "5"  "6"  "9"  "10" "11" "12" "15"
-  
-  $`3`
-  [1] "4"
-  
-  $`4`
-  + ... omitted several groups/vertices</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-3" class="slide level2">
-<h2>2) Walktrap</h2>
-<p>What would happen if we used 3 steps?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># the modularity is slightly higher when we use 3 steps</span></span>
-<span id="cb30-2"><a></a>friend_comm_wt3 <span class="ot">&lt;-</span> <span class="fu">cluster_walktrap</span>(<span class="at">graph =</span> net182_friend_und, </span>
-<span id="cb30-3"><a></a>                                    <span class="at">steps =</span> <span class="dv">3</span>, <span class="at">membership =</span> T)</span>
-<span id="cb30-4"><a></a>friend_comm_wt3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>IGRAPH clustering walktrap, groups: 5, mod: 0.28
-+ groups:
-  $`1`
-  [1] "2"  "7"  "8"  "13" "14"
-  
-  $`2`
-  [1] "1"  "9"  "10" "12" "15"
-  
-  $`3`
-  [1] "3"  "5"  "6"  "11"
-  
-  $`4`
-  + ... omitted several groups/vertices</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-4" class="slide level2">
-<h2>2) Walktrap</h2>
+<section id="lets-improve-the-graph-3" class="slide level2">
+<h2>Let’s improve the graph!</h2>
 <ul>
-<li>Compare the two partitions using the <code>table</code> function:</li>
+<li>Now we change layout of a network.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="co"># row : results for communities when step is 4 (4 community detected)</span></span>
-<span id="cb32-2"><a></a><span class="co"># col : results for communities when step is 3 (5 community detected)</span></span>
-<span id="cb32-3"><a></a><span class="fu">table</span>( <span class="fu">membership</span>(friend_comm_wt4),  <span class="fu">membership</span>(friend_comm_wt3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   
-    1 2 3 4 5
-  1 5 0 0 0 0
-  2 0 5 4 0 0
-  3 0 0 0 1 0
-  4 0 0 0 0 1</code></pre>
-</div>
-</div>
-</section>
-<section id="walktrap-5" class="slide level2">
-<h2>2) Walktrap</h2>
-<ul>
-<li>Plot the network based on the found communities, comparing the two partitions.</li>
-<li>Color the nodes based on the communities found using the walktrap algorithm.</li>
-</ul>
-</section>
-<section id="walktrap-6" class="slide level2">
-<h2>2) Walktrap</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb34-2"><a></a>layout <span class="ot">&lt;-</span> <span class="fu">layout_with_fr</span>(net182_friend) </span>
-<span id="cb34-3"><a></a><span class="fu">plot</span>(net182_friend_und, <span class="at">layout =</span> layout, <span class="at">vertex.color =</span> <span class="fu">membership</span>(friend_comm_wt4),<span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.size =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"Walktrap: 4 Steps"</span>)</span>
-<span id="cb34-4"><a></a><span class="fu">plot</span>(net182_friend_und, <span class="at">layout =</span> layout, <span class="at">vertex.color =</span> <span class="fu">membership</span>(friend_comm_wt3), <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="at">vertex.size =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">"Walktrap: 3 Steps"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">plot</span>(class_net, </span>
+<span id="cb19-2"><a></a>     <span class="at">vertex.size =</span> indeg <span class="sc">+</span> <span class="dv">3</span>, </span>
+<span id="cb19-3"><a></a>     <span class="at">vertex.label =</span> <span class="cn">NA</span>, </span>
+<span id="cb19-4"><a></a>     <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>, </span>
+<span id="cb19-5"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">5</span>, </span>
+<span id="cb19-6"><a></a>     <span class="at">edge.arrow.width =</span> .<span class="dv">75</span>, </span>
+<span id="cb19-7"><a></a>     <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="co"># change the color of the lines to light gray,</span></span>
+<span id="cb19-8"><a></a>     <span class="at">layout =</span> layout_with_mds, <span class="co"># alter the layout of the plot </span></span>
+<span id="cb19-9"><a></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="W5_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="672" class="r-stretch"></section>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-16-1.png" width="576" class="r-stretch"></section>
+<section id="lets-improve-the-graph-4" class="slide level2">
+<h2>Let’s improve the graph!</h2>
+<ul>
+<li>Now we change layout of a network.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">plot</span>(class_net, </span>
+<span id="cb20-2"><a></a>     <span class="at">vertex.size =</span> indeg <span class="sc">+</span> <span class="dv">3</span>, </span>
+<span id="cb20-3"><a></a>     <span class="at">vertex.label =</span> <span class="cn">NA</span>, </span>
+<span id="cb20-4"><a></a>     <span class="at">vertex.frame.color =</span> <span class="cn">NA</span>, </span>
+<span id="cb20-5"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">5</span>, </span>
+<span id="cb20-6"><a></a>     <span class="at">edge.arrow.width =</span> .<span class="dv">75</span>, </span>
+<span id="cb20-7"><a></a>     <span class="at">edge.color =</span> <span class="st">"light gray"</span>, <span class="co"># change the color of the lines to light gray,</span></span>
+<span id="cb20-8"><a></a>     <span class="at">layout =</span> layout_with_kk, <span class="co"># alter the layout of the plot </span></span>
+<span id="cb20-9"><a></a>     <span class="at">margin =</span> <span class="sc">-</span>.<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="W3_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="768" class="r-stretch"></section>
+<section id="lets-improve-the-graph-5" class="slide level2">
+<h2>Let’s improve the graph!</h2>
+<ul>
+<li>a number of other options a researcher could explore if they wanted to continue tweaking their plot.</li>
+<li>See the following help files for more options: <code>?plot.igraph</code> <code>?igraph.plotting</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>?plot.igraph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
-<li>Please check KLMS for the assignment of this week(til Friday)</li>
-<li>If you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week [Option] in the assignment</li>
+<li><p>Please check KLMS for the assignment of this week</p></li>
+<li><p>This week [Option] is a real fun</p>
+<ul>
+<li>you can excercise how to draw dynamic graph!</li>
+</ul></li>
+<li><p>Questions?</p></li>
 </ul>
 
 
@@ -849,7 +729,6 @@ B-1      c 0, n 16
   <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
-  <script src="site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
   <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -870,8 +749,7 @@ B-1      c 0, n 16
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
-'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
-'chalkboard': {"buttons":true},
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -892,7 +770,7 @@ B-1      c 0, n 16
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: 'c/t',
+        slideNumber: false,
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1042,7 +920,7 @@ B-1      c 0, n 16
         },
 
         // reveal.js plugins
-        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
 
           RevealMath,
           RevealNotes,
