@@ -607,10 +607,15 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <section id="centralization" class="slide level2">
 <h2>Centralization</h2>
 <ul>
-<li>We have so far seen which nodes are most important in the classroom using different definitions of centrality.</li>
-<li>We have also seen how this differs across social and task interactions.</li>
-<li>To flesh out the story more clearly, it will be useful to formally summarize the distribution of the centrality measures, telling us something about the network as a whole.</li>
-<li>For example, a network with one node capturing the vast majority of ties is highly centralized, or highly unequal, as all of the activity in the network is focused on a particular node. A highly centralized network is also relatively fragile, as removing the one central node would greatly reduce the connectivity of the network. We could examine the distribution of any of the centrality scores we calculated above. Here, let’s focus on degree as a way of exploring the level of centralization in the two networks. Let’s start with a summary of the degree distributions (indegree for social and degree for task).</li>
+<li>Identify which nodes are most important in the classroom</li>
+<li>Let’s summarize the distribution of the centrality measures</li>
+<li>Extract stories about in the the network as a whole.</li>
+</ul>
+</section>
+<section id="centralization-1" class="slide level2">
+<h2>Centralization</h2>
+<ul>
+<li>What kind of story can we draw from the summary statistics?</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -633,16 +638,56 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 </div>
 </div>
 </section>
-<section id="centralization-1" class="slide level2">
+<section id="centralization-2" class="slide level2">
 <h2>Centralization</h2>
 <ul>
-<li>To calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).</li>
+<li>Task network is centered strongly on one node</li>
+<li>Social interaction network is based more on groups</li>
+<li>Simple standard deviation score can serve as an effective measure</li>
 </ul>
-<p><strong>igraph</strong> has different centralization functions for each centrality score. For degree the function is <code>cent_degree()</code>. The arguments are graph (network of interest), mode (in, out, total) loops (T/F should self-loops be considered), and normalized (T/F should divide by theoretical max?) Here we calculate indegree centralization for the social interaction network, ignoring self loops and dividing by the theoretical max.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>cent_social <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
-<span id="cb28-2"><a></a>                            <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb28-3"><a></a>cent_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   2.500   2.591   3.750   7.000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">summary</span>(degree_task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   1.000   1.000   2.182   2.000  17.000 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.03912</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">sd</span>(degree_task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.459099</code></pre>
+</div>
+</div>
+</section>
+<section id="centralization-3" class="slide level2">
+<h2>Centralization</h2>
+<ul>
+<li><code>centr_degree()</code> : Computes degree centrality statistics and network-level centralization</li>
+<li><span class="math inline">\(C_D(v_i)\)</span> is the degree centrality of node <span class="math inline">\(i\)</span><br>
+</li>
+<li><span class="math inline">\(C_D(v^*)\)</span> is the maximum degree centrality observed in the network<br>
+</li>
+<li>the denominator is the maximum possible value of the numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
+C_D(G) =
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+\]</span> ## Centralization</li>
+<li>Calculate indegree centralization for the social interaction network</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># mode (in, out, total) </span></span>
+<span id="cb36-2"><a></a><span class="co"># loops (T/F should self-loops be considered)</span></span>
+<span id="cb36-3"><a></a><span class="co"># normalized (T/F should divide by theoretical max?) </span></span>
+<span id="cb36-4"><a></a>cent_social <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
+<span id="cb36-5"><a></a>                            <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-6"><a></a>cent_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$res
  [1] 3 1 0 1 3 3 1 1 1 2 2 3 0 0 1 5 4 7 5 3 5 6
@@ -655,23 +700,24 @@ $theoretical_max
 </div>
 </div>
 </section>
-<section id="centralization-2" class="slide level2">
+<section id="centralization-4" class="slide level2">
 <h2>Centralization</h2>
 <p>We could also calculate this directly by doing:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">sum</span>(<span class="fu">max</span>(indegree_social) <span class="sc">-</span> indegree_social) <span class="sc">/</span> <span class="fu">sum</span>(<span class="dv">21</span> <span class="sc">-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">21</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">sum</span>(<span class="fu">max</span>(indegree_social) <span class="sc">-</span> indegree_social) <span class="sc">/</span> <span class="fu">sum</span>(<span class="dv">21</span> <span class="sc">-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">21</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2199546</code></pre>
 </div>
 </div>
 </section>
-<section id="centralization-3" class="slide level2">
+<section id="centralization-5" class="slide level2">
 <h2>Centralization</h2>
-<p>And now we do the same thing for the task network.</p>
+<p>Let’s apply the same thing for the task network</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>cent_task <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_task,</span>
-<span id="cb32-2"><a></a>                          <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-3"><a></a>cent_task</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="co"># Any difference btw social tie and task tie?</span></span>
+<span id="cb40-2"><a></a>cent_task <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_task,</span>
+<span id="cb40-3"><a></a>                          <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb40-4"><a></a>cent_task</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$res
  [1]  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17
@@ -684,36 +730,84 @@ $theoretical_max
 </div>
 </div>
 </section>
-<section id="centralization-4" class="slide level2">
+<section id="centralization-6" class="slide level2">
 <h2>Centralization</h2>
-<p>Now, let’s do a simple plot of the two degree distributions. We will put degree on the x-axis and plot a smoothed density curve for each distribution. First, we need to get the density curves for each network, starting with the social interaction network (we set from to 0 in the <code>density()</code> function as indegree cannot be less than 0).</p>
+<ul>
+<li>Let’s compare the two network with degree distribution</li>
+<li>Calculate the density of indegree values from social ties</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
-<span id="cb34-2"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
+<span id="cb42-2"><a></a>den_social</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+    density.default(x = indegree_social, from = 0)
+
+Data: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989
+
+       x               y          
+ Min.   :0.000   Min.   :0.00021  
+ 1st Qu.:2.492   1st Qu.:0.02481  
+ Median :4.984   Median :0.09198  
+ Mean   :4.984   Mean   :0.08894  
+ 3rd Qu.:7.475   3rd Qu.:0.15088  
+ Max.   :9.967   Max.   :0.17842  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="centralization-5" class="slide level2">
+<section id="centralization-7" class="slide level2">
 <h2>Centralization</h2>
-<p>And now we set up the plot, plot the two lines and add a legend.</p>
+<ul>
+<li>Let’s compare the two network with degree distribution</li>
+<li>Calculate the density of indegree values from task ties</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">plot</span>(<span class="fu">range</span>(den_social<span class="sc">$</span>x, den_task<span class="sc">$</span>x), <span class="fu">range</span>(den_social<span class="sc">$</span>y, den_task<span class="sc">$</span>y), </span>
-<span id="cb35-2"><a></a>     <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">"degree"</span>, </span>
-<span id="cb35-3"><a></a>     <span class="at">ylab =</span> <span class="st">"density"</span>, </span>
-<span id="cb35-4"><a></a>     <span class="at">main =</span> <span class="st">"Degree Distribution for Social and Task Networks"</span>)</span>
-<span id="cb35-5"><a></a></span>
-<span id="cb35-6"><a></a><span class="fu">lines</span>(den_social, <span class="at">col =</span> <span class="st">"red"</span> , <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb35-7"><a></a><span class="fu">lines</span>(den_task, <span class="at">col =</span> <span class="st">"light blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb35-8"><a></a></span>
-<span id="cb35-9"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Social"</span>, <span class="st">"Task"</span>),</span>
-<span id="cb35-10"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"light blue"</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span>
+<span id="cb45-2"><a></a>den_task</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+    density.default(x = degree_task, from = 0)
+
+Data: degree_task (22 obs.);    Bandwidth 'bw' = 0.362
+
+       x                y            
+ Min.   : 0.000   Min.   :0.000e+00  
+ 1st Qu.: 4.521   1st Qu.:0.000e+00  
+ Median : 9.043   Median :2.000e-08  
+ Mean   : 9.043   Mean   :5.269e-02  
+ 3rd Qu.:13.564   3rd Qu.:4.507e-02  
+ Max.   :18.086   Max.   :6.047e-01  </code></pre>
+</div>
+</div>
+</section>
+<section id="centralization-8" class="slide level2">
+<h2>Centralization</h2>
+<ul>
+<li>Plot the indegree density of two network</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="co"># what kind of information can we draw from?</span></span>
+<span id="cb47-2"><a></a><span class="fu">plot</span>(<span class="fu">range</span>(den_social<span class="sc">$</span>x, den_task<span class="sc">$</span>x), <span class="fu">range</span>(den_social<span class="sc">$</span>y, den_task<span class="sc">$</span>y), </span>
+<span id="cb47-3"><a></a>     <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">"degree"</span>, </span>
+<span id="cb47-4"><a></a>     <span class="at">ylab =</span> <span class="st">"density"</span>, </span>
+<span id="cb47-5"><a></a>     <span class="at">main =</span> <span class="st">"Degree Distribution for Social and Task Networks"</span>)</span>
+<span id="cb47-6"><a></a></span>
+<span id="cb47-7"><a></a><span class="fu">lines</span>(den_social, <span class="at">col =</span> <span class="st">"red"</span> , <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb47-8"><a></a><span class="fu">lines</span>(den_task, <span class="at">col =</span> <span class="st">"light blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb47-9"><a></a></span>
+<span id="cb47-10"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Social"</span>, <span class="st">"Task"</span>),</span>
+<span id="cb47-11"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"light blue"</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
-<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
 <li>Please check KLMS for the assignment of this week(til Friday)</li>
-<li>If you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week [Option] in the assignment</li>
+<li>If you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week [Option] in the assignment</li>
 </ul>
 
 

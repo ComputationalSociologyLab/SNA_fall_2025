@@ -109,49 +109,70 @@
     "href": "W7_presentation.html#centralization",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\n\nWe have so far seen which nodes are most important in the classroom using different definitions of centrality.\nWe have also seen how this differs across social and task interactions.\nTo flesh out the story more clearly, it will be useful to formally summarize the distribution of the centrality measures, telling us something about the network as a whole.\nFor example, a network with one node capturing the vast majority of ties is highly centralized, or highly unequal, as all of the activity in the network is focused on a particular node. A highly centralized network is also relatively fragile, as removing the one central node would greatly reduce the connectivity of the network. We could examine the distribution of any of the centrality scores we calculated above. Here, let’s focus on degree as a way of exploring the level of centralization in the two networks. Let’s start with a summary of the degree distributions (indegree for social and degree for task).\n\n\nsummary(indegree_social)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   2.500   2.591   3.750   7.000 \n\nsummary(degree_task)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   1.000   2.182   2.000  17.000 \n\nsd(indegree_social)\n\n[1] 2.03912\n\nsd(degree_task)\n\n[1] 3.459099"
+    "text": "Centralization\n\nIdentify which nodes are most important in the classroom\nLet’s summarize the distribution of the centrality measures\nExtract stories about in the the network as a whole."
   },
   {
     "objectID": "W7_presentation.html#centralization-1",
     "href": "W7_presentation.html#centralization-1",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\n\nTo calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).\n\nigraph has different centralization functions for each centrality score. For degree the function is cent_degree(). The arguments are graph (network of interest), mode (in, out, total) loops (T/F should self-loops be considered), and normalized (T/F should divide by theoretical max?) Here we calculate indegree centralization for the social interaction network, ignoring self loops and dividing by the theoretical max.\n\ncent_social &lt;- centr_degree(graph = s641_social, mode = \"in\", \n                            loops = FALSE, normalized = TRUE)\ncent_social\n\n$res\n [1] 3 1 0 1 3 3 1 1 1 2 2 3 0 0 1 5 4 7 5 3 5 6\n\n$centralization\n[1] 0.2199546\n\n$theoretical_max\n[1] 441"
+    "text": "Centralization\n\nWhat kind of story can we draw from the summary statistics?\n\n\nsummary(indegree_social)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   2.500   2.591   3.750   7.000 \n\nsummary(degree_task)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   1.000   2.182   2.000  17.000 \n\nsd(indegree_social)\n\n[1] 2.03912\n\nsd(degree_task)\n\n[1] 3.459099"
   },
   {
     "objectID": "W7_presentation.html#centralization-2",
     "href": "W7_presentation.html#centralization-2",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\nWe could also calculate this directly by doing:\n\nsum(max(indegree_social) - indegree_social) / sum(21 - rep(0, 21)) \n\n[1] 0.2199546"
+    "text": "Centralization\n\nTask network is centered strongly on one node\nSocial interaction network is based more on groups\nSimple standard deviation score can serve as an effective measure\n\n\nsummary(indegree_social)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   2.500   2.591   3.750   7.000 \n\nsummary(degree_task)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n  0.000   1.000   1.000   2.182   2.000  17.000 \n\nsd(indegree_social)\n\n[1] 2.03912\n\nsd(degree_task)\n\n[1] 3.459099"
   },
   {
     "objectID": "W7_presentation.html#centralization-3",
     "href": "W7_presentation.html#centralization-3",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\nAnd now we do the same thing for the task network.\n\ncent_task &lt;- centr_degree(graph = s641_task,\n                          loops = FALSE, normalized = TRUE)\ncent_task\n\n$res\n [1]  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17\n\n$centralization\n[1] 0.7761905\n\n$theoretical_max\n[1] 420"
+    "text": "Centralization\n\ncentr_degree() : Computes degree centrality statistics and network-level centralization\n\\(C_D(v_i)\\) is the degree centrality of node \\(i\\)\n\n\\(C_D(v^*)\\) is the maximum degree centrality observed in the network\n\nthe denominator is the maximum possible value of the numerator in a graph of size \\(n\\) (i.e., the star graph). \\[\nC_D(G) =\n\\frac{\\sum_{i=1}^{n} \\left( C_D(v^*) - C_D(v_i) \\right)}\n{\\max \\sum_{i=1}^{n} \\left( C_D(v^*) - C_D(v_i) \\right)}\n\\] ## Centralization\nCalculate indegree centralization for the social interaction network\n\n\n# mode (in, out, total) \n# loops (T/F should self-loops be considered)\n# normalized (T/F should divide by theoretical max?) \ncent_social &lt;- centr_degree(graph = s641_social, mode = \"in\", \n                            loops = FALSE, normalized = TRUE)\ncent_social\n\n$res\n [1] 3 1 0 1 3 3 1 1 1 2 2 3 0 0 1 5 4 7 5 3 5 6\n\n$centralization\n[1] 0.2199546\n\n$theoretical_max\n[1] 441"
   },
   {
     "objectID": "W7_presentation.html#centralization-4",
     "href": "W7_presentation.html#centralization-4",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\nNow, let’s do a simple plot of the two degree distributions. We will put degree on the x-axis and plot a smoothed density curve for each distribution. First, we need to get the density curves for each network, starting with the social interaction network (we set from to 0 in the density() function as indegree cannot be less than 0).\n\nden_social &lt;- density(indegree_social, from = 0) \nden_task &lt;- density(degree_task, from = 0)"
+    "text": "Centralization\nWe could also calculate this directly by doing:\n\nsum(max(indegree_social) - indegree_social) / sum(21 - rep(0, 21)) \n\n[1] 0.2199546"
   },
   {
     "objectID": "W7_presentation.html#centralization-5",
     "href": "W7_presentation.html#centralization-5",
     "title": "W7.Centrality and Hierarchy",
     "section": "Centralization",
-    "text": "Centralization\nAnd now we set up the plot, plot the two lines and add a legend.\n\nplot(range(den_social$x, den_task$x), range(den_social$y, den_task$y), \n     type = \"n\", xlab = \"degree\", \n     ylab = \"density\", \n     main = \"Degree Distribution for Social and Task Networks\")\n\nlines(den_social, col = \"red\" , lty = 2, lwd = 2)\nlines(den_task, col = \"light blue\", lty = 2, lwd = 2)\n\nlegend(\"topright\", c(\"Social\", \"Task\"),\n       col = c(\"red\", \"light blue\"), lty = 2, lwd = 2)"
+    "text": "Centralization\nLet’s apply the same thing for the task network\n\n# Any difference btw social tie and task tie?\ncent_task &lt;- centr_degree(graph = s641_task,\n                          loops = FALSE, normalized = TRUE)\ncent_task\n\n$res\n [1]  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17\n\n$centralization\n[1] 0.7761905\n\n$theoretical_max\n[1] 420"
+  },
+  {
+    "objectID": "W7_presentation.html#centralization-6",
+    "href": "W7_presentation.html#centralization-6",
+    "title": "W7.Centrality and Hierarchy",
+    "section": "Centralization",
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from social ties\n\n\nden_social &lt;- density(indegree_social, from = 0) \nden_social\n\n\nCall:\n    density.default(x = indegree_social, from = 0)\n\nData: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989\n\n       x               y          \n Min.   :0.000   Min.   :0.00021  \n 1st Qu.:2.492   1st Qu.:0.02481  \n Median :4.984   Median :0.09198  \n Mean   :4.984   Mean   :0.08894  \n 3rd Qu.:7.475   3rd Qu.:0.15088  \n Max.   :9.967   Max.   :0.17842  \n\nden_task &lt;- density(degree_task, from = 0)"
+  },
+  {
+    "objectID": "W7_presentation.html#centralization-7",
+    "href": "W7_presentation.html#centralization-7",
+    "title": "W7.Centrality and Hierarchy",
+    "section": "Centralization",
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from task ties\n\n\nden_task &lt;- density(degree_task, from = 0)\nden_task\n\n\nCall:\n    density.default(x = degree_task, from = 0)\n\nData: degree_task (22 obs.);    Bandwidth 'bw' = 0.362\n\n       x                y            \n Min.   : 0.000   Min.   :0.000e+00  \n 1st Qu.: 4.521   1st Qu.:0.000e+00  \n Median : 9.043   Median :2.000e-08  \n Mean   : 9.043   Mean   :5.269e-02  \n 3rd Qu.:13.564   3rd Qu.:4.507e-02  \n Max.   :18.086   Max.   :6.047e-01"
+  },
+  {
+    "objectID": "W7_presentation.html#centralization-8",
+    "href": "W7_presentation.html#centralization-8",
+    "title": "W7.Centrality and Hierarchy",
+    "section": "Centralization",
+    "text": "Centralization\n\nPlot the indegree density of two network\n\n\n# what kind of information can we draw from?\nplot(range(den_social$x, den_task$x), range(den_social$y, den_task$y), \n     type = \"n\", xlab = \"degree\", \n     ylab = \"density\", \n     main = \"Degree Distribution for Social and Task Networks\")\n\nlines(den_social, col = \"red\" , lty = 2, lwd = 2)\nlines(den_task, col = \"light blue\", lty = 2, lwd = 2)\n\nlegend(\"topright\", c(\"Social\", \"Task\"),\n       col = c(\"red\", \"light blue\"), lty = 2, lwd = 2)"
   },
   {
     "objectID": "W7_presentation.html#done",
     "href": "W7_presentation.html#done",
     "title": "W7.Centrality and Hierarchy",
     "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week [Option] in the assignment"
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week [Option] in the assignment"
   },
   {
     "objectID": "W4_presentation.html#working-with-ego-network-data",
@@ -270,7 +291,7 @@
     "href": "W4_presentation.html#plotting-ego-networks-2",
     "title": "W4. Ego, Dyads and Triads",
     "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 3357bcb UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 3357bcb (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 27ca68c UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 27ca68c (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 8457fe8 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 8457fe8 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
+    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 9327c2e UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 9327c2e (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 7c61ed8 UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 7c61ed8 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 47d5469 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 47d5469 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
   },
   {
     "objectID": "W4_presentation.html#plotting-ego-networks-3",
@@ -445,7 +466,7 @@
     "href": "W3_presentation.html#detailed-information-of-our-network",
     "title": "W3. Visualization",
     "section": "Detailed information of our network",
-    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH b4307f9 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from b4307f9 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
+    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH 1bc74cb DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from 1bc74cb (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
   },
   {
     "objectID": "W3_presentation.html#plot-a-network-using-igraph",
@@ -620,7 +641,7 @@
     "href": "W5_presentation.html#create-frienship-network-1",
     "title": "W5. Network Cohesion and Communities",
     "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 397b800 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 397b800 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 01532ee DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 01532ee (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
@@ -683,7 +704,7 @@
     "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
     "title": "W5. Network Cohesion and Communities",
     "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH bff07a2 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from bff07a2 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 03e1d49 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 03e1d49 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",

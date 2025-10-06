@@ -102,6 +102,7 @@ indegree_social <- degree(graph = s641_social, mode = "in")
 indegree_social
 ```
 
+
 ## Outdegree Centrality 
 - Measures how many ties the node sends out
 - The number of people that the node talks to in a social way
@@ -148,10 +149,25 @@ degree_task <- degree(s641_task)
 ```
 
 ## Centralization
-- We have so far seen which nodes are most important in the classroom using different definitions of centrality. 
-- We have also seen how this differs across social and task interactions. 
-- To flesh out the story more clearly, it will be useful to formally summarize the distribution of the centrality measures, telling us something about the network as a whole. 
-- For example, a network with one node capturing the vast majority of ties is highly centralized, or highly unequal, as all of the activity in the network is focused on a particular node. A highly centralized network is also relatively fragile, as removing the one central node would greatly reduce the connectivity of the network. We could examine the distribution of any of the centrality scores we calculated above. Here, let's focus on degree as a way of exploring the level of centralization in the two networks. Let's start with a summary of the degree distributions (indegree for social and degree for task).
+- Identify which nodes are most important in the classroom
+- Let's summarize the distribution of the centrality measures
+- Extract stories about in the the network as a whole. 
+
+
+## Centralization
+- What kind of story can we draw from the summary statistics?
+```{r}
+summary(indegree_social)
+summary(degree_task)
+
+sd(indegree_social)
+sd(degree_task)
+```
+
+## Centralization
+- Task network is centered strongly on one node
+- Social interaction network is based more on groups
+- Simple standard deviation score can serve as an effective measure
 
 ```{r}
 summary(indegree_social)
@@ -159,14 +175,24 @@ summary(degree_task)
 
 sd(indegree_social)
 sd(degree_task)
-
 ```
+
 ## Centralization
-- To calculate centralization, we take the centrality scores of interest and sum up the total deviations from the highest value. We then typically divide the total summation by the maximum possible level of centralization in a network of that size (i.e., the centralization we would have observed in a hub and spoke structure).
-
-**igraph** has different centralization functions for each centrality score. For degree the function is `cent_degree()`. The arguments are graph (network of interest), mode (in, out, total) loops (T/F should self-loops be considered), and normalized (T/F should divide by theoretical max?) Here we calculate indegree centralization for the social interaction network, ignoring self loops and dividing by the theoretical max. 
-
+- `centr_degree()` : Computes degree centrality statistics and network-level centralization
+- $C_D(v_i)$ is the degree centrality of node $i$  
+- $C_D(v^*)$ is the maximum degree centrality observed in the network  
+- the denominator is the maximum possible value of the numerator in a graph of size $n$ (i.e., the star graph).
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+## Centralization
+- Calculate indegree centralization for the social interaction network 
 ```{r}
+# mode (in, out, total) 
+# loops (T/F should self-loops be considered)
+# normalized (T/F should divide by theoretical max?) 
 cent_social <- centr_degree(graph = s641_social, mode = "in", 
                             loops = FALSE, normalized = TRUE)
 cent_social
@@ -180,26 +206,38 @@ sum(max(indegree_social) - indegree_social) / sum(21 - rep(0, 21))
 ```
 
 ## Centralization
-And now we do the same thing for the task network.
+Let's apply the same thing for the task network
 
 ```{r}
+# Any difference btw social tie and task tie?
 cent_task <- centr_degree(graph = s641_task,
                           loops = FALSE, normalized = TRUE)
 cent_task
 ```
 
 ## Centralization
-Now, let's do a simple plot of the two degree distributions. We will put degree on the x-axis and plot a smoothed density curve for each distribution. First, we need to get the density curves for each network, starting with the social interaction network (we set from to 0 in the `density()` function as indegree cannot be less than 0). 
+- Let's compare the two network with degree distribution 
+- Calculate the density of indegree values from social ties 
 
 ```{r}
 den_social <- density(indegree_social, from = 0) 
+den_social
 den_task <- density(degree_task, from = 0)
 ```
 
 ## Centralization
-And now we set up the plot, plot the two lines and add a legend.
+- Let's compare the two network with degree distribution 
+- Calculate the density of indegree values from task ties
+```{r}
+den_task <- density(degree_task, from = 0)
+den_task
+```
+
+## Centralization
+-  Plot the indegree density of two network
 
 ```{r}
+# what kind of information can we draw from?
 plot(range(den_social$x, den_task$x), range(den_social$y, den_task$y), 
      type = "n", xlab = "degree", 
      ylab = "density", 
@@ -216,4 +254,4 @@ legend("topright", c("Social", "Task"),
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week \[Option\] in the assignment
