@@ -165,6 +165,9 @@ incloseness_social
 ```{r warning=F}
 degree_task <- degree(s641_task)
 degree_task
+close_task <- closeness(graph = s641_task, normalized = T)
+close_task
+
 ```
 
 ## Centralization
