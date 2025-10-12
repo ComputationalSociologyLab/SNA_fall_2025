@@ -168,7 +168,7 @@ degree_task
 ```
 
 ## Centralization
-- Identify which nodes are most important in the classroom
+- Broader perspective!
 - Let's summarize the distribution of the centrality measures
 - Extract stories about in the the network as a whole. 
 
