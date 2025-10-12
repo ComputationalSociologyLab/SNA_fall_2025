@@ -199,7 +199,6 @@ sd(degree_task)
 - `centr_degree()` : Computes degree centrality statistics and network-level centralization
 - $C_D(v_i)$ is the degree centrality of node $i$  
 - $C_D(v^*)$ is the maximum degree centrality observed in the network  
-- Denominator is the maximum possible value of Numerator in a graph of size $n$ (i.e., the star graph).
 $$
 C_D(G) = 
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
@@ -208,7 +207,7 @@ $$
 
 ## Centralization
 - Numerator : Difference btw max degree centrality and observed centrality for node $i$
-- Denominator : is the maximum possible value of Numerator in a graph of size $n$ (i.e., the star graph).
+- Denominator :The maximum possible value of Numerator in a graph of size $n$ (i.e., the star graph).
 $$
 C_D(G) = 
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
@@ -216,8 +215,8 @@ C_D(G) =
 $$
 
 ## Centralization
-- 0 → all nodes have similar degrees (no centralization)
-- 1 → one node has all the connections (perfectly centralized)
+- 0 → All nodes have similar degrees (no centralization)
+- 1 → One node has all the connections (perfectly centralized)
 $$
 C_D(G) = 
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}

@@ -514,8 +514,7 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <li><span class="math inline">\(C_D(v_i)\)</span> is the degree centrality of node <span class="math inline">\(i\)</span><br>
 </li>
 <li><span class="math inline">\(C_D(v^*)\)</span> is the maximum degree centrality observed in the network<br>
-</li>
-<li>Denominator is the maximum possible value of Numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
+<span class="math display">\[
 C_D(G) =
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 {\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
@@ -526,7 +525,7 @@ C_D(G) =
 <h2>Centralization</h2>
 <ul>
 <li>Numerator : Difference btw max degree centrality and observed centrality for node <span class="math inline">\(i\)</span></li>
-<li>Denominator : is the maximum possible value of Numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
+<li>Denominator :The maximum possible value of Numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
 C_D(G) =
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 {\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
@@ -536,8 +535,8 @@ C_D(G) =
 <section id="centralization-5" class="slide level2">
 <h2>Centralization</h2>
 <ul>
-<li>0 → all nodes have similar degrees (no centralization)</li>
-<li>1 → one node has all the connections (perfectly centralized) <span class="math display">\[
+<li>0 → All nodes have similar degrees (no centralization)</li>
+<li>1 → One node has all the connections (perfectly centralized) <span class="math display">\[
 C_D(G) =
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 {\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
