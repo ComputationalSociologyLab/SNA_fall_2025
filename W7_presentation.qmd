@@ -127,27 +127,31 @@ $$
 
 
 ## Closeness Centrality 
+- Inverse of the mean distance from focal node to others
+
 ```{r warning=F}
 # mode = "in", or "out"
-# normalized = T/F, should scores be normalized? (divided by n-1, where n is the number of people in the network)
+# normalized = T/F, should scores be normalized? 
+# (divided by n-1, where n is the number of people in the network)
 outcloseness_social <- closeness(graph = s641_social, mode = "out",
                                  normalized = T)
-head(outcloseness_social)
+outcloseness_social
 ```
 
 ## Closeness Centrality 
-- We can interpret those values as the inverse of the mean distance of each node to all other nodes that the focal node can reach. Isolates are assigned an NA value. Now we will do the same thing for in-closeness.
+- Inverse of the mean distance from others to focal node
 
 ```{r warning=F}
 # why the closeness centrality is NaN for node 3?
 incloseness_social <- closeness(graph = s641_social, mode = "in", 
                                 normalized = T)
-head(incloseness_social)
+incloseness_social
 ```
 
 ## Closeness Centrality 
 ```{r warning=F}
 degree_task <- degree(s641_task)
+degree_task
 ```
 
 ## Centralization
