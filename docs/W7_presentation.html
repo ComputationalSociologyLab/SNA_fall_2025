@@ -334,10 +334,9 @@
 <li>The number of people that talks to node i in a social way.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># If the network is partially disconnected and some nodes can reach only a few others, </span></span>
-<span id="cb11-2"><a></a><span class="co"># the closeness values can be misleading.</span></span>
-<span id="cb11-3"><a></a>indegree_social <span class="ot">&lt;-</span> <span class="fu">degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>)</span>
-<span id="cb11-4"><a></a>indegree_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="co"># 3 people talk to node 1, 1 person talks to node 2</span></span>
+<span id="cb11-2"><a></a>indegree_social <span class="ot">&lt;-</span> <span class="fu">degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>)</span>
+<span id="cb11-3"><a></a>indegree_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 
  3  1  0  1  3  3  1  1  1  2  2  3  0  0  1  5  4  7  5  3  5  6 </code></pre>
@@ -398,13 +397,34 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <section id="closeness-centrality-2" class="slide level2">
 <h2>Closeness Centrality</h2>
 <ul>
+<li>Inverse of the mean distance from focal node to others</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># If the network is partially disconnected and some nodes can reach only a few others, </span></span>
+<span id="cb17-2"><a></a><span class="co"># the closeness values can be misleading.</span></span>
+<span id="cb17-3"><a></a>outcloseness_social <span class="ot">&lt;-</span> <span class="fu">closeness</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"out"</span>,</span>
+<span id="cb17-4"><a></a>                                 <span class="at">normalized =</span> T)</span>
+<span id="cb17-5"><a></a>outcloseness_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        1         2         3         4         5         6         7         8 
+0.4210526 0.3720930       NaN 1.0000000 0.4210526 0.3200000 0.2352941 1.0000000 
+        9        10        11        12        13        14        15        16 
+0.2461538 0.3018868 1.0000000 0.4000000       NaN       NaN 1.0000000 0.5000000 
+       17        18        19        20        21        22 
+0.3809524 0.4210526 0.4848485 0.3720930 0.4571429 0.5714286 </code></pre>
+</div>
+</div>
+</section>
+<section id="closeness-centrality-3" class="slide level2">
+<h2>Closeness Centrality</h2>
+<ul>
 <li>Inverse of the mean distance from others to focal node</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># why the closeness centrality is NaN for node 3?</span></span>
-<span id="cb17-2"><a></a>incloseness_social <span class="ot">&lt;-</span> <span class="fu">closeness</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
-<span id="cb17-3"><a></a>                                <span class="at">normalized =</span> T)</span>
-<span id="cb17-4"><a></a>incloseness_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="co"># why the closeness centrality is NaN for node 3?</span></span>
+<span id="cb19-2"><a></a>incloseness_social <span class="ot">&lt;-</span> <span class="fu">closeness</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
+<span id="cb19-3"><a></a>                                <span class="at">normalized =</span> T)</span>
+<span id="cb19-4"><a></a>incloseness_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        1         2         3         4         5         6         7         8 
 0.4117647 0.3589744       NaN 1.0000000 0.4117647 0.3181818 0.2456140 1.0000000 
@@ -415,11 +435,11 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 </div>
 </div>
 </section>
-<section id="closeness-centrality-3" class="slide level2">
+<section id="closeness-centrality-4" class="slide level2">
 <h2>Closeness Centrality</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>degree_task <span class="ot">&lt;-</span> <span class="fu">degree</span>(s641_task)</span>
-<span id="cb19-2"><a></a>degree_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>degree_task <span class="ot">&lt;-</span> <span class="fu">degree</span>(s641_task)</span>
+<span id="cb21-2"><a></a>degree_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 
  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17 </code></pre>
@@ -440,21 +460,21 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <li>What kind of story can we draw from the summary statistics?</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   0.000   1.000   2.500   2.591   3.750   7.000 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">summary</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">summary</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   0.000   1.000   1.000   2.182   2.000  17.000 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.03912</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">sd</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">sd</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.459099</code></pre>
 </div>
@@ -467,21 +487,21 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <li>Social interaction network is based more on groups</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   0.000   1.000   2.500   2.591   3.750   7.000 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">summary</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">summary</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
   0.000   1.000   1.000   2.182   2.000  17.000 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">sd</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.03912</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">sd</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">sd</span>(degree_task)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.459099</code></pre>
 </div>
@@ -508,12 +528,12 @@ C_D(G) =
 <li>Calculate indegree centralization for the social interaction network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="co"># mode (in, out, total) </span></span>
-<span id="cb37-2"><a></a><span class="co"># loops (T/F should self-loops be considered)</span></span>
-<span id="cb37-3"><a></a><span class="co"># normalized (T/F should divide by theoretical max?) </span></span>
-<span id="cb37-4"><a></a>cent_social <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
-<span id="cb37-5"><a></a>                            <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb37-6"><a></a>cent_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># mode (in, out, total) </span></span>
+<span id="cb39-2"><a></a><span class="co"># loops (T/F should self-loops be considered)</span></span>
+<span id="cb39-3"><a></a><span class="co"># normalized (T/F should divide by theoretical max?) </span></span>
+<span id="cb39-4"><a></a>cent_social <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_social, <span class="at">mode =</span> <span class="st">"in"</span>, </span>
+<span id="cb39-5"><a></a>                            <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb39-6"><a></a>cent_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$res
  [1] 3 1 0 1 3 3 1 1 1 2 2 3 0 0 1 5 4 7 5 3 5 6
@@ -530,7 +550,7 @@ $theoretical_max
 <h2>Centralization</h2>
 <p>We could also calculate this directly by doing:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">sum</span>(<span class="fu">max</span>(indegree_social) <span class="sc">-</span> indegree_social) <span class="sc">/</span> <span class="fu">sum</span>(<span class="dv">21</span> <span class="sc">-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">21</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">sum</span>(<span class="fu">max</span>(indegree_social) <span class="sc">-</span> indegree_social) <span class="sc">/</span> <span class="fu">sum</span>(<span class="dv">21</span> <span class="sc">-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="dv">21</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2199546</code></pre>
 </div>
@@ -540,10 +560,10 @@ $theoretical_max
 <h2>Centralization</h2>
 <p>Let’s apply the same thing for the task network</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="co"># Any difference btw social tie and task tie?</span></span>
-<span id="cb41-2"><a></a>cent_task <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_task,</span>
-<span id="cb41-3"><a></a>                          <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb41-4"><a></a>cent_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># Any difference btw social tie and task tie?</span></span>
+<span id="cb43-2"><a></a>cent_task <span class="ot">&lt;-</span> <span class="fu">centr_degree</span>(<span class="at">graph =</span> s641_task,</span>
+<span id="cb43-3"><a></a>                          <span class="at">loops =</span> <span class="cn">FALSE</span>, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb43-4"><a></a>cent_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$res
  [1]  1  1  0  1  1  1  1  1  1  1  1  0  2  1  1  2  3  4  3  2  3 17
@@ -563,9 +583,9 @@ $theoretical_max
 <li>Calculate the density of indegree values from social ties</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># minumun value of ingree would be 0 so...</span></span>
-<span id="cb43-2"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
-<span id="cb43-3"><a></a>den_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="co"># minumun value of ingree would be 0 so...</span></span>
+<span id="cb45-2"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
+<span id="cb45-3"><a></a>den_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -590,8 +610,8 @@ Data: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989
 <li>Calculate the density of indegree values from task ties</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span>
-<span id="cb45-2"><a></a>den_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>den_task <span class="ot">&lt;-</span> <span class="fu">density</span>(degree_task, <span class="at">from =</span> <span class="dv">0</span>)</span>
+<span id="cb47-2"><a></a>den_task</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -615,20 +635,20 @@ Data: degree_task (22 obs.);    Bandwidth 'bw' = 0.362
 <li>Plot the indegree density of two network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="co"># what kind of information can we draw from?</span></span>
-<span id="cb47-2"><a></a><span class="fu">plot</span>(<span class="fu">range</span>(den_social<span class="sc">$</span>x, den_task<span class="sc">$</span>x), <span class="fu">range</span>(den_social<span class="sc">$</span>y, den_task<span class="sc">$</span>y), </span>
-<span id="cb47-3"><a></a>     <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">"degree"</span>, </span>
-<span id="cb47-4"><a></a>     <span class="at">ylab =</span> <span class="st">"density"</span>, </span>
-<span id="cb47-5"><a></a>     <span class="at">main =</span> <span class="st">"Degree Distribution for Social and Task Networks"</span>)</span>
-<span id="cb47-6"><a></a></span>
-<span id="cb47-7"><a></a><span class="fu">lines</span>(den_social, <span class="at">col =</span> <span class="st">"red"</span> , <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb47-8"><a></a><span class="fu">lines</span>(den_task, <span class="at">col =</span> <span class="st">"light blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
-<span id="cb47-9"><a></a></span>
-<span id="cb47-10"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Social"</span>, <span class="st">"Task"</span>),</span>
-<span id="cb47-11"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"light blue"</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="co"># what kind of information can we draw from?</span></span>
+<span id="cb49-2"><a></a><span class="fu">plot</span>(<span class="fu">range</span>(den_social<span class="sc">$</span>x, den_task<span class="sc">$</span>x), <span class="fu">range</span>(den_social<span class="sc">$</span>y, den_task<span class="sc">$</span>y), </span>
+<span id="cb49-3"><a></a>     <span class="at">type =</span> <span class="st">"n"</span>, <span class="at">xlab =</span> <span class="st">"degree"</span>, </span>
+<span id="cb49-4"><a></a>     <span class="at">ylab =</span> <span class="st">"density"</span>, </span>
+<span id="cb49-5"><a></a>     <span class="at">main =</span> <span class="st">"Degree Distribution for Social and Task Networks"</span>)</span>
+<span id="cb49-6"><a></a></span>
+<span id="cb49-7"><a></a><span class="fu">lines</span>(den_social, <span class="at">col =</span> <span class="st">"red"</span> , <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb49-8"><a></a><span class="fu">lines</span>(den_task, <span class="at">col =</span> <span class="st">"light blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb49-9"><a></a></span>
+<span id="cb49-10"><a></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="fu">c</span>(<span class="st">"Social"</span>, <span class="st">"Task"</span>),</span>
+<span id="cb49-11"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"light blue"</span>), <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<img data-src="W7_presentation_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
