@@ -14,9 +14,10 @@ execute:
 
 # Centrality and Hierarchy
 
-- Looking at various centrality measures
-- Explore network-level measures of hierarchy
+- Look around various methods to find out the centrality of a network
+- + Some coding tips for preparing dataset
 - Apply the same student relationship dataset (social tie and task tie btw students)
+- [OPTION] Explore network-level measures of hierarchy
 
 ## Setting up the Session
 - Import **igraph** package for network analysis 
@@ -37,7 +38,7 @@ head(social_data)
 ## Setting up the Session
 - Create a network... by the way...
 ```{r}
-# vertices = (id = 1:22), what does it mean...?
+# Difference?, what does it mean...?
 s641_social <- graph_from_data_frame(d = edgelist_social, directed = T, 
                                      vertices = (id = 1:22)) 
 ```
@@ -63,14 +64,15 @@ head(task_data)
 
 ```{r}
 edgelist_task <- task_data[task_data$task_tie > 0, ] 
-edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ] # ?????????
+# ?????????? (hint, task-tie network would be undirected netwrok...so...?)
+edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ] 
 ```
 
 
 ## Setting up the Session
 - Delete duplicated edges 
 - If there are tie1(2-5) and tie2(5-2), then delete the second tie
-- Is it a right way to handle the edge list data?
+- Is it a right way to handle directed edge list data?
 
 ```{r}
 edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ]
