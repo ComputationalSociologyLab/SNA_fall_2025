@@ -99,9 +99,11 @@ plot(s641_task, vertex.frame.color = NA, edge.arrow.size = .25, vertex.size = 8,
 - The number of people that talks to node i in a social way. 
 
 ```{r}
-# 3 people talk to node 1, 1 person talks to node 2
+# If the network is partially disconnected and some nodes can reach only a few others, 
+# the closeness values can be misleading.
 indegree_social <- degree(graph = s641_social, mode = "in")
 indegree_social
+
 ```
 
 
