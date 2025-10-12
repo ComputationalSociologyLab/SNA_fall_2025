@@ -207,6 +207,24 @@ C_D(G) =
 $$
 
 ## Centralization
+- Numerator : Difference btw max degree centrality and observed centrality for node $i$
+- Denominator : is the maximum possible value of Numerator in a graph of size $n$ (i.e., the star graph).
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+
+## Centralization
+- 0 → all nodes have similar degrees (no centralization)
+- 1 → one node has all the connections (perfectly centralized)
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+
+## Centralization
 - Calculate indegree centralization for the social interaction network 
 ```{r}
 # mode (in, out, total) 
