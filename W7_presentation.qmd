@@ -15,7 +15,6 @@ execute:
 # Centrality and Hierarchy
 
 - Look around various methods to find out the centrality of a network
-- 🧐🧐 Some coding tips for preparing dataset 🧐🧐
 - Apply the same student relationship dataset (social tie and task tie btw students)
 - [OPTION] Explore network-level measures of hierarchy
 
