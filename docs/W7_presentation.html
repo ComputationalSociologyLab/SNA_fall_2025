@@ -466,7 +466,6 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 <ul>
 <li>Task network is centered strongly on one node</li>
 <li>Social interaction network is based more on groups</li>
-<li>Simple standard deviation score can serve as an effective measure</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">summary</span>(indegree_social)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -497,7 +496,7 @@ C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
 </li>
 <li><span class="math inline">\(C_D(v^*)\)</span> is the maximum degree centrality observed in the network<br>
 </li>
-<li>the denominator is the maximum possible value of the numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
+<li>Denominator is the maximum possible value of Numerator in a graph of size <span class="math inline">\(n\)</span> (i.e., the star graph). <span class="math display">\[
 C_D(G) =
 \frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
 {\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
@@ -565,8 +564,9 @@ $theoretical_max
 <li>Calculate the density of indegree values from social ties</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
-<span id="cb43-2"><a></a>den_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># minumun value of ingree would be 0 so...</span></span>
+<span id="cb43-2"><a></a>den_social <span class="ot">&lt;-</span> <span class="fu">density</span>(indegree_social, <span class="at">from =</span> <span class="dv">0</span>) </span>
+<span id="cb43-3"><a></a>den_social</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
