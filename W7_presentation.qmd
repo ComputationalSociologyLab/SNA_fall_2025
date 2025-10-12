@@ -117,7 +117,7 @@ outdegree_social
 
 
 ## Closeness Centrality 
-- the inverse of the mean distance in shortest path between a given node and all other nodes. 
+- Inverse of the mean distance in shortest path between a given node and all other nodes. 
 - where:
 - $n$ is the number of nodes in the network  
 - $d(v, u)$ is the geodesic distance (shortest path length) between node $v$ and node $u$  
