@@ -1,5 +1,5 @@
 ---
-title: "W7.Centrality and Hierarchy"
+title: "W7.Centrality"
 format: 
   revealjs:
     theme: default
@@ -12,7 +12,7 @@ execute:
   fig-asp: null
 ---
 
-# Centrality and Hierarchy
+# Centrality
 
 - Look around various methods to find out the centrality of a network
 - Apply the same student relationship dataset (social tie and task tie btw students)
