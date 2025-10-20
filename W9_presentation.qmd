@@ -1,0 +1,288 @@
+---
+title: "W7.Centrality"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Centrality
+
+- Look around various methods to find out the centrality of a network
+- Apply the same student relationship dataset (social tie and task tie btw students)
+- [OPTION] Explore network-level measures of hierarchy
+
+## Setting up the Session
+- Import **igraph** package for network analysis 
+
+```{r message=F, warning=F}
+library(igraph)
+```
+
+## Setting up the Session
+- Load edgelist dataset where there exists social tie between students
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/social_interactions_s641.csv"
+social_data <- read.csv(file = url1)
+edgelist_social <- social_data[social_data$social_tie > 0, ] 
+head(social_data) 
+```
+
+## Setting up the Session
+- Create a network... by the way...
+```{r}
+# Difference?, what does it mean...?
+s641_social <- graph_from_data_frame(d = edgelist_social, directed = T, 
+                                     vertices = (id = 1:22)) 
+```
+
+## Setting up the Session
+- If you want to delete the all isolated nodes, then, 
+```{r}
+net641_social_noisolates <- graph_from_data_frame(d = edgelist_social, 
+                                                  directed = T) 
+```
+
+## Setting up the Session
+- Read in the task data
+```{r}
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/task_interactions_s641.csv"
+task_data <- read.csv(file = url2)
+head(task_data)
+```
+
+## Setting up the Session
+- The `task_tie` variable shows the frequency of task-based interactions between nodes i and j
+- Construct `task_tie` related network, by the way...
+
+```{r}
+edgelist_task <- task_data[task_data$task_tie > 0, ] 
+# ?????????? (hint, task-tie network would be undirected netwrok...so...?)
+edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ] 
+```
+
+
+## Setting up the Session
+- Delete duplicated edges 
+- If there are tie1(2-5) and tie2(5-2), then delete the second tie
+- Is it a right way to handle directed edge list data?
+
+```{r}
+edgelist_task <- edgelist_task[edgelist_task$ego < edgelist_task$alter, ]
+s641_task <- graph_from_data_frame(d = edgelist_task, directed = F, vertices = (id = 1:22)) 
+```
+
+## Setting up the Session
+- plot both networks.
+- what is the difference between the two networks?
+
+```{r fig.height=4.0, fig.width=7.0}
+par(mfrow = c(1, 2)) 
+
+plot(s641_social, vertex.frame.color = NA, edge.arrow.size = .25, vertex.size = 8, main = "Social Interactions", margin = -.08)
+plot(s641_task, vertex.frame.color = NA, edge.arrow.size = .25, vertex.size = 8, main = "Task Interactions", margin = -.08)
+```
+
+## Centrality 
+- Capture something about which nodes are most important to the network
+- Used as predictors of other outcomes, like attitudes, behaviors, etc. 
+
+## Indegree Centrality 
+- Measures how many ties each node receives
+- The number of people that talks to node i in a social way. 
+
+```{r}
+# 3 people talk to node 1, 1 person talks to node 2
+indegree_social <- degree(graph = s641_social, mode = "in")
+indegree_social
+
+```
+
+
+## Outdegree Centrality 
+- Measures how many ties the node sends out
+- The number of people that the node talks to in a social way
+
+```{r}
+# node 1 talk to 3 people, node 2 talks to 1 person 
+outdegree_social <- degree(graph = s641_social, mode = "out")
+outdegree_social
+```
+
+
+## Closeness Centrality 
+- Inverse of the mean distance in shortest path between a given node and all other nodes. 
+- where:
+- $n$ is the number of nodes in the network  
+- $d(v, u)$ is the geodesic distance (shortest path length) between node $v$ and node $u$  
+$$
+C(v) = \frac{1}{\frac{1}{n-1} \sum_{u \neq v} d(v, u)}
+$$
+
+
+## Closeness Centrality 
+- Inverse of the mean distance from focal node to others
+
+```{r warning=F}
+# mode = "in", or "out"
+# normalized = T/F, should scores be normalized? 
+# (divided by n-1, where n is the number of people in the network)
+outcloseness_social <- closeness(graph = s641_social, mode = "out",
+                                 normalized = T)
+outcloseness_social
+```
+
+## Closeness Centrality 
+- Inverse of the mean distance from focal node to others
+```{r warning=F}
+# If the network is partially disconnected and some nodes can reach only a few others, 
+# the closeness values can be misleading.
+outcloseness_social <- closeness(graph = s641_social, mode = "out",
+                                 normalized = T)
+outcloseness_social
+```
+
+
+
+## Closeness Centrality 
+- Inverse of the mean distance from others to focal node
+
+```{r warning=F}
+# why the closeness centrality is NaN for node 3?
+incloseness_social <- closeness(graph = s641_social, mode = "in", 
+                                normalized = T)
+incloseness_social
+```
+
+## Closeness Centrality 
+```{r warning=F}
+degree_task <- degree(s641_task)
+degree_task
+close_task <- closeness(graph = s641_task, normalized = T)
+close_task
+
+```
+
+## Centralization
+- Broader perspective!
+- Let's summarize the distribution of the centrality measures
+- Extract stories about in the the network as a whole. 
+
+
+## Centralization
+- What kind of story can we draw from the summary statistics?
+```{r}
+summary(indegree_social)
+summary(degree_task)
+
+sd(indegree_social)
+sd(degree_task)
+```
+
+## Centralization
+- Task network is centered strongly on one node
+- Social interaction network is based more on groups
+
+```{r}
+summary(indegree_social)
+summary(degree_task)
+
+sd(indegree_social)
+sd(degree_task)
+```
+
+## Centralization
+- `centr_degree()` : Computes degree centrality statistics and network-level centralization
+- $C_D(v_i)$ is the degree centrality of node $i$  
+- $C_D(v^*)$ is the maximum degree centrality observed in the network  
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+
+## Centralization
+- Numerator : Difference btw max degree centrality and observed centrality for node $i$
+- Denominator :The maximum possible value of Numerator in a graph of size $n$ (i.e., the star graph).
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+
+## Centralization
+- 0 → All nodes have similar degrees (no centralization)
+- 1 → One node has all the connections (perfectly centralized)
+$$
+C_D(G) = 
+\frac{\sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+{\max \sum_{i=1}^{n} \left( C_D(v^*) - C_D(v_i) \right)}
+$$
+
+## Centralization
+- Calculate indegree centralization for the social interaction network 
+```{r}
+# mode (in, out, total) 
+# loops (T/F should self-loops be considered)
+# normalized (T/F should divide by theoretical max?) 
+cent_social <- centr_degree(graph = s641_social, mode = "in", 
+                            loops = FALSE, normalized = TRUE)
+cent_social
+```
+
+## Centralization
+Let's apply the same thing for the task network
+
+```{r}
+# Any difference btw social tie and task tie?
+cent_task <- centr_degree(graph = s641_task,
+                          loops = FALSE, normalized = TRUE)
+cent_task
+```
+
+## Centralization
+- Let's compare the two network with degree distribution 
+- Calculate the density of indegree values from social ties 
+
+```{r}
+# minumun value of ingree would be 0 so...
+den_social <- density(indegree_social, from = 0) 
+den_social
+```
+
+## Centralization
+- Let's compare the two network with degree distribution 
+- Calculate the density of indegree values from task ties
+```{r}
+den_task <- density(degree_task, from = 0)
+den_task
+```
+
+## Centralization
+-  Plot the indegree density of two network
+
+```{r}
+# what kind of information can we draw from?
+plot(range(den_social$x, den_task$x), range(den_social$y, den_task$y), 
+     type = "n", xlab = "degree", 
+     ylab = "density", 
+     main = "Degree Distribution for Social and Task Networks")
+
+lines(den_social, col = "red" , lty = 2, lwd = 2)
+lines(den_task, col = "light blue", lty = 2, lwd = 2)
+
+legend("topright", c("Social", "Task"),
+       col = c("red", "light blue"), lty = 2, lwd = 2) 
+```
+
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week \[Option\] in the assignment
