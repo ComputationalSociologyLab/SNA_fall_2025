@@ -204,12 +204,168 @@ heatmap(social_mat_rearrange, Rowv = NA, Colv = NA, revC = T,
 ```{r}
 library(sna)
 blockmod_friend <- blockmodel(friend_mat, ec = hc_ids)
+blockmod_task <- blockmodel(task_mat, ec = hc_ids)
+blockmod_social <- blockmodel(social_mat, ec = hc_ids)
+```
+## Role Analysis with Blockmodel
+- The blockmodel shows us the (weighted) density of within and between block ties
+- Identify the possibility of asymmetries between the blocks
+```{r}
 blockmod_friend
 ```
 
-The default is to calculate the density of ties between blocks (defined as the mean value, taken over the rows/columns in the input matrix associated with those blocks). In this case the values are weighted but we could do the same exercise with binary (0/1) data.
+## Plotting a Blockmodel
+- Let's interprete the results of blockmodel with visualization
+```{r}
+# function returning edgelist between blocks
+block_model_edgelist <- function(block_model, relation_label, directed = T){
+  # Arguments: 
+  # block_model: blockmodel object 
+  # relation_label: label for type of tie, 
+  # directed: is blockmodel based on directed network?
+
+  # First we grab the actual matrix from the blockmodel:
+  block_mat <- block_model$block.model
+
+  # Here we set any NA to 0.
+  block_mat[is.na(block_mat)] <- 0
+
+  # Now we create a little network based on the matrix.
+  net_block <- network(block_mat, loops = T, 
+                       directed = directed)
+
+  # Here we extract the edgelist:
+  edges_netblock <- as.edgelist(net_block)
+
+  # Now we get the edge weights, stringing out the matrix
+  # into a vector. We only extract those weights corresponding
+  # to where an edge exists, defined by the edgelist 
+  # extracted above.
+  weight_edge <- c(block_mat[edges_netblock])
+
+  # Now we create a little data frame putting the information together.
+  block_edgelist <- data.frame(edges_netblock, weight = weight_edge, 
+                               Tie = relation_label)
+
+  # Here we create the additional weighting scheme,
+  # where weight is equal to 0, 1, or 2, depending if it is
+  # less than the mean, greater than the mean (but less than 1 sd above mean)
+  # or greater than 1 sd above the mean. 
+  edge_mean <- mean(block_mat)
+  edge_sd <- sd(block_mat)
+  edge_max <- max(block_mat)
+
+  block_edgelist$WeightRecode <- cut(block_edgelist$weight, 
+                                     breaks = c(0, edge_mean, 
+                                                edge_mean + edge_sd, 
+                                                edge_max),
+                                     include.lowest = T, 
+                                     right = F, labels = c("0", "1", "2")) 
+
+  block_edgelist$WeightRecode <- as.character(block_edgelist$WeightRecode)
+  block_edgelist$WeightRecode <-as.numeric(block_edgelist$WeightRecode)
+
+  colnames(block_edgelist)[1:2] <- c("sender", "receiver")
+
+  block_edgelist
+}
+```
+
+## Plotting a Blockmodel
+- Create the edgelist for the friendship relation: 
+```{r}
+blockedges_friend <- block_model_edgelist(block_model = blockmod_friend, 
+                                          relation_label = "friendship",
+                                          directed = T)
+blockedges_friend
+```
+
+## Plotting a Blockmodel
+- Create the edgelist for the friendship relation: 
+```{r}
+blockedges_task <- block_model_edgelist(block_model = blockmod_task,
+                                        relation_label = "task", 
+                                        directed = F)
+
+blockedges_social <- block_model_edgelist(block_model = blockmod_social,
+                                          relation_label = "social", 
+                                          directed = F)
+```
+
+## Plotting a Blockmodel
+And now we put together the three edgelists
+```{r}
+# stacking block edgelist using an `rbind()` function. 
+block_dat <- rbind(blockedges_friend, blockedges_task, blockedges_social)
+# only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.
+block_dat <- block_dat[block_dat$WeightRecode %in% c("1", "2"), ]
+```
+
+## Plotting a Blockmodel
+- Construct a network with the conbined block edgelist
+```{r}
+blockmod_edges <- as.matrix(block_dat[, c("sender", "receiver")])
+blockmod_igraph <- graph_from_edgelist(blockmod_edges, directed = T)
+
+```
+
+## Plotting a Blockmodel
+- Set tie attributes to constructed network
+```{r}
+library(car)
+# type of tie
+E(blockmod_igraph)$type <- block_dat[, "Tie"]
+# color for each type of tie
+cols <- recode(block_dat[, "Tie"], 
+               "'friendship' = 'red'; 'task'='blue'; 'social' = 'green'")
+E(blockmod_igraph)$color <- cols
+```
+
+## Plotting a Blockmodel
+```{r}
+friend_edge <- E(blockmod_igraph)$type %in% "friendship"
+self_loop <- which_loop(blockmod_igraph)
+arrow_mode <- ifelse(friend_edge & !self_loop, yes = ">", no = "-")
+```
+
+```{r}
+arrow_mode
+```
+## Plotting a Blockmodel
+We also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops. 
+
+We will set the angles such that all non-self loops have an angle of 0, all friendship self loops have an angle of `4 * pi / 3` and all social self loops have an angle of `3 * pi / 3`  (there are no task self loops). This will ensure that the friendship and social self loops are not drawn on top of each other.
+
+```{r}
+edge_loop_angles <- rep(0, nrow(block_dat))
+```
+
+```{r}
+edge_loop_angles[self_loop & friend_edge] <- 4 * pi / 3
+```
+
+```{r}
+social_edge <- E(blockmod_igraph)$type %in% "social"
+edge_loop_angles[self_loop & social_edge] <- 3 * pi / 3
+```
+
+## Plotting a Blockmodel
+```{r fig.height=5.0, fig.width=5.5, message=F, warning=F}
+plot(blockmod_igraph, edge.arrow.mode = arrow_mode,
+     edge.arrow.size = .65, edge.arrow.width = .75,
+     vertex.label = c("block 1", "block 2", "block 3", "block 4"),
+     vertex.label.dist = 4.5, vertex.label.degree = 0,
+     edge.loop.angle = edge_loop_angles, margin = .20)
+
+legend("left", c("friendship", "task", "social"),
+       col = c("red", "blue", "green"),
+       lwd = 1, cex = .8)
+```
 
 
+```{r}
+arrow_mode
+```
 
 ## Done!
 
