@@ -80,7 +80,7 @@ We will treat the task and social interaction networks as undirected. In our cas
 net182_task <- graph_from_data_frame(d = edgelist_task, directed = T,
                                      vertices = class182_attributes) 
 
-net182_task <- as.undirected(net182_task, mode="collapse", 
+net182_task <- as_undirected(net182_task, mode="collapse", 
                              edge.attr.comb = "mean")
 ```
 
@@ -97,7 +97,7 @@ edgelist_social <- class182_networkdata[class182_networkdata$social_tie > 0,
 net182_social <- graph_from_data_frame(d = edgelist_social, directed = T, 
                                        vertices = class182_attributes) 
 
-net182_social <- as.undirected(net182_social, mode="collapse", 
+net182_social <- as_undirected(net182_social, mode="collapse", 
                                edge.attr.comb = "mean")
 ```
 
@@ -181,6 +181,8 @@ y <- fit[, 2]
 First, we will set up the plot with title, axes, etc. but no points. And then we will put in the labels using the `text()` function. The first two arguments to text are the x, y coordinates. The labels argument tells R what to print and cex controls the size of the labels. 
 
 ```{r}
+x <- fit[, 1]
+y <- fit[, 2]
 plot(x, y, xlab = "Coordinate 1", ylab = "Coordinate 2", 
      main = "2 Dimensional MDS Solution", type = "n") 
 
@@ -468,7 +470,7 @@ Let's begin by fixing the undirected edges for task and social. The basic idea i
 
 ```{r}
 friend_edge <- E(blockmod_igraph)$type %in% "friendship"
-self_loop <- is.loop(blockmod_igraph)
+self_loop <- which_loop(blockmod_igraph)
 
 arrow_mode <- ifelse(friend_edge & !self_loop, yes = ">", no = "-")
 ```
@@ -557,7 +559,7 @@ We can see here that gender is again quite diverse but that everyone identifies 
 
 It is important to see that the roles themselves are defined completely separately from the attributes of those playing the role. Thus, it becomes an empirical question as to who ends up playing a given role in the classroom. In this case, the low engagement role is not being played by demographic groups who are traditionally disadvantaged in the classroom (e.g., black and male). A more systematic analysis could extend the results to a large number of classrooms, seeing how different students play different roles in different settings. 
 
-## Local Equivalence
+## [OPTION] Local Equivalence
 In this last section of the tutorial, we turn our attention to local equivalence. We have so far focused on structural equivalence, where we clustered actors based on being tied to the same other people. With local equivalence, actors are clustered together if they have the same interactional tendencies, or signatures, based on how they interact in their own local 'neighborhood'. Thus, actors are placed in the same position not because they interact with the same people, but because they interact in the same manner. 
 
 We will explore local equivalence by looking at triads. We will first characterize each actor based on the pattern of triads they are part of. We will then calculate the correlation between actors, based on their triad types. We will then use the correlations between triad-type memberships (across actors) to identify positions in the role analysis. Actors with similar triad-type distributions will be put in the same position, regardless of the specific people with whom they interact.  

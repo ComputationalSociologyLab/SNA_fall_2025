@@ -1,5 +1,768 @@
 [
   {
+    "objectID": "W9_presentation.html#setting-up-the-session",
+    "href": "W9_presentation.html#setting-up-the-session",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nImport igraph package for network analysis\n\n\nlibrary(igraph)"
+  },
+  {
+    "objectID": "W9_presentation.html#setting-up-the-session-1",
+    "href": "W9_presentation.html#setting-up-the-session-1",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nLoad edgelist dataset where there exists social tie between students\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv\"\nclass182_networkdata &lt;- read.csv(file = url1)\nedgelist_friendship &lt;- class182_networkdata[class182_networkdata$friend_tie &gt; 0, \n                                            c(\"ego\", \"alter\", \"friend_tie\")]\nhead(class182_networkdata) \n\n  ego alter friend_tie social_tie task_tie\n1   1     1          0        0.0      0.0\n2   1     2          0        0.0      0.0\n3   1     3          0        0.0      0.0\n4   1     4          0        0.0      0.0\n5   1     5          0        1.2      0.3\n6   1     6          0        0.0      0.0"
+  },
+  {
+    "objectID": "W9_presentation.html#setting-up-the-session-2",
+    "href": "W9_presentation.html#setting-up-the-session-2",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nLoad attribute dataset where there exists social tie between students\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv\"\nclass182_attributes &lt;- read.csv(file = url2)\nhead(class182_attributes)\n\n  ids  race grade gender\n1   1 white    10   male\n2   2 black    10 female\n3   3 white    10 female\n4   4 white    11 female\n5   5 white    10   male\n6   6 white    10 female"
+  },
+  {
+    "objectID": "W9_presentation.html#setting-up-the-session-3",
+    "href": "W9_presentation.html#setting-up-the-session-3",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nConstrcut a directed network for freinds tie\n\n\nedgelist_friendship &lt;- class182_networkdata[class182_networkdata$friend_tie &gt; 0, \n                                            c(\"ego\", \"alter\", \"friend_tie\")]\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes)"
+  },
+  {
+    "objectID": "W9_presentation.html#setting-up-the-session-4",
+    "href": "W9_presentation.html#setting-up-the-session-4",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nConstruct a undirected network for task tie\n\n\nedgelist_task &lt;- class182_networkdata[class182_networkdata$task_tie &gt; 0,\n                                        c(\"ego\", \"alter\", \"task_tie\")]\nnet182_task &lt;- graph_from_data_frame(d = edgelist_task, directed = T,\n                                     vertices = class182_attributes) \nnet182_task &lt;- as_undirected(net182_task, mode=\"collapse\", \n                             edge.attr.comb = \"mean\")"
+  },
+  {
+    "objectID": "W9_presentation.html#setting-up-the-session-5",
+    "href": "W9_presentation.html#setting-up-the-session-5",
+    "title": "Positions and Roles",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nConstruct a undirected network for social tie\n\n\nedgelist_social &lt;- class182_networkdata[class182_networkdata$social_tie &gt; 0, \n                                      c(\"ego\", \"alter\", \"social_tie\")]\n\nnet182_social &lt;- graph_from_data_frame(d = edgelist_social, directed = T, \n                                       vertices = class182_attributes) \n\nnet182_social &lt;- as_undirected(net182_social, mode=\"collapse\", \n                               edge.attr.comb = \"mean\")"
+  },
+  {
+    "objectID": "W9_presentation.html#lets-apply-the-role-analysis",
+    "href": "W9_presentation.html#lets-apply-the-role-analysis",
+    "title": "Positions and Roles",
+    "section": "Let’s apply the Role analysis",
+    "text": "Let’s apply the Role analysis\n\nBuilt to incorporate multiple relations\nDoing a role/position analysis is to place nodes into equivalent positions\n\nHere, equivalence is based on the idea of structural equivalence\nNodes who are friends with the same people, do tasks with the same people, etc. should be in the same position."
+  },
+  {
+    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-1",
+    "href": "W9_presentation.html#lets-apply-the-role-analysis-1",
+    "title": "Positions and Roles",
+    "section": "Let’s apply the Role analysis",
+    "text": "Let’s apply the Role analysis\n\nConvert the networks into adjacency matrix\n\n\nfriend_mat &lt;- as_adjacency_matrix(net182_friend, attr = \"friend_tie\", sparse = F) \ntask_mat &lt;- as_adjacency_matrix(net182_task, attr = \"task_tie\", sparse = F)\nsocial_mat &lt;- as_adjacency_matrix(net182_social, attr = \"social_tie\", sparse = F)"
+  },
+  {
+    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-2",
+    "href": "W9_presentation.html#lets-apply-the-role-analysis-2",
+    "title": "Positions and Roles",
+    "section": "Let’s apply the Role analysis",
+    "text": "Let’s apply the Role analysis\n\nStandardize our columns so they are comparable \\[\nZ = \\frac{X - \\mu}{\\sigma}\n\\]\n\n\nfriend_mat_in &lt;- t(friend_mat)\nfriend_mat_std &lt;- (friend_mat - mean(friend_mat)) / sd(friend_mat)\nfriend_mat_in_std &lt;- t(friend_mat_std) # for the incoming friendship ties\ntask_mat_std &lt;- (task_mat - mean(task_mat)) / sd(task_mat)\nsocial_mat_std &lt;- (social_mat - mean(social_mat)) / sd(social_mat)"
+  },
+  {
+    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-3",
+    "href": "W9_presentation.html#lets-apply-the-role-analysis-3",
+    "title": "Positions and Roles",
+    "section": "Let’s apply the Role analysis",
+    "text": "Let’s apply the Role analysis\n\nCombine all of the standardized matrices into one matrix.\n\n\nfriends_task_social_std &lt;- cbind(friend_mat_std, friend_mat_in_std, \n                                 task_mat_std, social_mat_std)\nfriends_task_social &lt;- cbind(friend_mat, friend_mat_in, task_mat, social_mat) \n# 16*16 adjacent matrix * 4\ndim(friends_task_social_std) \n\n[1] 16 64"
+  },
+  {
+    "objectID": "W9_presentation.html#structural-equivalence",
+    "href": "W9_presentation.html#structural-equivalence",
+    "title": "Positions and Roles",
+    "section": "Structural Equivalence",
+    "text": "Structural Equivalence\n\neuclid_dist &lt;- dist(x = friends_task_social_std, method = \"euclidean\") \neuclid_dist\n\n           1         2         3         4         5         6         7\n2  12.277092                                                            \n3   9.337925 12.666789                                                  \n4   8.125464 10.447252  8.035579                                        \n5  11.104733 12.728916  9.647258  9.121137                              \n6  10.678168 12.565643  9.919998  8.088631  8.720639                    \n7   8.890135  7.850717  9.402618  6.784490 10.162484 10.479959          \n8  10.349860  7.464200  9.522193  8.039333 12.013896 10.297088  6.933562\n9  11.124331 13.784948 12.511439 10.298732 12.110515 10.470634 11.854747\n10  7.052583 11.970673  8.885192  8.234908 10.597375 10.001802  9.733430\n11 10.406593 13.215125  9.147026  8.618923 10.459737  8.211965 10.579496\n12  6.916288 12.388970 10.242419  9.154222 11.949265 11.860957 10.175290\n13 11.915949 11.955712 12.930734 10.482529 13.132799 12.897925  8.143778\n14  9.548177  8.919780 10.645521  7.001845  9.814018  9.120023  6.009304\n15  7.685769 11.528159 11.324092  8.700158 11.173555 10.468069 10.074406\n16 14.160821 15.140840 14.241848 11.869697 14.696566 14.161035 13.150494\n           8         9        10        11        12        13        14\n2                                                                       \n3                                                                       \n4                                                                       \n5                                                                       \n6                                                                       \n7                                                                       \n8                                                                       \n9  12.346245                                                            \n10 10.388199  9.711395                                                  \n11 10.744884 11.878246 10.115245                                        \n12 11.115321 11.186167  7.327656 11.847435                              \n13  9.159214 14.384530 12.409627 13.472127 13.132353                    \n14  7.686441 11.092270  9.562528 10.321041 10.841942  7.631703          \n15 11.100016  9.998283  6.135059 11.502730  7.631501 12.001112  9.012054\n16 13.698101 14.748241 14.138346 14.396936 14.307963 15.152258 13.497085\n          15\n2           \n3           \n4           \n5           \n6           \n7           \n8           \n9           \n10          \n11          \n12          \n13          \n14          \n15          \n16 14.495992"
+  },
+  {
+    "objectID": "W9_presentation.html#structural-equivalence-1",
+    "href": "W9_presentation.html#structural-equivalence-1",
+    "title": "Positions and Roles",
+    "section": "Structural Equivalence",
+    "text": "Structural Equivalence\n\nfit &lt;- cmdscale(d = euclid_dist, k = 2) \nx &lt;- fit[, 1]\ny &lt;- fit[, 2]"
+  },
+  {
+    "objectID": "W9_presentation.html#structural-equivalence-2",
+    "href": "W9_presentation.html#structural-equivalence-2",
+    "title": "Positions and Roles",
+    "section": "Structural Equivalence",
+    "text": "Structural Equivalence\n\nx &lt;- fit[, 1]\ny &lt;- fit[, 2]\nplot(x, y, xlab = \"Coordinate 1\", ylab = \"Coordinate 2\", \n     main = \"2 Dimensional MDS Solution\", type = \"n\") \n\ntext(x, y, labels = 1:length(x), cex = 1)"
+  },
+  {
+    "objectID": "W9_presentation.html#defining-positions",
+    "href": "W9_presentation.html#defining-positions",
+    "title": "Positions and Roles",
+    "section": "Defining Positions",
+    "text": "Defining Positions\n\nCluster the nodes based on the euclid distance\n\n\nhc &lt;- hclust(euclid_dist)\nplot(hc)\nplot_clusters &lt;- rect.hclust(hc, h = 12)\n\n# save the cluster\nhc_ids &lt;- cutree(hc, h = 12)"
+  },
+  {
+    "objectID": "W9_presentation.html#role-analysis",
+    "href": "W9_presentation.html#role-analysis",
+    "title": "Positions and Roles",
+    "section": "Role Analysis",
+    "text": "Role Analysis\n\nThe goal of a role analysis is to create a reduced version of the network, where the positions become the nodes of interest\nAnalyze the pattern of ties between positions\nex) a ‘teacher’ role has certain rights and responsibilities relative to actors playing the ‘student’ role.\n\nGet a sense of Role Analysis with plot\n\nDraw heatmap basd on the positions found above\ntake the matrix of friendship, social or task ties and create a plot where the values are colored by whether a tie exists between i and j\nThe key is reordering the rows/columns of the matrix to correspond to the positions from the clustering analysis\nThis makes it possible to see how nodes in different positions relate to one another; moving us closer to capturing roles in the classroom.\n\nGet a sense of Role Analysis with plot\n\nCreate a data frame with two columns, one for the ids of the nodes and one for the positions of the nodes.\nUtilize our 4 cluster solution from above to define the positions\n\n\nid_dat &lt;- data.frame(ids = class182_attributes$ids, position = hc_ids)\nid_dat &lt;- id_dat[order(id_dat$position), ]\nid_dat\n\n   ids position\n1    1        1\n9    9        1\n10  10        1\n12  12        1\n15  15        1\n2    2        2\n4    4        2\n7    7        2\n8    8        2\n13  13        2\n14  14        2\n3    3        3\n5    5        3\n6    6        3\n11  11        3\n16  16        4\n\n\nGet a sense of Role Analysis with plot\n\nReorder the social tie matrix with the order of position\n\n\nsocial_mat_rearrange &lt;- social_mat[id_dat$ids, id_dat$ids]\n\nGet a sense of Role Analysis with plot\n\nDraw a plot\n\n\nlibrary(RColorBrewer)\n\n# set color for each position\ncolumn_cols &lt;- c(\"red\", \"green\", \"black\", \"blue\")\n\nheatmap(social_mat_rearrange, Rowv = NA, Colv = NA, revC = T,\n        col = colorRampPalette(brewer.pal(6, \"Blues\"))(25),\n        ColSideColors = column_cols[id_dat$position],\n        RowSideColors = column_cols[id_dat$position], symm = T)"
+  },
+  {
+    "objectID": "W9_presentation.html#role-analysis-with-blockmodel",
+    "href": "W9_presentation.html#role-analysis-with-blockmodel",
+    "title": "Positions and Roles",
+    "section": "Role Analysis with Blockmodel",
+    "text": "Role Analysis with Blockmodel\n\nDorm a matrix where the positions themselves are the nodes, or blocks\nThe previously found positions are the rows/columns of the newly constructed matrix\n\nex) all actors in the ‘red’ position (1, 9, 10, 12 and 15 in the figure above) get collapsed into a single node, or block, labeled, “Block 1”; all nodes in the green position get collapsed into “Block 2”, and so on. We will then analyze the resulting blockmodel in terms of the pattern of ties between blocks."
+  },
+  {
+    "objectID": "W9_presentation.html#role-analysis-with-blockmodel-1",
+    "href": "W9_presentation.html#role-analysis-with-blockmodel-1",
+    "title": "Positions and Roles",
+    "section": "Role Analysis with Blockmodel",
+    "text": "Role Analysis with Blockmodel\n\nlibrary(sna)\nblockmod_friend &lt;- blockmodel(friend_mat, ec = hc_ids)\nblockmod_friend\n\n\nNetwork Blockmodel:\n\nBlock membership:\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 1  2  3  2  3  3  2  2  1  1  3  1  2  2  1  4 \n\nReduced form blockmodel:\n\n     1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 \n        Block 1    Block 2    Block 3 Block 4\nBlock 1     0.9 0.03333333 0.05000000       0\nBlock 2     0.1 0.66666667 0.08333333       0\nBlock 3     0.4 0.12500000 1.16666667       0\nBlock 4     0.0 0.00000000 0.00000000     NaN\n\n\nThe default is to calculate the density of ties between blocks (defined as the mean value, taken over the rows/columns in the input matrix associated with those blocks). In this case the values are weighted but we could do the same exercise with binary (0/1) data."
+  },
+  {
+    "objectID": "W9_presentation.html#done",
+    "href": "W9_presentation.html#done",
+    "title": "Positions and Roles",
+    "section": "Done!",
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week [Option] in the assignment"
+  },
+  {
+    "objectID": "W5_presentation.html#load-dataset",
+    "href": "W5_presentation.html#load-dataset",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Load dataset",
+    "text": "Load dataset\n\nuse primarily with the igraph package. We will also load ggplot2 to draw a network.\n\n\nlibrary(igraph)\nlibrary(ggplot2)"
+  },
+  {
+    "objectID": "W5_presentation.html#load-dataset-1",
+    "href": "W5_presentation.html#load-dataset-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Load dataset",
+    "text": "Load dataset\n\nread in the classroom network data (edgelist dataset)\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv\"\nclass182_networkdata &lt;- read.csv(file = url1)\n# contains information for three relationship : friendship, social interaction, task interaction \n# 2 = best friend, 1 = friend, 0 = not friend\n# Social/task interaction is measured as each interaction per hour\nhead(class182_networkdata) \n\n  ego alter friend_tie social_tie task_tie\n1   1     1          0        0.0      0.0\n2   1     2          0        0.0      0.0\n3   1     3          0        0.0      0.0\n4   1     4          0        0.0      0.0\n5   1     5          0        1.2      0.3\n6   1     6          0        0.0      0.0"
+  },
+  {
+    "objectID": "W5_presentation.html#load-dataset-2",
+    "href": "W5_presentation.html#load-dataset-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Load dataset",
+    "text": "Load dataset\n\nread in the classroom network data (attribute dataset)\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv\"\nclass182_attributes &lt;- read.csv(file = url2)\nclass182_attributes\n\n   ids  race grade gender\n1    1 white    10   male\n2    2 black    10 female\n3    3 white    10 female\n4    4 white    11 female\n5    5 white    10   male\n6    6 white    10 female\n7    7 black    10 female\n8    8 black    10 female\n9    9 white    10 female\n10  10 black    11   male\n11  11 white    10   male\n12  12 black    11 female\n13  13 white    10 female\n14  14 black    10 female\n15  15 black    10 female\n16  16 black    13   male"
+  },
+  {
+    "objectID": "W5_presentation.html#create-frienship-network",
+    "href": "W5_presentation.html#create-frienship-network",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Create Frienship Network",
+    "text": "Create Frienship Network\n\nExtract the friends within the dataset\n\n\n# edges with a friendship value greater than zero\nedge_value &lt;- class182_networkdata$friend_tie\nedgelist_friendship &lt;- class182_networkdata[edge_value &gt; 0, \n                                            c(\"ego\", \"alter\", \"friend_tie\")]\nhead(edgelist_friendship)\n\n   ego alter friend_tie\n17   2     1          1\n23   2     7          1\n24   2     8          1\n29   2    13          2\n30   2    14          1\n37   3     5          1"
+  },
+  {
+    "objectID": "W5_presentation.html#create-frienship-network-1",
+    "href": "W5_presentation.html#create-frienship-network-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Create Frienship Network",
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 89972f0 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 89972f0 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nStart with a quick plot of the friendship network\nIs there any cohision in this network??\n\n\nplot(net182_friend, vertex.label = NA, vertex.size = 10,\n     edge.arrow.size = .25, edge.arrow.width = 1, \n     edge.color = \"light gray\", vertex.frame.color = NA)"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-1",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nThe classroom network is fairly cohesive (ignoring the two isolates)\nHard to split the central group into two groups."
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-2",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nexplore some of the properties of the network, starting with density.\n\nWhat does it mean?\n\n\nedge_density(net182_friend)\n\n[1] 0.2583333"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-3",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-3",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nAbout a quarter of all possible ties are present in the network\n(m) = number of edges = 62\n(n) = number of nodes = 16\n\\[\nDentisy = \\frac{m}{n(n-1)} = \\frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%\n\\]\nGive us the information on the volume of ties, not the pattern of ties"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-4",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-4",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\ncomponents() : Detect all connected node in the network\n\nIf the nodes are connected, then they belong to the same component.\n“strong” mode : find components where node i and j are mutual reachable\n“weak” mode : find components where node i and j are in the same group if there is any path connecting them\n\n\n\n# *Note* : mode argument is ignored in the case of undirected networks.  \ncomponents_friendship &lt;- components(graph = net182_friend, mode = \"weak\")"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-5",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-5",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\n# membership : component membership of each node\n# csize : size of component\n# no : component number\ncomponents_friendship\n\n$membership\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 1  1  1  2  1  1  1  1  1  1  1  1  1  1  1  3 \n\n$csize\n[1] 14  1  1\n\n$no\n[1] 3"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-6",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-6",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nLet’s calculate the proportion of nodes in each component.\n\n\n# 87.5% of the nodes fall in the largest component\n# two isolates are each in their own component\ncomponents_friendship$csize / sum(components_friendship$csize) \n\n[1] 0.8750 0.0625 0.0625"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-with-vertex-connectivity",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-with-vertex-connectivity",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists with vertex connectivity",
+    "text": "Let’s see if cohesion exists with vertex connectivity\n\nExplore the connectivity of specific pairs of nodes in the network\nvertex connectivity give us the number of nodes that would need to be removed so that i can no longer reach j"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-7",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH bec4f05 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from bec4f05 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-8",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\ncalculate vertex connectivity for two example nodes, 1 and 9:\n\n\n# need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group \nvertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)\n\n[1] 5"
+  },
+  {
+    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-9",
+    "href": "W5_presentation.html#lets-see-if-cohesion-exists-9",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Let’s see if cohesion exists",
+    "text": "Let’s see if cohesion exists\n\ncalculate vertex connectivity for a network\n\n\n# returns the minimum number of vertices that must be removed to make the graph disconnected \n# (i.e., split into at least two components)\nvertex_connectivity(net182_friend_und)\n\n[1] 0"
+  },
+  {
+    "objectID": "W5_presentation.html#community-or-group-detection",
+    "href": "W5_presentation.html#community-or-group-detection",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Community (or Group) Detection",
+    "text": "Community (or Group) Detection\n\nFind the communities (or groups) within the larger cohesive set.\nThe goal is to identify sets of nodes that have high internal density and few ties to outside members."
+  },
+  {
+    "objectID": "W5_presentation.html#community-or-group-detection-1",
+    "href": "W5_presentation.html#community-or-group-detection-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Community (or Group) Detection",
+    "text": "Community (or Group) Detection\n\nMany different ways to detect communities.\n\n1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness …"
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking",
+    "href": "W5_presentation.html#cohesive-blocking",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nSubset the network into groups based on vertex connectivity\nIteratively search for subgroups that maintain connectivity under the removal of k nodes\nStarting from highly cohesive groups (large k) and moving down to less cohesive ones"
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking-1",
+    "href": "W5_presentation.html#cohesive-blocking-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nfriend_comm_cohesive &lt;- cohesive_blocks(graph = net182_friend_und)\nfriend_comm_cohesive # hard to interprete the result..... then...?\n\nCohesive block structure:\nB-1      c 0, n 16\n'- B-2   c 4, n 14   ooo.oooooo ooooo."
+  },
+  {
+    "objectID": "W5_presentation.html#cohesive-blocking-2",
+    "href": "W5_presentation.html#cohesive-blocking-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "1) Cohesive Blocking",
+    "text": "1) Cohesive Blocking\n\nVisualize the result!!\nTwo blocks (one with vertex connectivity 0, second with vertex connectivity)\n\n\nplot(friend_comm_cohesive, net182_friend_und)"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap",
+    "href": "W5_presentation.html#walktrap",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nDetects communities through a series of short random walks\n\nNodes encountered on any given random walk are more likely to be within a community than not\nThe algorithm initially treats all nodes as communities of their own\nMerges them into larger communities, and these into still larger communities, and so on"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-1",
+    "href": "W5_presentation.html#walktrap-1",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nDetects communities through a series of short random walks\n\nUnlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities\n\n\n\n# steps :length of random walk (4 or 5 is recommended)\n# membership : T/F, should membership be calculated based on highest modularity score? T by default\nfriend_comm_wt4 &lt;- cluster_walktrap(graph = net182_friend_und, steps = 4, \n                                    membership = T)"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-2",
+    "href": "W5_presentation.html#walktrap-2",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\n# groups: 4 → 4 community detected in the network\n# mod: 0.27 → value of modularity \nprint(friend_comm_wt4, all = TRUE)\n\nIGRAPH clustering walktrap, groups: 4, mod: 0.27\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"3\"  \"5\"  \"6\"  \"9\"  \"10\" \"11\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"4\"\n  \n  $`4`\n  + ... omitted several groups/vertices"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-3",
+    "href": "W5_presentation.html#walktrap-3",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\nWhat would happen if we used 3 steps?\n\n# the modularity is slightly higher when we use 3 steps\nfriend_comm_wt3 &lt;- cluster_walktrap(graph = net182_friend_und, \n                                    steps = 3, membership = T)\nfriend_comm_wt3\n\nIGRAPH clustering walktrap, groups: 5, mod: 0.28\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"9\"  \"10\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"3\"  \"5\"  \"6\"  \"11\"\n  \n  $`4`\n  + ... omitted several groups/vertices"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-4",
+    "href": "W5_presentation.html#walktrap-4",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nCompare the two partitions using the table function:\n\n\n# row : results for communities when step is 4 (4 community detected)\n# col : results for communities when step is 3 (5 community detected)\ntable( membership(friend_comm_wt4),  membership(friend_comm_wt3))\n\n   \n    1 2 3 4 5\n  1 5 0 0 0 0\n  2 0 5 4 0 0\n  3 0 0 0 1 0\n  4 0 0 0 0 1"
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-5",
+    "href": "W5_presentation.html#walktrap-5",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\nPlot the network based on the found communities, comparing the two partitions.\nColor the nodes based on the communities found using the walktrap algorithm."
+  },
+  {
+    "objectID": "W5_presentation.html#walktrap-6",
+    "href": "W5_presentation.html#walktrap-6",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "2) Walktrap",
+    "text": "2) Walktrap\n\npar(mfrow = c(1, 2))\nlayout &lt;- layout_with_fr(net182_friend) \nplot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt4),edge.color = \"light gray\", vertex.size = 20, main = \"Walktrap: 4 Steps\")\nplot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt3), edge.color = \"light gray\", vertex.size = 20, main = \"Walktrap: 3 Steps\")"
+  },
+  {
+    "objectID": "W5_presentation.html#done",
+    "href": "W5_presentation.html#done",
+    "title": "W5. Network Cohesion and Communities",
+    "section": "Done!",
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week [Option] in the assignment"
+  },
+  {
+    "objectID": "W3_presentation.html#please-keep-in-mind",
+    "href": "W3_presentation.html#please-keep-in-mind",
+    "title": "W3. Visualization",
+    "section": "Please keep in mind",
+    "text": "Please keep in mind\n\nWe only cover a relatively small number of plotting options\nThere isn’t one “magic” plot that is perfect for everything (mirage…unicorn…)\n\nIf I could, I’d like to introduce R script that makes the perfect plot everytime\nA plot that works well for one network might not work for another🥲"
+  },
+  {
+    "objectID": "W3_presentation.html#setting-up-the-session",
+    "href": "W3_presentation.html#setting-up-the-session",
+    "title": "W3. Visualization",
+    "section": "Setting up the Session",
+    "text": "Setting up the Session\n\nThe actors are students in a classroom and the relation of interest is friendship\n\n\n# Load files for edge list\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_edgelist.csv\"\n\nclass_edges &lt;- read.csv(url1)"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-see-how-it-looks-like",
+    "href": "W3_presentation.html#lets-see-how-it-looks-like",
+    "title": "W3. Visualization",
+    "section": "Let’s see how it looks like",
+    "text": "Let’s see how it looks like\n\nhead(class_edges)\n\n  sender receiver weight\n1      1        3      1\n2      1        5      1\n3      1        7      1\n4      1       21      1\n5      2        3      1\n6      2        6      1"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-also-read-in-the-attribute-file.",
+    "href": "W3_presentation.html#lets-also-read-in-the-attribute-file.",
+    "title": "W3. Visualization",
+    "section": "Let’s also read in the attribute file.",
+    "text": "Let’s also read in the attribute file.\n\n# Attributes for gender, race and grade.\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_attributedata.csv\"\n\nclass_attributes &lt;- read.csv(url2)"
+  },
+  {
+    "objectID": "W3_presentation.html#we-begin-using-the-igraph-package.",
+    "href": "W3_presentation.html#we-begin-using-the-igraph-package.",
+    "title": "W3. Visualization",
+    "section": "We begin using the igraph package.",
+    "text": "We begin using the igraph package.\n\n# import library\nlibrary(igraph)"
+  },
+  {
+    "objectID": "W3_presentation.html#now-we-go-ahead-and-construct-the-igraph-object",
+    "href": "W3_presentation.html#now-we-go-ahead-and-construct-the-igraph-object",
+    "title": "W3. Visualization",
+    "section": "Now we go ahead and construct the igraph object",
+    "text": "Now we go ahead and construct the igraph object\n\n# the edgelist and attribute objects as inputs.\n# use 'graph_from_data_frame' function \nclass_net &lt;- graph_from_data_frame(d = class_edges, directed = T, \n                                   vertices = class_attributes)"
+  },
+  {
+    "objectID": "W3_presentation.html#detailed-information-of-our-network",
+    "href": "W3_presentation.html#detailed-information-of-our-network",
+    "title": "W3. Visualization",
+    "section": "Detailed information of our network",
+    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH 0c11402 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from 0c11402 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
+  },
+  {
+    "objectID": "W3_presentation.html#plot-a-network-using-igraph",
+    "href": "W3_presentation.html#plot-a-network-using-igraph",
+    "title": "W3. Visualization",
+    "section": "Plot a network using igraph",
+    "text": "Plot a network using igraph\n\nPloting network offers an intuitive way of exploring the features of the network\nLooking at a picture of the network is a useful starting point for an analysis."
+  },
+  {
+    "objectID": "W3_presentation.html#lets-start-with-the-default-plotting-in-igraph.",
+    "href": "W3_presentation.html#lets-start-with-the-default-plotting-in-igraph.",
+    "title": "W3. Visualization",
+    "section": "Let’s start with the default plotting in igraph.",
+    "text": "Let’s start with the default plotting in igraph.\n\nplot(class_net)"
+  },
+  {
+    "objectID": "W3_presentation.html#and-improve-the-graph",
+    "href": "W3_presentation.html#and-improve-the-graph",
+    "title": "W3. Visualization",
+    "section": "And improve the graph!",
+    "text": "And improve the graph!\n\nThe plot does not tell us anything (gender, race, degree..)\nWe begin by exploring gender divides in the network\ni.e., how strongly does gender map onto friendship groups?"
+  },
+  {
+    "objectID": "W3_presentation.html#and-improve-the-graph-1",
+    "href": "W3_presentation.html#and-improve-the-graph-1",
+    "title": "W3. Visualization",
+    "section": "And improve the graph!",
+    "text": "And improve the graph!\n\nLet’s color the nodes by gender\n\n\n#  make male students navy blue and female students light sky blue \ncols &lt;- ifelse(class_attributes$gender == \"Female\", \"lightskyblue\", \"navy\")"
+  },
+  {
+    "objectID": "W3_presentation.html#and-improve-the-graph-2",
+    "href": "W3_presentation.html#and-improve-the-graph-2",
+    "title": "W3. Visualization",
+    "section": "And improve the graph!",
+    "text": "And improve the graph!\n\n# Using a simple `table()` function, we made simple table \n# 16 female students are assigned for lightskyblue color\n# 8 male students are assigned for navy color\ntable(cols, class_attributes$gender)\n\n              \ncols           Female Male\n  lightskyblue     16    0\n  navy              0    8"
+  },
+  {
+    "objectID": "W3_presentation.html#assign-the-gendered-colorset-to-the-network",
+    "href": "W3_presentation.html#assign-the-gendered-colorset-to-the-network",
+    "title": "W3. Visualization",
+    "section": "Assign the gendered colorset to the network",
+    "text": "Assign the gendered colorset to the network\n\n# use a `V(g)$color` command to set the color of each node in the network \nV(class_net)$color &lt;- cols"
+  },
+  {
+    "objectID": "W3_presentation.html#and-now-we-plot-as-before.",
+    "href": "W3_presentation.html#and-now-we-plot-as-before.",
+    "title": "W3. Visualization",
+    "section": "And now we plot as before.",
+    "text": "And now we plot as before.\n\n# same result for `plot(class_net, vertex.color = cols)`\nplot(class_net)"
+  },
+  {
+    "objectID": "W3_presentation.html#what-is-different",
+    "href": "W3_presentation.html#what-is-different",
+    "title": "W3. Visualization",
+    "section": "What is different?",
+    "text": "What is different?\n\nThe network does divide along gender lines\nWith one small group of boys and then a larger set of girls\nTwo boys are not part of the ‘boy group’, and are disproportionately connected to girls\nWhat else?"
+  },
+  {
+    "objectID": "W3_presentation.html#what-if",
+    "href": "W3_presentation.html#what-if",
+    "title": "W3. Visualization",
+    "section": "What if?",
+    "text": "What if?\n\nA researcher may also be interested in who is popular in the class\nWe can identify it with Network Measure"
+  },
+  {
+    "objectID": "W3_presentation.html#what-if-1",
+    "href": "W3_presentation.html#what-if-1",
+    "title": "W3. Visualization",
+    "section": "What if?",
+    "text": "What if?\n\nA researcher may also be interested in who is popular in the class\nWe can identify it with Network Measure\n\n\n# Yes! indegree!\n# degree : # of of neighbors in a network\n# indegree : # of incoming neighbors\n# indegree of node i : # of students who think node i is their frieds \n# -&gt; popularity\nindeg &lt;- degree(class_net, mode = \"in\")"
+  },
+  {
+    "objectID": "W3_presentation.html#now-we-plot-the-network",
+    "href": "W3_presentation.html#now-we-plot-the-network",
+    "title": "W3. Visualization",
+    "section": "Now we plot the network",
+    "text": "Now we plot the network\n\nPut indegree value for the size of the nodes\n\n\n# set margin to -.10 to reduce some of the extra white space around the plot.\nplot(class_net, vertex.size = indeg, margin = -.10)"
+  },
+  {
+    "objectID": "W3_presentation.html#now-we-plot-the-network-1",
+    "href": "W3_presentation.html#now-we-plot-the-network-1",
+    "title": "W3. Visualization",
+    "section": "Now we plot the network",
+    "text": "Now we plot the network\n\nMake all the nodes a little bigger, but the nodes are still sized by indegree\n\n\n# adding integer (here, 3) to the indegree to make the node bigger\n# change the color of label\nplot(class_net, vertex.size = indeg + 3, vertex.label.color = \"red\", \n     margin = -.10)"
+  },
+  {
+    "objectID": "W3_presentation.html#now-we-plot-the-network-2",
+    "href": "W3_presentation.html#now-we-plot-the-network-2",
+    "title": "W3. Visualization",
+    "section": "Now we plot the network",
+    "text": "Now we plot the network\n\nOne boy (id 13) and one girl (id 24) receive a particularly high number of nominations\nBoys in the ‘boy group’ tend to have low indegree, as they are only friends with each other and there are few boys in the network."
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph",
+    "href": "W3_presentation.html#lets-improve-the-graph",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\nChange the look of the nodes\n\n\nplot(class_net, \n    vertex.size = indeg + 3, \n    vertex.label = NA, # take out those labels using a vertex.label argument\n    vertex.frame.color = NA, # take off the black edges around the nodes\n    edge.arrow.size = .5, \n    edge.arrow.width = .75, \n    margin = -.10)"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph-1",
+    "href": "W3_presentation.html#lets-improve-the-graph-1",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\nNow we change the layout of the graph.\nlayout_with_mds(Multi-Dimensional Scaling)\n\ncalculate the distance between node i and j\nplace nodes where the distance is preserved\n👉 Good for showing the overall/global structure of the network"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph-2",
+    "href": "W3_presentation.html#lets-improve-the-graph-2",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\nlayout_with_kk(Kamada–Kawai)\n\nAssign the distnace between node i and j\n\nif direct edge exists, place the nodes closer together\nif not, place the nodes farther apart\n👉 Good for highlighting local structures and communities"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph-3",
+    "href": "W3_presentation.html#lets-improve-the-graph-3",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\nNow we change layout of a network.\n\n\nplot(class_net, \n     vertex.size = indeg + 3, \n     vertex.label = NA, \n     vertex.frame.color = NA, \n     edge.arrow.size = .5, \n     edge.arrow.width = .75, \n     edge.color = \"light gray\", # change the color of the lines to light gray,\n     layout = layout_with_mds, # alter the layout of the plot \n     margin = -.10)"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph-4",
+    "href": "W3_presentation.html#lets-improve-the-graph-4",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\nNow we change layout of a network.\n\n\nplot(class_net, \n     vertex.size = indeg + 3, \n     vertex.label = NA, \n     vertex.frame.color = NA, \n     edge.arrow.size = .5, \n     edge.arrow.width = .75, \n     edge.color = \"light gray\", # change the color of the lines to light gray,\n     layout = layout_with_kk, # alter the layout of the plot \n     margin = -.10)"
+  },
+  {
+    "objectID": "W3_presentation.html#lets-improve-the-graph-5",
+    "href": "W3_presentation.html#lets-improve-the-graph-5",
+    "title": "W3. Visualization",
+    "section": "Let’s improve the graph!",
+    "text": "Let’s improve the graph!\n\na number of other options a researcher could explore if they wanted to continue tweaking their plot.\nSee the following help files for more options: ?plot.igraph ?igraph.plotting\n\n\n?plot.igraph"
+  },
+  {
+    "objectID": "W3_presentation.html#done",
+    "href": "W3_presentation.html#done",
+    "title": "W3. Visualization",
+    "section": "Done!",
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week\nThis week [Option] is a real fun\n\nyou can excercise how to draw dynamic graph!\n\nQuestions?"
+  },
+  {
+    "objectID": "W4_presentation.html#working-with-ego-network-data",
+    "href": "W4_presentation.html#working-with-ego-network-data",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Working with Ego Network Data",
+    "text": "Working with Ego Network Data\n\nEgo network data are based on a sample of individuals and are commonly used in the social sciences.\nEach respondent (ego) reports on the people (alters) they are connected to, providing the local network around the focal respondent.\nEgo network data offer only pieces of the whole network"
+  },
+  {
+    "objectID": "W4_presentation.html#working-with-ego-network-data-1",
+    "href": "W4_presentation.html#working-with-ego-network-data-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Working with Ego Network Data",
+    "text": "Working with Ego Network Data\n\nEgo network data can be structured in a number of ways but will generally have 4 kinds of information:\n\ndemographic, behavioral, etc. information on the egos\ndemographic, behavioral, etc. information on the named alters\ninformation about the relationship between ego and alter\ninformation about the relationships between the alters"
+  },
+  {
+    "objectID": "W4_presentation.html#working-with-ego-network-data-2",
+    "href": "W4_presentation.html#working-with-ego-network-data-2",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Working with Ego Network Data",
+    "text": "Working with Ego Network Data\n\nWork with ego network data from the GSS(General Social Survey)\n\na file with the ego attributes\na file with the alter(other) attributes\na file with the alter-alter ties\n\n\n\n# a file with the ego attributes\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_ego_dat.csv\"\n\nego_dat &lt;- read.csv(file = url1, stringsAsFactors = F)"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-ego-attribute",
+    "href": "W4_presentation.html#load-dataset-for-ego-attribute",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Ego Attribute",
+    "text": "Load Dataset for Ego Attribute\nFirst 10 rows of the ego data frame\n\n# CASEID : unique ID for each respondent\n# NUMGIVEN : the number of alters named, Respondents could say they had 6+ alters but were only allowed to report on 5\nego_dat[1:10, c(\"CASEID\", \"AGE\", \"EDUC\", \"RACE\", \"SEX\", \"HAPPY\", \"NUMGIVEN\")]\n\n     CASEID AGE EDUC  RACE    SEX HAPPY NUMGIVEN\n1  19850001  33   16 white   male     2        6\n2  19850002  49   19 white   male     2        6\n3  19850003  23   16 white female     2        5\n4  19850004  26   20 white female     2        5\n5  19850005  24   17 white female     2        5\n6  19850006  45   17 white   male     2        4\n7  19850007  44   18 white female     2        6\n8  19850008  56   12 white female     2        5\n9  19850009  85    7 white female     2        2\n10 19850010  65   12 white female     2        2"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-ego-attribute-1",
+    "href": "W4_presentation.html#load-dataset-for-ego-attribute-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Ego Attribute",
+    "text": "Load Dataset for Ego Attribute\n\n# check if there is empty values\nna_yn &lt;-!is.na(ego_dat$NUMGIVEN)\n# exclude the emply values\nego_dat &lt;- ego_dat[na_yn, ]"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-alter-attribute",
+    "href": "W4_presentation.html#load-dataset-for-alter-attribute",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Alter Attribute",
+    "text": "Load Dataset for Alter Attribute\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alter_dat.csv\"\n\nalter_dat &lt;- read.csv(file = url2, stringsAsFactors = F)"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-alter-attribute-1",
+    "href": "W4_presentation.html#load-dataset-for-alter-attribute-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Alter Attribute",
+    "text": "Load Dataset for Alter Attribute\n\n# each row corresponds to a different named alter\n# Each alter is denoted by an ALTERID (CASEID : ALTERID = 1:N)\n# KIN : 1(True) if ego is relatives with that alter\n# respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego.\nalter_dat[1:10, c(\"CASEID\", \"ALTERID\", \"AGE\", \"EDUC\", \"RACE\", \"SEX\", \"KIN\")] \n\n     CASEID ALTERID AGE EDUC  RACE    SEX KIN\n1  19850001       1  32   18 white   male   0\n2  19850001       2  29   16 white female   1\n3  19850001       3  32   18 white   male   0\n4  19850001       4  35   16 white   male   1\n5  19850001       5  29   13 white female   0\n6  19850002       1  42   12 white female   1\n7  19850002       2  44   18 white   male   0\n8  19850002       3  45   16 white   male   0\n9  19850002       4  40   12 white female   0\n10 19850002       5  50   18 white   male   0"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-alter-alter-tie",
+    "href": "W4_presentation.html#load-dataset-for-alter-alter-tie",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Alter-Alter Tie",
+    "text": "Load Dataset for Alter-Alter Tie\n\nurl3 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alteralter_dat.csv\"\n\nalteralter_dat &lt;- read.csv(file = url3)"
+  },
+  {
+    "objectID": "W4_presentation.html#load-dataset-for-alter-alter-tie-1",
+    "href": "W4_presentation.html#load-dataset-for-alter-alter-tie-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Load Dataset for Alter-Alter Tie",
+    "text": "Load Dataset for Alter-Alter Tie\n\nthe ties between the named alters\n\n\n# `CASEID` : relevant ego \n# `ALTER1` : first alter in the dyad\n# `ALTER2` : second alter in the dyad\n# `Weight` : nature of the relationship (1 : alters know each other, 2: especially close)\nalteralter_dat[1:10, ]\n\n     CASEID ALTER1 ALTER2 WEIGHT\n1  19850001      1      2      2\n2  19850001      1      3      1\n3  19850001      1      4      1\n4  19850001      1      5      1\n5  19850001      2      3      2\n6  19850001      2      4      2\n7  19850001      2      5      2\n8  19850001      3      4      1\n9  19850001      3      5      1\n10 19850001      4      5      1"
+  },
+  {
+    "objectID": "W4_presentation.html#lets-make-ego-network",
+    "href": "W4_presentation.html#lets-make-ego-network",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Let’s make Ego Network",
+    "text": "Let’s make Ego Network\n\ntransforming traditional survey data into something that has the structure of a network 🤯🤯🤯🤯🤯\n🍀🍀egor🍀🍀 package has made the task of constructing ego networks from survey data much easier\n\n\n# load a package for constructing ego network\nlibrary(egor)"
+  },
+  {
+    "objectID": "W4_presentation.html#lets-make-ego-network-1",
+    "href": "W4_presentation.html#lets-make-ego-network-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Let’s make Ego Network",
+    "text": "Let’s make Ego Network\n\nconstruct an egor object from our survey data\n\n\n# `egor()` : input the data using three separate files.\n\negonetlist &lt;-  egor(alters = alter_dat, # alter attributes data frame\n                    egos = ego_dat, # ego attributes data frame\n                    aaties = alteralter_dat, # alter-alter tie data frame\n                    alter_design = list(max = 5), # list of arguments to specify nomination information from survey\n                    # list of variable names corresponding to key columns\n                    ID.vars = list(ego = \"CASEID\", alter =\"ALTERID\", \n                                   source = \"ALTER1\", target = \"ALTER2\") \n                    )"
+  },
+  {
+    "objectID": "W4_presentation.html#calculate-summary-statistics",
+    "href": "W4_presentation.html#calculate-summary-statistics",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Calculate Summary Statistics",
+    "text": "Calculate Summary Statistics\n\nWe will begin with density, showing the proportion of alter-alter ties that exist in each ego network\nBy the way, What is the definition of density?🤨"
+  },
+  {
+    "objectID": "W4_presentation.html#calculate-summary-statistics-1",
+    "href": "W4_presentation.html#calculate-summary-statistics-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Calculate Summary Statistics",
+    "text": "Calculate Summary Statistics\n\na measure for overall level of connection among nodes in a network\n(m) = number of edges\n\n(n) = number of nodes\n\\[\nDentisy = \\frac{2m}{n(n-1)}\n\\]\n\n\n# use `ego_density()` function\ndens &lt;- ego_density(egonetlist)"
+  },
+  {
+    "objectID": "W4_presentation.html#calculate-summary-statistics-2",
+    "href": "W4_presentation.html#calculate-summary-statistics-2",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Calculate Summary Statistics",
+    "text": "Calculate Summary Statistics\n\n# we calculated the density of every ego network\nhead(dens)\n\n# A tibble: 6 × 2\n    .egoID density\n     &lt;int&gt;   &lt;dbl&gt;\n1 19850001   1    \n2 19850002   0.8  \n3 19850003   0.6  \n4 19850004   0.6  \n5 19850005   1    \n6 19850006   0.667"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks",
+    "href": "W4_presentation.html#plotting-ego-networks",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\n\ngo over how to plot the ego networks using packages like igraph\n\n\nlibrary(igraph)"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks-1",
+    "href": "W4_presentation.html#plotting-ego-networks-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\n\nconvert the egor object to igraph objects.\n\n\nigraph_nets &lt;- as_igraph(egonetlist, include.ego = TRUE)"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks-2",
+    "href": "W4_presentation.html#plotting-ego-networks-2",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 8844c70 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 8844c70 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 208cce9 UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 208cce9 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH dbe3431 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from dbe3431 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks-3",
+    "href": "W4_presentation.html#plotting-ego-networks-3",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\nlet’s plot a couple of example networks, focusing on the first 3 ego networks.\n\n# set 1 row, 3 column grid for visualization layout\npar(mfrow = c(1, 3))\n# draw graphs in igraph_nets variable\npurrr::walk(igraph_nets[1:3], plot)"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks-4",
+    "href": "W4_presentation.html#plotting-ego-networks-4",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\n\nLet’s color the nodes based on gender\nso we can get a sense of the level of gender homogeneity in these ego networks\n\n\n# somewhat more difficult task than with a single network\n# defind a function to set the color for each network\nplotfunc_colorgender &lt;- function(nets){ \n  # Arguments: \n  # nets: ego network of interest\n  \n  # extracting the attribute from the ego network:\n  cols &lt;- vertex_attr(nets, \"SEX\") \n\n  # now we use an ifelse statement to set color,\n  # light sky blue if gender equals female, blue otherwise:\n  cols &lt;- ifelse(cols == \"female\", \"lightskyblue\", \"blue\")\n\n  # plotting ego network with nodes colored based on gender:\n  plot(nets, vertex.color = cols) \n}"
+  },
+  {
+    "objectID": "W4_presentation.html#plotting-ego-networks-5",
+    "href": "W4_presentation.html#plotting-ego-networks-5",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Plotting Ego Networks",
+    "text": "Plotting Ego Networks\n\nNow let’s run plotfunc_colorgender() over the first three ego networks.\n\n\n# third ego network is homogenous in terms of gender\n# the first two are quite heterogeneous\n# first ego network is complete\npar(mfrow = c(1, 3))\npurrr::walk(igraph_nets[1:3], plotfunc_colorgender)"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes",
+    "href": "W4_presentation.html#triadic-processes",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\n\nwork primarily with the sna package [@sna], so let’s start by loading that package.\n\n\nlibrary(sna)"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes-1",
+    "href": "W4_presentation.html#triadic-processes-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\n\ndownload three datasets(1. friends 2. advice 3. attributes)\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_advice.csv\"\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_attributes.csv\"\nurl3 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_friendship.csv\"\n\nadvice_data_frame &lt;- read.csv(file = url1) \nattributes &lt;- read.csv(file = url2)\nfriends_data_frame &lt;- read.csv(file = url3)\n\n# extract only Ture relationship\nadvice_edgelist &lt;- advice_data_frame[advice_data_frame$advice_tie == 1, ]\nfriends_edgelist &lt;- friends_data_frame[friends_data_frame$friendship_tie == 1, ]"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes-2",
+    "href": "W4_presentation.html#triadic-processes-2",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# ego 1 said he or she gives advice from alter 2,4,8,16,21\nhead(advice_edgelist)\n\n   ego alter advice_tie\n2    1     2          1\n4    1     4          1\n8    1     8          1\n16   1    16          1\n18   1    18          1\n21   1    21          1"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes-3",
+    "href": "W4_presentation.html#triadic-processes-3",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# ego 1 said he or she is friend with alter 2,4,8,12,16\nhead(friends_edgelist)\n\n   ego alter friendship_tie\n2    1     2              1\n4    1     4              1\n8    1     8              1\n12   1    12              1\n16   1    16              1\n22   2     1              1"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes-4",
+    "href": "W4_presentation.html#triadic-processes-4",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# attributes for each resopondent\nhead(attributes)\n\n  ids AGE TENURE LEVEL DEPT\n1   1  33  9.333     3    4\n2   2  42 19.583     2    4\n3   3  40 12.750     3    2\n4   4  33  7.500     3    4\n5   5  32  3.333     3    2\n6   6  59 28.000     3    1"
+  },
+  {
+    "objectID": "W4_presentation.html#triadic-processes-5",
+    "href": "W4_presentation.html#triadic-processes-5",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triadic Processes",
+    "text": "Triadic Processes\n\nWe now construct the network , as before, using the network() function.\n\n\nkrack_friendship &lt;-  network(x = friends_edgelist, directed = T, \n                             vertices = attributes)\nkrack_advice &lt;- network(x = advice_edgelist, directed = T, \n                        vertices = attributes)"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census",
+    "href": "W4_presentation.html#triad-census",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\nThe triad census captures the distribution of triads across 16 basic types, representing different patterns of interaction between the three nodes\nThere are 16 different triad types:"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-1",
+    "href": "W4_presentation.html#triad-census-1",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\ncompare the triad counts across the two network relations, to see if the patterns differ for friendship compared to advice\n\n\n# `triad.census()` function outputs the counts in each triad type\ntriads_advice &lt;- triad.census(krack_advice) \ntriads_advice\n\n     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300\n[1,]  74 153  90  160   86   49   59  101  190    2  72   62   78   17 107  30"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-2",
+    "href": "W4_presentation.html#triad-census-2",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\nAnd now for friendship :\n\n# `triad.census()` function outputs the counts in each triad type\ntriads_friendship &lt;- triad.census(krack_friendship)\ntriads_friendship\n\n     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300\n[1,] 376 366 143  114   34   35   39  101   23    0  20   16   25    9  23   6"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-3",
+    "href": "W4_presentation.html#triad-census-3",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\nLet’s make a table to make the comparisons easier.\n\ntriad_data &lt;- data.frame(advice = t(triads_advice), \n                         friendship = t(triads_friendship))"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-4",
+    "href": "W4_presentation.html#triad-census-4",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\ntriad_data\n\n     advice friendship\n003      74        376\n012     153        366\n102      90        143\n021D    160        114\n021U     86         34\n021C     49         35\n111D     59         39\n111U    101        101\n030T    190         23\n030C      2          0\n201      72         20\n120D     62         16\n120U     78         25\n120C     17          9\n210     107         23\n300      30          6"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-5",
+    "href": "W4_presentation.html#triad-census-5",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\none striking difference : The advice network has a much higher proportion of 030T triads than the friendship network"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-6",
+    "href": "W4_presentation.html#triad-census-6",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\nThe underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one\nSuch a pattern of hierarchy does not emerge as clearly in the friendship network"
+  },
+  {
+    "objectID": "W4_presentation.html#triad-census-7",
+    "href": "W4_presentation.html#triad-census-7",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Triad Census",
+    "text": "Triad Census\n\nThe triads associated with transitive dominance relations are more likely to be present in the advice network than the friendship network"
+  },
+  {
+    "objectID": "W4_presentation.html#done",
+    "href": "W4_presentation.html#done",
+    "title": "W4. Ego, Dyads and Triads",
+    "section": "Done!",
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week [Option] in the assignment"
+  },
+  {
     "objectID": "W7_presentation.html#setting-up-the-session",
     "href": "W7_presentation.html#setting-up-the-session",
     "title": "W7.Centrality",
@@ -172,14 +935,14 @@
     "href": "W7_presentation.html#centralization-8",
     "title": "W7.Centrality",
     "section": "Centralization",
-    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from social ties\n\n\n# minumun value of ingree would be 0 so...\nden_social &lt;- density(indegree_social, from = 0) \nden_social\n\n\nCall:\n    density.default(x = indegree_social, from = 0)\n\nData: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989\n\n       x               y            \n Min.   :0.000   Min.   :0.0002118  \n 1st Qu.:2.492   1st Qu.:0.0248385  \n Median :4.984   Median :0.0920633  \n Mean   :4.984   Mean   :0.0890183  \n 3rd Qu.:7.475   3rd Qu.:0.1509740  \n Max.   :9.967   Max.   :0.1785387"
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from social ties\n\n\n# minumun value of ingree would be 0 so...\nden_social &lt;- density(indegree_social, from = 0) \nden_social\n\n\nCall:\n    density.default(x = indegree_social, from = 0)\n\nData: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989\n\n       x               y          \n Min.   :0.000   Min.   :0.00021  \n 1st Qu.:2.492   1st Qu.:0.02481  \n Median :4.984   Median :0.09198  \n Mean   :4.984   Mean   :0.08894  \n 3rd Qu.:7.475   3rd Qu.:0.15088  \n Max.   :9.967   Max.   :0.17842"
   },
   {
     "objectID": "W7_presentation.html#centralization-9",
     "href": "W7_presentation.html#centralization-9",
     "title": "W7.Centrality",
     "section": "Centralization",
-    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from task ties\n\n\nden_task &lt;- density(degree_task, from = 0)\nden_task\n\n\nCall:\n    density.default(x = degree_task, from = 0)\n\nData: degree_task (22 obs.);    Bandwidth 'bw' = 0.362\n\n       x                y          \n Min.   : 0.000   Min.   :0.00000  \n 1st Qu.: 4.521   1st Qu.:0.00000  \n Median : 9.043   Median :0.00000  \n Mean   : 9.043   Mean   :0.05275  \n 3rd Qu.:13.564   3rd Qu.:0.04508  \n Max.   :18.086   Max.   :0.60475"
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from task ties\n\n\nden_task &lt;- density(degree_task, from = 0)\nden_task\n\n\nCall:\n    density.default(x = degree_task, from = 0)\n\nData: degree_task (22 obs.);    Bandwidth 'bw' = 0.362\n\n       x                y            \n Min.   : 0.000   Min.   :0.000e+00  \n 1st Qu.: 4.521   1st Qu.:0.000e+00  \n Median : 9.043   Median :2.000e-08  \n Mean   : 9.043   Mean   :5.269e-02  \n 3rd Qu.:13.564   3rd Qu.:4.507e-02  \n Max.   :18.086   Max.   :6.047e-01"
   },
   {
     "objectID": "W7_presentation.html#centralization-10",
@@ -194,642 +957,5 @@
     "title": "W7.Centrality",
     "section": "Done!",
     "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week [Option] in the assignment"
-  },
-  {
-    "objectID": "W4_presentation.html#working-with-ego-network-data",
-    "href": "W4_presentation.html#working-with-ego-network-data",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Working with Ego Network Data",
-    "text": "Working with Ego Network Data\n\nEgo network data are based on a sample of individuals and are commonly used in the social sciences.\nEach respondent (ego) reports on the people (alters) they are connected to, providing the local network around the focal respondent.\nEgo network data offer only pieces of the whole network"
-  },
-  {
-    "objectID": "W4_presentation.html#working-with-ego-network-data-1",
-    "href": "W4_presentation.html#working-with-ego-network-data-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Working with Ego Network Data",
-    "text": "Working with Ego Network Data\n\nEgo network data can be structured in a number of ways but will generally have 4 kinds of information:\n\ndemographic, behavioral, etc. information on the egos\ndemographic, behavioral, etc. information on the named alters\ninformation about the relationship between ego and alter\ninformation about the relationships between the alters"
-  },
-  {
-    "objectID": "W4_presentation.html#working-with-ego-network-data-2",
-    "href": "W4_presentation.html#working-with-ego-network-data-2",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Working with Ego Network Data",
-    "text": "Working with Ego Network Data\n\nWork with ego network data from the GSS(General Social Survey)\n\na file with the ego attributes\na file with the alter(other) attributes\na file with the alter-alter ties\n\n\n\n# a file with the ego attributes\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_ego_dat.csv\"\n\nego_dat &lt;- read.csv(file = url1, stringsAsFactors = F)"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-ego-attribute",
-    "href": "W4_presentation.html#load-dataset-for-ego-attribute",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Ego Attribute",
-    "text": "Load Dataset for Ego Attribute\nFirst 10 rows of the ego data frame\n\n# CASEID : unique ID for each respondent\n# NUMGIVEN : the number of alters named, Respondents could say they had 6+ alters but were only allowed to report on 5\nego_dat[1:10, c(\"CASEID\", \"AGE\", \"EDUC\", \"RACE\", \"SEX\", \"HAPPY\", \"NUMGIVEN\")]\n\n     CASEID AGE EDUC  RACE    SEX HAPPY NUMGIVEN\n1  19850001  33   16 white   male     2        6\n2  19850002  49   19 white   male     2        6\n3  19850003  23   16 white female     2        5\n4  19850004  26   20 white female     2        5\n5  19850005  24   17 white female     2        5\n6  19850006  45   17 white   male     2        4\n7  19850007  44   18 white female     2        6\n8  19850008  56   12 white female     2        5\n9  19850009  85    7 white female     2        2\n10 19850010  65   12 white female     2        2"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-ego-attribute-1",
-    "href": "W4_presentation.html#load-dataset-for-ego-attribute-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Ego Attribute",
-    "text": "Load Dataset for Ego Attribute\n\n# check if there is empty values\nna_yn &lt;-!is.na(ego_dat$NUMGIVEN)\n# exclude the emply values\nego_dat &lt;- ego_dat[na_yn, ]"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-alter-attribute",
-    "href": "W4_presentation.html#load-dataset-for-alter-attribute",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Alter Attribute",
-    "text": "Load Dataset for Alter Attribute\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alter_dat.csv\"\n\nalter_dat &lt;- read.csv(file = url2, stringsAsFactors = F)"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-alter-attribute-1",
-    "href": "W4_presentation.html#load-dataset-for-alter-attribute-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Alter Attribute",
-    "text": "Load Dataset for Alter Attribute\n\n# each row corresponds to a different named alter\n# Each alter is denoted by an ALTERID (CASEID : ALTERID = 1:N)\n# KIN : 1(True) if ego is relatives with that alter\n# respondent 1 (CASEID = 19850001) names 5 alters. The first alter (ALTERID = 1) is 32, has 18 years of education, and is not kin to ego.\nalter_dat[1:10, c(\"CASEID\", \"ALTERID\", \"AGE\", \"EDUC\", \"RACE\", \"SEX\", \"KIN\")] \n\n     CASEID ALTERID AGE EDUC  RACE    SEX KIN\n1  19850001       1  32   18 white   male   0\n2  19850001       2  29   16 white female   1\n3  19850001       3  32   18 white   male   0\n4  19850001       4  35   16 white   male   1\n5  19850001       5  29   13 white female   0\n6  19850002       1  42   12 white female   1\n7  19850002       2  44   18 white   male   0\n8  19850002       3  45   16 white   male   0\n9  19850002       4  40   12 white female   0\n10 19850002       5  50   18 white   male   0"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-alter-alter-tie",
-    "href": "W4_presentation.html#load-dataset-for-alter-alter-tie",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Alter-Alter Tie",
-    "text": "Load Dataset for Alter-Alter Tie\n\nurl3 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/gss1985_alteralter_dat.csv\"\n\nalteralter_dat &lt;- read.csv(file = url3)"
-  },
-  {
-    "objectID": "W4_presentation.html#load-dataset-for-alter-alter-tie-1",
-    "href": "W4_presentation.html#load-dataset-for-alter-alter-tie-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Load Dataset for Alter-Alter Tie",
-    "text": "Load Dataset for Alter-Alter Tie\n\nthe ties between the named alters\n\n\n# `CASEID` : relevant ego \n# `ALTER1` : first alter in the dyad\n# `ALTER2` : second alter in the dyad\n# `Weight` : nature of the relationship (1 : alters know each other, 2: especially close)\nalteralter_dat[1:10, ]\n\n     CASEID ALTER1 ALTER2 WEIGHT\n1  19850001      1      2      2\n2  19850001      1      3      1\n3  19850001      1      4      1\n4  19850001      1      5      1\n5  19850001      2      3      2\n6  19850001      2      4      2\n7  19850001      2      5      2\n8  19850001      3      4      1\n9  19850001      3      5      1\n10 19850001      4      5      1"
-  },
-  {
-    "objectID": "W4_presentation.html#lets-make-ego-network",
-    "href": "W4_presentation.html#lets-make-ego-network",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Let’s make Ego Network",
-    "text": "Let’s make Ego Network\n\ntransforming traditional survey data into something that has the structure of a network 🤯🤯🤯🤯🤯\n🍀🍀egor🍀🍀 package has made the task of constructing ego networks from survey data much easier\n\n\n# load a package for constructing ego network\nlibrary(egor)"
-  },
-  {
-    "objectID": "W4_presentation.html#lets-make-ego-network-1",
-    "href": "W4_presentation.html#lets-make-ego-network-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Let’s make Ego Network",
-    "text": "Let’s make Ego Network\n\nconstruct an egor object from our survey data\n\n\n# `egor()` : input the data using three separate files.\n\negonetlist &lt;-  egor(alters = alter_dat, # alter attributes data frame\n                    egos = ego_dat, # ego attributes data frame\n                    aaties = alteralter_dat, # alter-alter tie data frame\n                    alter_design = list(max = 5), # list of arguments to specify nomination information from survey\n                    # list of variable names corresponding to key columns\n                    ID.vars = list(ego = \"CASEID\", alter =\"ALTERID\", \n                                   source = \"ALTER1\", target = \"ALTER2\") \n                    )"
-  },
-  {
-    "objectID": "W4_presentation.html#calculate-summary-statistics",
-    "href": "W4_presentation.html#calculate-summary-statistics",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Calculate Summary Statistics",
-    "text": "Calculate Summary Statistics\n\nWe will begin with density, showing the proportion of alter-alter ties that exist in each ego network\nBy the way, What is the definition of density?🤨"
-  },
-  {
-    "objectID": "W4_presentation.html#calculate-summary-statistics-1",
-    "href": "W4_presentation.html#calculate-summary-statistics-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Calculate Summary Statistics",
-    "text": "Calculate Summary Statistics\n\na measure for overall level of connection among nodes in a network\n(m) = number of edges\n\n(n) = number of nodes\n\\[\nDentisy = \\frac{2m}{n(n-1)}\n\\]\n\n\n# use `ego_density()` function\ndens &lt;- ego_density(egonetlist)"
-  },
-  {
-    "objectID": "W4_presentation.html#calculate-summary-statistics-2",
-    "href": "W4_presentation.html#calculate-summary-statistics-2",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Calculate Summary Statistics",
-    "text": "Calculate Summary Statistics\n\n# we calculated the density of every ego network\nhead(dens)\n\n# A tibble: 6 × 2\n    .egoID density\n     &lt;int&gt;   &lt;dbl&gt;\n1 19850001   1    \n2 19850002   0.8  \n3 19850003   0.6  \n4 19850004   0.6  \n5 19850005   1    \n6 19850006   0.667"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks",
-    "href": "W4_presentation.html#plotting-ego-networks",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\n\ngo over how to plot the ego networks using packages like igraph\n\n\nlibrary(igraph)"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks-1",
-    "href": "W4_presentation.html#plotting-ego-networks-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\n\nconvert the egor object to igraph objects.\n\n\nigraph_nets &lt;- as_igraph(egonetlist, include.ego = TRUE)"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks-2",
-    "href": "W4_presentation.html#plotting-ego-networks-2",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 26c3e0f UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 26c3e0f (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 8ffb011 UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 8ffb011 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 4b6daf2 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 4b6daf2 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks-3",
-    "href": "W4_presentation.html#plotting-ego-networks-3",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nlet’s plot a couple of example networks, focusing on the first 3 ego networks.\n\n# set 1 row, 3 column grid for visualization layout\npar(mfrow = c(1, 3))\n# draw graphs in igraph_nets variable\npurrr::walk(igraph_nets[1:3], plot)"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks-4",
-    "href": "W4_presentation.html#plotting-ego-networks-4",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\n\nLet’s color the nodes based on gender\nso we can get a sense of the level of gender homogeneity in these ego networks\n\n\n# somewhat more difficult task than with a single network\n# defind a function to set the color for each network\nplotfunc_colorgender &lt;- function(nets){ \n  # Arguments: \n  # nets: ego network of interest\n  \n  # extracting the attribute from the ego network:\n  cols &lt;- vertex_attr(nets, \"SEX\") \n\n  # now we use an ifelse statement to set color,\n  # light sky blue if gender equals female, blue otherwise:\n  cols &lt;- ifelse(cols == \"female\", \"lightskyblue\", \"blue\")\n\n  # plotting ego network with nodes colored based on gender:\n  plot(nets, vertex.color = cols) \n}"
-  },
-  {
-    "objectID": "W4_presentation.html#plotting-ego-networks-5",
-    "href": "W4_presentation.html#plotting-ego-networks-5",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\n\nNow let’s run plotfunc_colorgender() over the first three ego networks.\n\n\n# third ego network is homogenous in terms of gender\n# the first two are quite heterogeneous\n# first ego network is complete\npar(mfrow = c(1, 3))\npurrr::walk(igraph_nets[1:3], plotfunc_colorgender)"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes",
-    "href": "W4_presentation.html#triadic-processes",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\n\nwork primarily with the sna package [@sna], so let’s start by loading that package.\n\n\nlibrary(sna)"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes-1",
-    "href": "W4_presentation.html#triadic-processes-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\n\ndownload three datasets(1. friends 2. advice 3. attributes)\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_advice.csv\"\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_attributes.csv\"\nurl3 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/krackhardt_friendship.csv\"\n\nadvice_data_frame &lt;- read.csv(file = url1) \nattributes &lt;- read.csv(file = url2)\nfriends_data_frame &lt;- read.csv(file = url3)\n\n# extract only Ture relationship\nadvice_edgelist &lt;- advice_data_frame[advice_data_frame$advice_tie == 1, ]\nfriends_edgelist &lt;- friends_data_frame[friends_data_frame$friendship_tie == 1, ]"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes-2",
-    "href": "W4_presentation.html#triadic-processes-2",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# ego 1 said he or she gives advice from alter 2,4,8,16,21\nhead(advice_edgelist)\n\n   ego alter advice_tie\n2    1     2          1\n4    1     4          1\n8    1     8          1\n16   1    16          1\n18   1    18          1\n21   1    21          1"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes-3",
-    "href": "W4_presentation.html#triadic-processes-3",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# ego 1 said he or she is friend with alter 2,4,8,12,16\nhead(friends_edgelist)\n\n   ego alter friendship_tie\n2    1     2              1\n4    1     4              1\n8    1     8              1\n12   1    12              1\n16   1    16              1\n22   2     1              1"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes-4",
-    "href": "W4_presentation.html#triadic-processes-4",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\nLet’s take a look at the dataset, one by one\n\n# attributes for each resopondent\nhead(attributes)\n\n  ids AGE TENURE LEVEL DEPT\n1   1  33  9.333     3    4\n2   2  42 19.583     2    4\n3   3  40 12.750     3    2\n4   4  33  7.500     3    4\n5   5  32  3.333     3    2\n6   6  59 28.000     3    1"
-  },
-  {
-    "objectID": "W4_presentation.html#triadic-processes-5",
-    "href": "W4_presentation.html#triadic-processes-5",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triadic Processes",
-    "text": "Triadic Processes\n\nWe now construct the network , as before, using the network() function.\n\n\nkrack_friendship &lt;-  network(x = friends_edgelist, directed = T, \n                             vertices = attributes)\nkrack_advice &lt;- network(x = advice_edgelist, directed = T, \n                        vertices = attributes)"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census",
-    "href": "W4_presentation.html#triad-census",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\nThe triad census captures the distribution of triads across 16 basic types, representing different patterns of interaction between the three nodes\nThere are 16 different triad types:"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-1",
-    "href": "W4_presentation.html#triad-census-1",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\ncompare the triad counts across the two network relations, to see if the patterns differ for friendship compared to advice\n\n\n# `triad.census()` function outputs the counts in each triad type\ntriads_advice &lt;- triad.census(krack_advice) \ntriads_advice\n\n     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300\n[1,]  74 153  90  160   86   49   59  101  190    2  72   62   78   17 107  30"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-2",
-    "href": "W4_presentation.html#triad-census-2",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\nAnd now for friendship :\n\n# `triad.census()` function outputs the counts in each triad type\ntriads_friendship &lt;- triad.census(krack_friendship)\ntriads_friendship\n\n     003 012 102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300\n[1,] 376 366 143  114   34   35   39  101   23    0  20   16   25    9  23   6"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-3",
-    "href": "W4_presentation.html#triad-census-3",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\nLet’s make a table to make the comparisons easier.\n\ntriad_data &lt;- data.frame(advice = t(triads_advice), \n                         friendship = t(triads_friendship))"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-4",
-    "href": "W4_presentation.html#triad-census-4",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\ntriad_data\n\n     advice friendship\n003      74        376\n012     153        366\n102      90        143\n021D    160        114\n021U     86         34\n021C     49         35\n111D     59         39\n111U    101        101\n030T    190         23\n030C      2          0\n201      72         20\n120D     62         16\n120U     78         25\n120C     17          9\n210     107         23\n300      30          6"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-5",
-    "href": "W4_presentation.html#triad-census-5",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\none striking difference : The advice network has a much higher proportion of 030T triads than the friendship network"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-6",
-    "href": "W4_presentation.html#triad-census-6",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\nThe underlying hierarchy in this advice relation thus runs: A to C to B, as A influences B and C, C influences only B and B influences no one\nSuch a pattern of hierarchy does not emerge as clearly in the friendship network"
-  },
-  {
-    "objectID": "W4_presentation.html#triad-census-7",
-    "href": "W4_presentation.html#triad-census-7",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Triad Census",
-    "text": "Triad Census\n\nThe triads associated with transitive dominance relations are more likely to be present in the advice network than the friendship network"
-  },
-  {
-    "objectID": "W4_presentation.html#done",
-    "href": "W4_presentation.html#done",
-    "title": "W4. Ego, Dyads and Triads",
-    "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for the ego network, dyad, and triad network, please check this week [Option] in the assignment"
-  },
-  {
-    "objectID": "W3_presentation.html#please-keep-in-mind",
-    "href": "W3_presentation.html#please-keep-in-mind",
-    "title": "W3. Visualization",
-    "section": "Please keep in mind",
-    "text": "Please keep in mind\n\nWe only cover a relatively small number of plotting options\nThere isn’t one “magic” plot that is perfect for everything (mirage…unicorn…)\n\nIf I could, I’d like to introduce R script that makes the perfect plot everytime\nA plot that works well for one network might not work for another🥲"
-  },
-  {
-    "objectID": "W3_presentation.html#setting-up-the-session",
-    "href": "W3_presentation.html#setting-up-the-session",
-    "title": "W3. Visualization",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nThe actors are students in a classroom and the relation of interest is friendship\n\n\n# Load files for edge list\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_edgelist.csv\"\n\nclass_edges &lt;- read.csv(url1)"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-see-how-it-looks-like",
-    "href": "W3_presentation.html#lets-see-how-it-looks-like",
-    "title": "W3. Visualization",
-    "section": "Let’s see how it looks like",
-    "text": "Let’s see how it looks like\n\nhead(class_edges)\n\n  sender receiver weight\n1      1        3      1\n2      1        5      1\n3      1        7      1\n4      1       21      1\n5      2        3      1\n6      2        6      1"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-also-read-in-the-attribute-file.",
-    "href": "W3_presentation.html#lets-also-read-in-the-attribute-file.",
-    "title": "W3. Visualization",
-    "section": "Let’s also read in the attribute file.",
-    "text": "Let’s also read in the attribute file.\n\n# Attributes for gender, race and grade.\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class555_attributedata.csv\"\n\nclass_attributes &lt;- read.csv(url2)"
-  },
-  {
-    "objectID": "W3_presentation.html#we-begin-using-the-igraph-package.",
-    "href": "W3_presentation.html#we-begin-using-the-igraph-package.",
-    "title": "W3. Visualization",
-    "section": "We begin using the igraph package.",
-    "text": "We begin using the igraph package.\n\n# import library\nlibrary(igraph)"
-  },
-  {
-    "objectID": "W3_presentation.html#now-we-go-ahead-and-construct-the-igraph-object",
-    "href": "W3_presentation.html#now-we-go-ahead-and-construct-the-igraph-object",
-    "title": "W3. Visualization",
-    "section": "Now we go ahead and construct the igraph object",
-    "text": "Now we go ahead and construct the igraph object\n\n# the edgelist and attribute objects as inputs.\n# use 'graph_from_data_frame' function \nclass_net &lt;- graph_from_data_frame(d = class_edges, directed = T, \n                                   vertices = class_attributes)"
-  },
-  {
-    "objectID": "W3_presentation.html#detailed-information-of-our-network",
-    "href": "W3_presentation.html#detailed-information-of-our-network",
-    "title": "W3. Visualization",
-    "section": "Detailed information of our network",
-    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH 575e089 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from 575e089 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
-  },
-  {
-    "objectID": "W3_presentation.html#plot-a-network-using-igraph",
-    "href": "W3_presentation.html#plot-a-network-using-igraph",
-    "title": "W3. Visualization",
-    "section": "Plot a network using igraph",
-    "text": "Plot a network using igraph\n\nPloting network offers an intuitive way of exploring the features of the network\nLooking at a picture of the network is a useful starting point for an analysis."
-  },
-  {
-    "objectID": "W3_presentation.html#lets-start-with-the-default-plotting-in-igraph.",
-    "href": "W3_presentation.html#lets-start-with-the-default-plotting-in-igraph.",
-    "title": "W3. Visualization",
-    "section": "Let’s start with the default plotting in igraph.",
-    "text": "Let’s start with the default plotting in igraph.\n\nplot(class_net)"
-  },
-  {
-    "objectID": "W3_presentation.html#and-improve-the-graph",
-    "href": "W3_presentation.html#and-improve-the-graph",
-    "title": "W3. Visualization",
-    "section": "And improve the graph!",
-    "text": "And improve the graph!\n\nThe plot does not tell us anything (gender, race, degree..)\nWe begin by exploring gender divides in the network\ni.e., how strongly does gender map onto friendship groups?"
-  },
-  {
-    "objectID": "W3_presentation.html#and-improve-the-graph-1",
-    "href": "W3_presentation.html#and-improve-the-graph-1",
-    "title": "W3. Visualization",
-    "section": "And improve the graph!",
-    "text": "And improve the graph!\n\nLet’s color the nodes by gender\n\n\n#  make male students navy blue and female students light sky blue \ncols &lt;- ifelse(class_attributes$gender == \"Female\", \"lightskyblue\", \"navy\")"
-  },
-  {
-    "objectID": "W3_presentation.html#and-improve-the-graph-2",
-    "href": "W3_presentation.html#and-improve-the-graph-2",
-    "title": "W3. Visualization",
-    "section": "And improve the graph!",
-    "text": "And improve the graph!\n\n# Using a simple `table()` function, we made simple table \n# 16 female students are assigned for lightskyblue color\n# 8 male students are assigned for navy color\ntable(cols, class_attributes$gender)\n\n              \ncols           Female Male\n  lightskyblue     16    0\n  navy              0    8"
-  },
-  {
-    "objectID": "W3_presentation.html#assign-the-gendered-colorset-to-the-network",
-    "href": "W3_presentation.html#assign-the-gendered-colorset-to-the-network",
-    "title": "W3. Visualization",
-    "section": "Assign the gendered colorset to the network",
-    "text": "Assign the gendered colorset to the network\n\n# use a `V(g)$color` command to set the color of each node in the network \nV(class_net)$color &lt;- cols"
-  },
-  {
-    "objectID": "W3_presentation.html#and-now-we-plot-as-before.",
-    "href": "W3_presentation.html#and-now-we-plot-as-before.",
-    "title": "W3. Visualization",
-    "section": "And now we plot as before.",
-    "text": "And now we plot as before.\n\n# same result for `plot(class_net, vertex.color = cols)`\nplot(class_net)"
-  },
-  {
-    "objectID": "W3_presentation.html#what-is-different",
-    "href": "W3_presentation.html#what-is-different",
-    "title": "W3. Visualization",
-    "section": "What is different?",
-    "text": "What is different?\n\nThe network does divide along gender lines\nWith one small group of boys and then a larger set of girls\nTwo boys are not part of the ‘boy group’, and are disproportionately connected to girls\nWhat else?"
-  },
-  {
-    "objectID": "W3_presentation.html#what-if",
-    "href": "W3_presentation.html#what-if",
-    "title": "W3. Visualization",
-    "section": "What if?",
-    "text": "What if?\n\nA researcher may also be interested in who is popular in the class\nWe can identify it with Network Measure"
-  },
-  {
-    "objectID": "W3_presentation.html#what-if-1",
-    "href": "W3_presentation.html#what-if-1",
-    "title": "W3. Visualization",
-    "section": "What if?",
-    "text": "What if?\n\nA researcher may also be interested in who is popular in the class\nWe can identify it with Network Measure\n\n\n# Yes! indegree!\n# degree : # of of neighbors in a network\n# indegree : # of incoming neighbors\n# indegree of node i : # of students who think node i is their frieds \n# -&gt; popularity\nindeg &lt;- degree(class_net, mode = \"in\")"
-  },
-  {
-    "objectID": "W3_presentation.html#now-we-plot-the-network",
-    "href": "W3_presentation.html#now-we-plot-the-network",
-    "title": "W3. Visualization",
-    "section": "Now we plot the network",
-    "text": "Now we plot the network\n\nPut indegree value for the size of the nodes\n\n\n# set margin to -.10 to reduce some of the extra white space around the plot.\nplot(class_net, vertex.size = indeg, margin = -.10)"
-  },
-  {
-    "objectID": "W3_presentation.html#now-we-plot-the-network-1",
-    "href": "W3_presentation.html#now-we-plot-the-network-1",
-    "title": "W3. Visualization",
-    "section": "Now we plot the network",
-    "text": "Now we plot the network\n\nMake all the nodes a little bigger, but the nodes are still sized by indegree\n\n\n# adding integer (here, 3) to the indegree to make the node bigger\n# change the color of label\nplot(class_net, vertex.size = indeg + 3, vertex.label.color = \"red\", \n     margin = -.10)"
-  },
-  {
-    "objectID": "W3_presentation.html#now-we-plot-the-network-2",
-    "href": "W3_presentation.html#now-we-plot-the-network-2",
-    "title": "W3. Visualization",
-    "section": "Now we plot the network",
-    "text": "Now we plot the network\n\nOne boy (id 13) and one girl (id 24) receive a particularly high number of nominations\nBoys in the ‘boy group’ tend to have low indegree, as they are only friends with each other and there are few boys in the network."
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph",
-    "href": "W3_presentation.html#lets-improve-the-graph",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\nChange the look of the nodes\n\n\nplot(class_net, \n    vertex.size = indeg + 3, \n    vertex.label = NA, # take out those labels using a vertex.label argument\n    vertex.frame.color = NA, # take off the black edges around the nodes\n    edge.arrow.size = .5, \n    edge.arrow.width = .75, \n    margin = -.10)"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph-1",
-    "href": "W3_presentation.html#lets-improve-the-graph-1",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\nNow we change the layout of the graph.\nlayout_with_mds(Multi-Dimensional Scaling)\n\ncalculate the distance between node i and j\nplace nodes where the distance is preserved\n👉 Good for showing the overall/global structure of the network"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph-2",
-    "href": "W3_presentation.html#lets-improve-the-graph-2",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\nlayout_with_kk(Kamada–Kawai)\n\nAssign the distnace between node i and j\n\nif direct edge exists, place the nodes closer together\nif not, place the nodes farther apart\n👉 Good for highlighting local structures and communities"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph-3",
-    "href": "W3_presentation.html#lets-improve-the-graph-3",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\nNow we change layout of a network.\n\n\nplot(class_net, \n     vertex.size = indeg + 3, \n     vertex.label = NA, \n     vertex.frame.color = NA, \n     edge.arrow.size = .5, \n     edge.arrow.width = .75, \n     edge.color = \"light gray\", # change the color of the lines to light gray,\n     layout = layout_with_mds, # alter the layout of the plot \n     margin = -.10)"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph-4",
-    "href": "W3_presentation.html#lets-improve-the-graph-4",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\nNow we change layout of a network.\n\n\nplot(class_net, \n     vertex.size = indeg + 3, \n     vertex.label = NA, \n     vertex.frame.color = NA, \n     edge.arrow.size = .5, \n     edge.arrow.width = .75, \n     edge.color = \"light gray\", # change the color of the lines to light gray,\n     layout = layout_with_kk, # alter the layout of the plot \n     margin = -.10)"
-  },
-  {
-    "objectID": "W3_presentation.html#lets-improve-the-graph-5",
-    "href": "W3_presentation.html#lets-improve-the-graph-5",
-    "title": "W3. Visualization",
-    "section": "Let’s improve the graph!",
-    "text": "Let’s improve the graph!\n\na number of other options a researcher could explore if they wanted to continue tweaking their plot.\nSee the following help files for more options: ?plot.igraph ?igraph.plotting\n\n\n?plot.igraph"
-  },
-  {
-    "objectID": "W3_presentation.html#done",
-    "href": "W3_presentation.html#done",
-    "title": "W3. Visualization",
-    "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week\nThis week [Option] is a real fun\n\nyou can excercise how to draw dynamic graph!\n\nQuestions?"
-  },
-  {
-    "objectID": "W5_presentation.html#load-dataset",
-    "href": "W5_presentation.html#load-dataset",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Load dataset",
-    "text": "Load dataset\n\nuse primarily with the igraph package. We will also load ggplot2 to draw a network.\n\n\nlibrary(igraph)\nlibrary(ggplot2)"
-  },
-  {
-    "objectID": "W5_presentation.html#load-dataset-1",
-    "href": "W5_presentation.html#load-dataset-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Load dataset",
-    "text": "Load dataset\n\nread in the classroom network data (edgelist dataset)\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv\"\nclass182_networkdata &lt;- read.csv(file = url1)\n# contains information for three relationship : friendship, social interaction, task interaction \n# 2 = best friend, 1 = friend, 0 = not friend\n# Social/task interaction is measured as each interaction per hour\nhead(class182_networkdata) \n\n  ego alter friend_tie social_tie task_tie\n1   1     1          0        0.0      0.0\n2   1     2          0        0.0      0.0\n3   1     3          0        0.0      0.0\n4   1     4          0        0.0      0.0\n5   1     5          0        1.2      0.3\n6   1     6          0        0.0      0.0"
-  },
-  {
-    "objectID": "W5_presentation.html#load-dataset-2",
-    "href": "W5_presentation.html#load-dataset-2",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Load dataset",
-    "text": "Load dataset\n\nread in the classroom network data (attribute dataset)\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv\"\nclass182_attributes &lt;- read.csv(file = url2)\nclass182_attributes\n\n   ids  race grade gender\n1    1 white    10   male\n2    2 black    10 female\n3    3 white    10 female\n4    4 white    11 female\n5    5 white    10   male\n6    6 white    10 female\n7    7 black    10 female\n8    8 black    10 female\n9    9 white    10 female\n10  10 black    11   male\n11  11 white    10   male\n12  12 black    11 female\n13  13 white    10 female\n14  14 black    10 female\n15  15 black    10 female\n16  16 black    13   male"
-  },
-  {
-    "objectID": "W5_presentation.html#create-frienship-network",
-    "href": "W5_presentation.html#create-frienship-network",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nExtract the friends within the dataset\n\n\n# edges with a friendship value greater than zero\nedge_value &lt;- class182_networkdata$friend_tie\nedgelist_friendship &lt;- class182_networkdata[edge_value &gt; 0, \n                                            c(\"ego\", \"alter\", \"friend_tie\")]\nhead(edgelist_friendship)\n\n   ego alter friend_tie\n17   2     1          1\n23   2     7          1\n24   2     8          1\n29   2    13          2\n30   2    14          1\n37   3     5          1"
-  },
-  {
-    "objectID": "W5_presentation.html#create-frienship-network-1",
-    "href": "W5_presentation.html#create-frienship-network-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 2659dab DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 2659dab (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nStart with a quick plot of the friendship network\nIs there any cohision in this network??\n\n\nplot(net182_friend, vertex.label = NA, vertex.size = 10,\n     edge.arrow.size = .25, edge.arrow.width = 1, \n     edge.color = \"light gray\", vertex.frame.color = NA)"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-1",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nThe classroom network is fairly cohesive (ignoring the two isolates)\nHard to split the central group into two groups."
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-2",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-2",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nexplore some of the properties of the network, starting with density.\n\nWhat does it mean?\n\n\nedge_density(net182_friend)\n\n[1] 0.2583333"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-3",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-3",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nAbout a quarter of all possible ties are present in the network\n(m) = number of edges = 62\n(n) = number of nodes = 16\n\\[\nDentisy = \\frac{m}{n(n-1)} = \\frac{62}{16*(16-1)} = 0.2583 ≈ 25.8%\n\\]\nGive us the information on the volume of ties, not the pattern of ties"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-4",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-4",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\ncomponents() : Detect all connected node in the network\n\nIf the nodes are connected, then they belong to the same component.\n“strong” mode : find components where node i and j are mutual reachable\n“weak” mode : find components where node i and j are in the same group if there is any path connecting them\n\n\n\n# *Note* : mode argument is ignored in the case of undirected networks.  \ncomponents_friendship &lt;- components(graph = net182_friend, mode = \"weak\")"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-5",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-5",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\n# membership : component membership of each node\n# csize : size of component\n# no : component number\ncomponents_friendship\n\n$membership\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 1  1  1  2  1  1  1  1  1  1  1  1  1  1  1  3 \n\n$csize\n[1] 14  1  1\n\n$no\n[1] 3"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-6",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-6",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nLet’s calculate the proportion of nodes in each component.\n\n\n# 87.5% of the nodes fall in the largest component\n# two isolates are each in their own component\ncomponents_friendship$csize / sum(components_friendship$csize) \n\n[1] 0.8750 0.0625 0.0625"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-with-vertex-connectivity",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-with-vertex-connectivity",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists with vertex connectivity",
-    "text": "Let’s see if cohesion exists with vertex connectivity\n\nExplore the connectivity of specific pairs of nodes in the network\nvertex connectivity give us the number of nodes that would need to be removed so that i can no longer reach j"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-7",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 666751f UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 666751f (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-8",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\ncalculate vertex connectivity for two example nodes, 1 and 9:\n\n\n# need to remove 5 other nodes -&gt; highly interconnected, likely part of the same social group \nvertex_disjoint_paths(graph = net182_friend_und, source = 1, target = 9)\n\n[1] 5"
-  },
-  {
-    "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-9",
-    "href": "W5_presentation.html#lets-see-if-cohesion-exists-9",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\ncalculate vertex connectivity for a network\n\n\n# returns the minimum number of vertices that must be removed to make the graph disconnected \n# (i.e., split into at least two components)\nvertex_connectivity(net182_friend_und)\n\n[1] 0"
-  },
-  {
-    "objectID": "W5_presentation.html#community-or-group-detection",
-    "href": "W5_presentation.html#community-or-group-detection",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Community (or Group) Detection",
-    "text": "Community (or Group) Detection\n\nFind the communities (or groups) within the larger cohesive set.\nThe goal is to identify sets of nodes that have high internal density and few ties to outside members."
-  },
-  {
-    "objectID": "W5_presentation.html#community-or-group-detection-1",
-    "href": "W5_presentation.html#community-or-group-detection-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Community (or Group) Detection",
-    "text": "Community (or Group) Detection\n\nMany different ways to detect communities.\n\n1) Cohesive Blocking, 2) Walktrap, 3) [OPTION] Edge Betweenness …"
-  },
-  {
-    "objectID": "W5_presentation.html#cohesive-blocking",
-    "href": "W5_presentation.html#cohesive-blocking",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "1) Cohesive Blocking",
-    "text": "1) Cohesive Blocking\n\nSubset the network into groups based on vertex connectivity\nIteratively search for subgroups that maintain connectivity under the removal of k nodes\nStarting from highly cohesive groups (large k) and moving down to less cohesive ones"
-  },
-  {
-    "objectID": "W5_presentation.html#cohesive-blocking-1",
-    "href": "W5_presentation.html#cohesive-blocking-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "1) Cohesive Blocking",
-    "text": "1) Cohesive Blocking\n\nfriend_comm_cohesive &lt;- cohesive_blocks(graph = net182_friend_und)\nfriend_comm_cohesive # hard to interprete the result..... then...?\n\nCohesive block structure:\nB-1      c 0, n 16\n'- B-2   c 4, n 14   ooo.oooooo ooooo."
-  },
-  {
-    "objectID": "W5_presentation.html#cohesive-blocking-2",
-    "href": "W5_presentation.html#cohesive-blocking-2",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "1) Cohesive Blocking",
-    "text": "1) Cohesive Blocking\n\nVisualize the result!!\nTwo blocks (one with vertex connectivity 0, second with vertex connectivity)\n\n\nplot(friend_comm_cohesive, net182_friend_und)"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap",
-    "href": "W5_presentation.html#walktrap",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\nDetects communities through a series of short random walks\n\nNodes encountered on any given random walk are more likely to be within a community than not\nThe algorithm initially treats all nodes as communities of their own\nMerges them into larger communities, and these into still larger communities, and so on"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-1",
-    "href": "W5_presentation.html#walktrap-1",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\nDetects communities through a series of short random walks\n\nUnlike Cohesive Blocking, Walktrap considers cohesion of communities and how separated they are from other communities\n\n\n\n# steps :length of random walk (4 or 5 is recommended)\n# membership : T/F, should membership be calculated based on highest modularity score? T by default\nfriend_comm_wt4 &lt;- cluster_walktrap(graph = net182_friend_und, steps = 4, \n                                    membership = T)"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-2",
-    "href": "W5_presentation.html#walktrap-2",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\n# groups: 4 → 4 community detected in the network\n# mod: 0.27 → value of modularity \nprint(friend_comm_wt4, all = TRUE)\n\nIGRAPH clustering walktrap, groups: 4, mod: 0.27\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"3\"  \"5\"  \"6\"  \"9\"  \"10\" \"11\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"4\"\n  \n  $`4`\n  + ... omitted several groups/vertices"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-3",
-    "href": "W5_presentation.html#walktrap-3",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\nWhat would happen if we used 3 steps?\n\n# the modularity is slightly higher when we use 3 steps\nfriend_comm_wt3 &lt;- cluster_walktrap(graph = net182_friend_und, \n                                    steps = 3, membership = T)\nfriend_comm_wt3\n\nIGRAPH clustering walktrap, groups: 5, mod: 0.28\n+ groups:\n  $`1`\n  [1] \"2\"  \"7\"  \"8\"  \"13\" \"14\"\n  \n  $`2`\n  [1] \"1\"  \"9\"  \"10\" \"12\" \"15\"\n  \n  $`3`\n  [1] \"3\"  \"5\"  \"6\"  \"11\"\n  \n  $`4`\n  + ... omitted several groups/vertices"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-4",
-    "href": "W5_presentation.html#walktrap-4",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\nCompare the two partitions using the table function:\n\n\n# row : results for communities when step is 4 (4 community detected)\n# col : results for communities when step is 3 (5 community detected)\ntable( membership(friend_comm_wt4),  membership(friend_comm_wt3))\n\n   \n    1 2 3 4 5\n  1 5 0 0 0 0\n  2 0 5 4 0 0\n  3 0 0 0 1 0\n  4 0 0 0 0 1"
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-5",
-    "href": "W5_presentation.html#walktrap-5",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\nPlot the network based on the found communities, comparing the two partitions.\nColor the nodes based on the communities found using the walktrap algorithm."
-  },
-  {
-    "objectID": "W5_presentation.html#walktrap-6",
-    "href": "W5_presentation.html#walktrap-6",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "2) Walktrap",
-    "text": "2) Walktrap\n\npar(mfrow = c(1, 2))\nlayout &lt;- layout_with_fr(net182_friend) \nplot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt4),edge.color = \"light gray\", vertex.size = 20, main = \"Walktrap: 4 Steps\")\nplot(net182_friend_und, layout = layout, vertex.color = membership(friend_comm_wt3), edge.color = \"light gray\", vertex.size = 20, main = \"Walktrap: 3 Steps\")"
-  },
-  {
-    "objectID": "W5_presentation.html#done",
-    "href": "W5_presentation.html#done",
-    "title": "W5. Network Cohesion and Communities",
-    "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for community detection algorithms or application for big data, please check this week [Option] in the assignment"
   }
 ]
