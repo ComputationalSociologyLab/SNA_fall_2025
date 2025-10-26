@@ -301,4 +301,4 @@ legend("left", c("friendship", "task", "social"),
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week \[Option\] in the assignment
