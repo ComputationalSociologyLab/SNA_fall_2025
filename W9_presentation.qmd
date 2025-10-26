@@ -262,7 +262,6 @@ And now we put together the three edgelists
 ```{r}
 # stacking block edgelist using an `rbind()` function. 
 block_dat <- rbind(blockedges_friend, blockedges_task, blockedges_social)
-# only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.
 block_dat <- block_dat[block_dat$WeightRecode %in% c("1", "2"), ]
 ```
 
@@ -287,29 +286,18 @@ E(blockmod_igraph)$color <- cols
 ```
 
 ## Plotting a Blockmodel
+- Set tie attributes to constructed network
 ```{r}
 friend_edge <- E(blockmod_igraph)$type %in% "friendship"
 self_loop <- which_loop(blockmod_igraph)
 arrow_mode <- ifelse(friend_edge & !self_loop, yes = ">", no = "-")
 ```
 
-```{r}
-arrow_mode
-```
 ## Plotting a Blockmodel
-We also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops. 
-
-We will set the angles such that all non-self loops have an angle of 0, all friendship self loops have an angle of `4 * pi / 3` and all social self loops have an angle of `3 * pi / 3`  (there are no task self loops). This will ensure that the friendship and social self loops are not drawn on top of each other.
-
+- Tweak the plotting of the loops
 ```{r}
 edge_loop_angles <- rep(0, nrow(block_dat))
-```
-
-```{r}
 edge_loop_angles[self_loop & friend_edge] <- 4 * pi / 3
-```
-
-```{r}
 social_edge <- E(blockmod_igraph)$type %in% "social"
 edge_loop_angles[self_loop & social_edge] <- 3 * pi / 3
 ```
