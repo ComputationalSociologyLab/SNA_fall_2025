@@ -130,23 +130,6 @@ dim(friends_task_social_std)
 euclid_dist <- dist(x = friends_task_social_std, method = "euclidean") 
 euclid_dist
 ```
-## Structural Equivalence
-- Project the distances into two dimensions
-```{r}
-fit <- cmdscale(d = euclid_dist, k = 2) 
-x <- fit[, 1]
-y <- fit[, 2]
-```
-
-## Structural Equivalence
-```{r}
-x <- fit[, 1]
-y <- fit[, 2]
-plot(x, y, xlab = "Coordinate 1", ylab = "Coordinate 2", 
-     main = "2 Dimensional MDS Solution", type = "n") 
-
-text(x, y, labels = 1:length(x), cex = 1)
-```
 
 ## Defining Positions
 - Cluster the students into structurally equivalent positions based on the euclid distance
