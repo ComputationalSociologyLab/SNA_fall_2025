@@ -161,9 +161,8 @@ plot_clusters <- rect.hclust(hc, h = 12)
 - ex) a 'teacher' positions has certain rights and responsibilities relative to actors playing the 'student' positions
 
 ## Role Analysis with Blockmodel
-- All actors fall into a position(here, cluster)
-- We call it as a block
-- create a matrix based on the relationship btw the blocks
+- All actors fall into a position(here, cluster, block)
+- Create a matrix based on the relationship(edges) btw the blocks
 
 ## Role Analysis with Blockmodel
 - Pass the matrix and the cluster for the parameter of the function `blockmodel`
