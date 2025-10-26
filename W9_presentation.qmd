@@ -158,46 +158,8 @@ hc_ids <- cutree(hc, h = 12)
 ```
 
 ## Role Analysis 
-- The goal of a role analysis is to create a reduced version of the network, where the positions become the nodes of interest
 - Analyze the pattern of ties between positions
 - ex) a 'teacher' role has certain rights and responsibilities relative to actors playing the 'student' role.
-
-### Get a sense of Role Analysis with plot
-- Draw heatmap basd on the positions found above
-- take the matrix of friendship, social or task ties and create a plot where the values are colored by whether a tie exists between i and j
-- The key is reordering the rows/columns of the matrix to correspond to the positions from the clustering analysis
-- This makes it possible to see how nodes in different positions relate to one another; moving us closer to capturing roles in the classroom.    
-
-### Get a sense of Role Analysis with plot
-- Create a data frame with two columns, one for the ids of the nodes and one for the positions of the nodes. 
-- Utilize our 4 cluster solution from above to define the positions
-```{r}
-id_dat <- data.frame(ids = class182_attributes$ids, position = hc_ids)
-id_dat <- id_dat[order(id_dat$position), ]
-id_dat
-```
-### Get a sense of Role Analysis with plot
-- Reorder the social tie matrix with the order of position
-```{r}
-social_mat_rearrange <- social_mat[id_dat$ids, id_dat$ids]
-```
-
-### Get a sense of Role Analysis with plot
-- Draw a plot 
-```{r message=F, warning=F}
-
-library(RColorBrewer)
-
-# set color for each position
-column_cols <- c("red", "green", "black", "blue")
-
-heatmap(social_mat_rearrange, Rowv = NA, Colv = NA, revC = T,
-        col = colorRampPalette(brewer.pal(6, "Blues"))(25),
-        ColSideColors = column_cols[id_dat$position],
-        RowSideColors = column_cols[id_dat$position], symm = T)
-
-```
-
 
 ## Role Analysis with Blockmodel
 - Dorm a matrix where the positions themselves are the nodes, or blocks
