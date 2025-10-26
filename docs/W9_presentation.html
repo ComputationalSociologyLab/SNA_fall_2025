@@ -611,7 +611,8 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <span id="cb25-4"><a></a><span class="co"># color for each type of tie</span></span>
 <span id="cb25-5"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">recode</span>(block_dat[, <span class="st">"Tie"</span>], </span>
 <span id="cb25-6"><a></a>               <span class="st">"'friendship' = 'red'; 'task'='blue'; 'social' = 'green'"</span>)</span>
-<span id="cb25-7"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>color <span class="ot">&lt;-</span> cols</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb25-7"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>color <span class="ot">&lt;-</span> cols</span>
+<span id="cb25-8"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>width <span class="ot">&lt;-</span> block_dat[, <span class="st">"WeightRecode"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-6" class="slide level2">

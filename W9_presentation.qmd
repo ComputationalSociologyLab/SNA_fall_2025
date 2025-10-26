@@ -266,6 +266,7 @@ E(blockmod_igraph)$type <- block_dat[, "Tie"]
 cols <- recode(block_dat[, "Tie"], 
                "'friendship' = 'red'; 'task'='blue'; 'social' = 'green'")
 E(blockmod_igraph)$color <- cols
+E(blockmod_igraph)$width <- block_dat[, "WeightRecode"]
 ```
 
 ## Plotting a Blockmodel
