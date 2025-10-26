@@ -158,12 +158,12 @@ plot_clusters <- rect.hclust(hc, h = 12)
 
 ## Role Analysis 
 - Analyze the pattern of ties between positions
-- ex) a 'teacher' role has certain rights and responsibilities relative to actors playing the 'student' role.
+- ex) a 'teacher' positions has certain rights and responsibilities relative to actors playing the 'student' positions
 
 ## Role Analysis with Blockmodel
-- Form a matrix where the positions themselves are the nodes, or blocks
-- All actors the last cluster (node 1, 9, 10, 12 and 15 in the figure above) fall into a single block...
-- Analyze the resulting blockmodel in terms of the pattern of ties between blocks. 
+- All actors fall into a position(here, cluster)
+- We call it as a block
+- create a matrix based on the relationship btw the blocks
 
 ## Role Analysis with Blockmodel
 - Pass the matrix and the cluster for the parameter of the function `blockmodel`
