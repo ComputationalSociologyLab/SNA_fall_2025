@@ -153,7 +153,6 @@ text(x, y, labels = 1:length(x), cex = 1)
 hc <- hclust(euclid_dist)
 plot(hc)
 plot_clusters <- rect.hclust(hc, h = 12)
-# save the cluster
 hc_ids <- cutree(hc, h = 12)  
 ```
 
