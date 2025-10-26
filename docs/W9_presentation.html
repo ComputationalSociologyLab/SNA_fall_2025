@@ -445,10 +445,10 @@ Z = \frac{X - \mu}{\sigma}
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(euclid_dist)</span>
-<span id="cb17-2"><a></a><span class="fu">plot</span>(hc)</span>
-<span id="cb17-3"><a></a>plot_clusters <span class="ot">&lt;-</span> <span class="fu">rect.hclust</span>(hc, <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-2"><a></a>hc_ids <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">h =</span> <span class="dv">12</span>)  </span>
+<span id="cb17-3"><a></a><span class="fu">plot</span>(hc)</span>
+<span id="cb17-4"><a></a>plot_clusters <span class="ot">&lt;-</span> <span class="fu">rect.hclust</span>(hc, <span class="at">h =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>hc_ids <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc, <span class="at">h =</span> <span class="dv">12</span>)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <img data-src="W9_presentation_files/figure-revealjs/unnamed-chunk-13-1.png" width="960" class="r-stretch"></section>
 <section id="role-analysis" class="slide level2">
@@ -461,30 +461,30 @@ Z = \frac{X - \mu}{\sigma}
 <section id="role-analysis-with-blockmodel" class="slide level2">
 <h2>Role Analysis with Blockmodel</h2>
 <ul>
-<li>Dorm a matrix where the positions themselves are the nodes, or blocks</li>
-<li>The previously found positions are the rows/columns of the newly constructed matrix
-<ul>
-<li>ex) all actors in the ‘red’ position (1, 9, 10, 12 and 15 in the figure above) get collapsed into a single node, or block, labeled, “Block 1”; all nodes in the green position get collapsed into “Block 2”, and so on. We will then analyze the resulting blockmodel in terms of the pattern of ties between blocks.</li>
-</ul></li>
+<li>Form a matrix where the positions themselves are the nodes, or blocks</li>
+<li>All actors the last cluster (node 1, 9, 10, 12 and 15 in the figure above) fall into a single block…</li>
+<li>Analyze the resulting blockmodel in terms of the pattern of ties between blocks.</li>
 </ul>
 </section>
 <section id="role-analysis-with-blockmodel-1" class="slide level2">
 <h2>Role Analysis with Blockmodel</h2>
+<ul>
+<li>Pass the matrix and the cluster for the parameter of the function <code>blockmodel</code></li>
+</ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">library</span>(sna)</span>
-<span id="cb19-2"><a></a>blockmod_friend <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(friend_mat, <span class="at">ec =</span> hc_ids)</span>
-<span id="cb19-3"><a></a>blockmod_task <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(task_mat, <span class="at">ec =</span> hc_ids)</span>
-<span id="cb19-4"><a></a>blockmod_social <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(social_mat, <span class="at">ec =</span> hc_ids)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">library</span>(sna)</span>
+<span id="cb18-2"><a></a>blockmod_friend <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(friend_mat, <span class="at">ec =</span> hc_ids)</span>
+<span id="cb18-3"><a></a>blockmod_task <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(task_mat, <span class="at">ec =</span> hc_ids)</span>
+<span id="cb18-4"><a></a>blockmod_social <span class="ot">&lt;-</span> <span class="fu">blockmodel</span>(social_mat, <span class="at">ec =</span> hc_ids)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="role-analysis-with-blockmodel-2" class="slide level2">
 <h2>Role Analysis with Blockmodel</h2>
 <ul>
-<li>The blockmodel shows us the (weighted) density of within and between block ties</li>
-<li>Identify the possibility of asymmetries between the blocks</li>
+<li>Blockmodel shows us the density of within and between block ties</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>blockmod_friend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>blockmod_friend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Network Blockmodel:
@@ -511,58 +511,57 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <li>Let’s interprete the results of blockmodel with visualization</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># function returning edgelist between blocks</span></span>
-<span id="cb22-2"><a></a>block_model_edgelist <span class="ot">&lt;-</span> <span class="cf">function</span>(block_model, relation_label, <span class="at">directed =</span> T){</span>
-<span id="cb22-3"><a></a>  <span class="co"># Arguments: </span></span>
-<span id="cb22-4"><a></a>  <span class="co"># block_model: blockmodel object </span></span>
-<span id="cb22-5"><a></a>  <span class="co"># relation_label: label for type of tie, </span></span>
-<span id="cb22-6"><a></a>  <span class="co"># directed: is blockmodel based on directed network?</span></span>
-<span id="cb22-7"><a></a></span>
-<span id="cb22-8"><a></a>  <span class="co"># First we grab the actual matrix from the blockmodel:</span></span>
-<span id="cb22-9"><a></a>  block_mat <span class="ot">&lt;-</span> block_model<span class="sc">$</span>block.model</span>
-<span id="cb22-10"><a></a></span>
-<span id="cb22-11"><a></a>  <span class="co"># Here we set any NA to 0.</span></span>
-<span id="cb22-12"><a></a>  block_mat[<span class="fu">is.na</span>(block_mat)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-13"><a></a></span>
-<span id="cb22-14"><a></a>  <span class="co"># Now we create a little network based on the matrix.</span></span>
-<span id="cb22-15"><a></a>  net_block <span class="ot">&lt;-</span> <span class="fu">network</span>(block_mat, <span class="at">loops =</span> T, </span>
-<span id="cb22-16"><a></a>                       <span class="at">directed =</span> directed)</span>
-<span id="cb22-17"><a></a></span>
-<span id="cb22-18"><a></a>  <span class="co"># Here we extract the edgelist:</span></span>
-<span id="cb22-19"><a></a>  edges_netblock <span class="ot">&lt;-</span> <span class="fu">as.edgelist</span>(net_block)</span>
-<span id="cb22-20"><a></a></span>
-<span id="cb22-21"><a></a>  <span class="co"># Now we get the edge weights, stringing out the matrix</span></span>
-<span id="cb22-22"><a></a>  <span class="co"># into a vector. We only extract those weights corresponding</span></span>
-<span id="cb22-23"><a></a>  <span class="co"># to where an edge exists, defined by the edgelist </span></span>
-<span id="cb22-24"><a></a>  <span class="co"># extracted above.</span></span>
-<span id="cb22-25"><a></a>  weight_edge <span class="ot">&lt;-</span> <span class="fu">c</span>(block_mat[edges_netblock])</span>
-<span id="cb22-26"><a></a></span>
-<span id="cb22-27"><a></a>  <span class="co"># Now we create a little data frame putting the information together.</span></span>
-<span id="cb22-28"><a></a>  block_edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(edges_netblock, <span class="at">weight =</span> weight_edge, </span>
-<span id="cb22-29"><a></a>                               <span class="at">Tie =</span> relation_label)</span>
-<span id="cb22-30"><a></a></span>
-<span id="cb22-31"><a></a>  <span class="co"># Here we create the additional weighting scheme,</span></span>
-<span id="cb22-32"><a></a>  <span class="co"># where weight is equal to 0, 1, or 2, depending if it is</span></span>
-<span id="cb22-33"><a></a>  <span class="co"># less than the mean, greater than the mean (but less than 1 sd above mean)</span></span>
-<span id="cb22-34"><a></a>  <span class="co"># or greater than 1 sd above the mean. </span></span>
-<span id="cb22-35"><a></a>  edge_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(block_mat)</span>
-<span id="cb22-36"><a></a>  edge_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(block_mat)</span>
-<span id="cb22-37"><a></a>  edge_max <span class="ot">&lt;-</span> <span class="fu">max</span>(block_mat)</span>
-<span id="cb22-38"><a></a></span>
-<span id="cb22-39"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span> <span class="fu">cut</span>(block_edgelist<span class="sc">$</span>weight, </span>
-<span id="cb22-40"><a></a>                                     <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, edge_mean, </span>
-<span id="cb22-41"><a></a>                                                edge_mean <span class="sc">+</span> edge_sd, </span>
-<span id="cb22-42"><a></a>                                                edge_max),</span>
-<span id="cb22-43"><a></a>                                     <span class="at">include.lowest =</span> T, </span>
-<span id="cb22-44"><a></a>                                     <span class="at">right =</span> F, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>)) </span>
-<span id="cb22-45"><a></a></span>
-<span id="cb22-46"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span> <span class="fu">as.character</span>(block_edgelist<span class="sc">$</span>WeightRecode)</span>
-<span id="cb22-47"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span><span class="fu">as.numeric</span>(block_edgelist<span class="sc">$</span>WeightRecode)</span>
-<span id="cb22-48"><a></a></span>
-<span id="cb22-49"><a></a>  <span class="fu">colnames</span>(block_edgelist)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sender"</span>, <span class="st">"receiver"</span>)</span>
-<span id="cb22-50"><a></a></span>
-<span id="cb22-51"><a></a>  block_edgelist</span>
-<span id="cb22-52"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="co"># function returning edgelist between blocks</span></span>
+<span id="cb21-2"><a></a>block_model_edgelist <span class="ot">&lt;-</span> <span class="cf">function</span>(block_model, relation_label, <span class="at">directed =</span> T){</span>
+<span id="cb21-3"><a></a>  <span class="co"># input: blockmodel object, label for type of tie, direction</span></span>
+<span id="cb21-4"><a></a>  <span class="co"># output : weighted edgelist btw the blocks</span></span>
+<span id="cb21-5"><a></a>  </span>
+<span id="cb21-6"><a></a></span>
+<span id="cb21-7"><a></a>  <span class="co"># First we grab the actual matrix from the blockmodel:</span></span>
+<span id="cb21-8"><a></a>  block_mat <span class="ot">&lt;-</span> block_model<span class="sc">$</span>block.model</span>
+<span id="cb21-9"><a></a></span>
+<span id="cb21-10"><a></a>  <span class="co"># Here we set any NA to 0.</span></span>
+<span id="cb21-11"><a></a>  block_mat[<span class="fu">is.na</span>(block_mat)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb21-12"><a></a></span>
+<span id="cb21-13"><a></a>  <span class="co"># Now we create a little network based on the matrix.</span></span>
+<span id="cb21-14"><a></a>  net_block <span class="ot">&lt;-</span> <span class="fu">network</span>(block_mat, <span class="at">loops =</span> T, </span>
+<span id="cb21-15"><a></a>                       <span class="at">directed =</span> directed)</span>
+<span id="cb21-16"><a></a></span>
+<span id="cb21-17"><a></a>  <span class="co"># Here we extract the edgelist:</span></span>
+<span id="cb21-18"><a></a>  edges_netblock <span class="ot">&lt;-</span> <span class="fu">as.edgelist</span>(net_block)</span>
+<span id="cb21-19"><a></a></span>
+<span id="cb21-20"><a></a>  <span class="co"># Now we get the edge weights, stringing out the matrix</span></span>
+<span id="cb21-21"><a></a>  <span class="co"># into a vector. We only extract those weights corresponding</span></span>
+<span id="cb21-22"><a></a>  <span class="co"># to where an edge exists, defined by the edgelist </span></span>
+<span id="cb21-23"><a></a>  <span class="co"># extracted above.</span></span>
+<span id="cb21-24"><a></a>  weight_edge <span class="ot">&lt;-</span> <span class="fu">c</span>(block_mat[edges_netblock])</span>
+<span id="cb21-25"><a></a></span>
+<span id="cb21-26"><a></a>  <span class="co"># Now we create a little data frame putting the information together.</span></span>
+<span id="cb21-27"><a></a>  block_edgelist <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(edges_netblock, <span class="at">weight =</span> weight_edge, </span>
+<span id="cb21-28"><a></a>                               <span class="at">Tie =</span> relation_label)</span>
+<span id="cb21-29"><a></a></span>
+<span id="cb21-30"><a></a>  <span class="co"># Here we create the additional weighting scheme,</span></span>
+<span id="cb21-31"><a></a>  <span class="co"># where weight is equal to 0, 1, or 2, depending if it is</span></span>
+<span id="cb21-32"><a></a>  <span class="co"># less than the mean, greater than the mean (but less than 1 sd above mean)</span></span>
+<span id="cb21-33"><a></a>  <span class="co"># or greater than 1 sd above the mean. </span></span>
+<span id="cb21-34"><a></a>  edge_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(block_mat)</span>
+<span id="cb21-35"><a></a>  edge_sd <span class="ot">&lt;-</span> <span class="fu">sd</span>(block_mat)</span>
+<span id="cb21-36"><a></a>  edge_max <span class="ot">&lt;-</span> <span class="fu">max</span>(block_mat)</span>
+<span id="cb21-37"><a></a></span>
+<span id="cb21-38"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span> <span class="fu">cut</span>(block_edgelist<span class="sc">$</span>weight, </span>
+<span id="cb21-39"><a></a>                                     <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, edge_mean, </span>
+<span id="cb21-40"><a></a>                                                edge_mean <span class="sc">+</span> edge_sd, </span>
+<span id="cb21-41"><a></a>                                                edge_max),</span>
+<span id="cb21-42"><a></a>                                     <span class="at">include.lowest =</span> T, </span>
+<span id="cb21-43"><a></a>                                     <span class="at">right =</span> F, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>, <span class="st">"2"</span>)) </span>
+<span id="cb21-44"><a></a></span>
+<span id="cb21-45"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span> <span class="fu">as.character</span>(block_edgelist<span class="sc">$</span>WeightRecode)</span>
+<span id="cb21-46"><a></a>  block_edgelist<span class="sc">$</span>WeightRecode <span class="ot">&lt;-</span><span class="fu">as.numeric</span>(block_edgelist<span class="sc">$</span>WeightRecode)</span>
+<span id="cb21-47"><a></a></span>
+<span id="cb21-48"><a></a>  <span class="fu">colnames</span>(block_edgelist)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sender"</span>, <span class="st">"receiver"</span>)</span>
+<span id="cb21-49"><a></a></span>
+<span id="cb21-50"><a></a>  block_edgelist</span>
+<span id="cb21-51"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-1" class="slide level2">
@@ -571,10 +570,10 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <li>Create the edgelist for the friendship relation:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>blockedges_friend <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_friend, </span>
-<span id="cb23-2"><a></a>                                          <span class="at">relation_label =</span> <span class="st">"friendship"</span>,</span>
-<span id="cb23-3"><a></a>                                          <span class="at">directed =</span> T)</span>
-<span id="cb23-4"><a></a>blockedges_friend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>blockedges_friend <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_friend, </span>
+<span id="cb22-2"><a></a>                                          <span class="at">relation_label =</span> <span class="st">"friendship"</span>,</span>
+<span id="cb22-3"><a></a>                                          <span class="at">directed =</span> T)</span>
+<span id="cb22-4"><a></a>blockedges_friend</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  sender receiver     weight        Tie WeightRecode
 1      1        1 0.90000000 friendship            2
@@ -595,23 +594,23 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <li>Create the edgelist for the friendship relation:</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>blockedges_task <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_task,</span>
-<span id="cb25-2"><a></a>                                        <span class="at">relation_label =</span> <span class="st">"task"</span>, </span>
-<span id="cb25-3"><a></a>                                        <span class="at">directed =</span> F)</span>
-<span id="cb25-4"><a></a></span>
-<span id="cb25-5"><a></a>blockedges_social <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_social,</span>
-<span id="cb25-6"><a></a>                                          <span class="at">relation_label =</span> <span class="st">"social"</span>, </span>
-<span id="cb25-7"><a></a>                                          <span class="at">directed =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>blockedges_task <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_task,</span>
+<span id="cb24-2"><a></a>                                        <span class="at">relation_label =</span> <span class="st">"task"</span>, </span>
+<span id="cb24-3"><a></a>                                        <span class="at">directed =</span> F)</span>
+<span id="cb24-4"><a></a></span>
+<span id="cb24-5"><a></a>blockedges_social <span class="ot">&lt;-</span> <span class="fu">block_model_edgelist</span>(<span class="at">block_model =</span> blockmod_social,</span>
+<span id="cb24-6"><a></a>                                          <span class="at">relation_label =</span> <span class="st">"social"</span>, </span>
+<span id="cb24-7"><a></a>                                          <span class="at">directed =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-3" class="slide level2">
 <h2>Plotting a Blockmodel</h2>
 <p>And now we put together the three edgelists</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># stacking block edgelist using an `rbind()` function. </span></span>
-<span id="cb26-2"><a></a>block_dat <span class="ot">&lt;-</span> <span class="fu">rbind</span>(blockedges_friend, blockedges_task, blockedges_social)</span>
-<span id="cb26-3"><a></a><span class="co"># only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.</span></span>
-<span id="cb26-4"><a></a>block_dat <span class="ot">&lt;-</span> block_dat[block_dat<span class="sc">$</span>WeightRecode <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="co"># stacking block edgelist using an `rbind()` function. </span></span>
+<span id="cb25-2"><a></a>block_dat <span class="ot">&lt;-</span> <span class="fu">rbind</span>(blockedges_friend, blockedges_task, blockedges_social)</span>
+<span id="cb25-3"><a></a><span class="co"># only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.</span></span>
+<span id="cb25-4"><a></a>block_dat <span class="ot">&lt;-</span> block_dat[block_dat<span class="sc">$</span>WeightRecode <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>), ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-4" class="slide level2">
@@ -620,8 +619,8 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <li>Construct a network with the conbined block edgelist</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>blockmod_edges <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(block_dat[, <span class="fu">c</span>(<span class="st">"sender"</span>, <span class="st">"receiver"</span>)])</span>
-<span id="cb27-2"><a></a>blockmod_igraph <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(blockmod_edges, <span class="at">directed =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>blockmod_edges <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(block_dat[, <span class="fu">c</span>(<span class="st">"sender"</span>, <span class="st">"receiver"</span>)])</span>
+<span id="cb26-2"><a></a>blockmod_igraph <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(blockmod_edges, <span class="at">directed =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-5" class="slide level2">
@@ -630,24 +629,24 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <li>Set tie attributes to constructed network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">library</span>(car)</span>
-<span id="cb28-2"><a></a><span class="co"># type of tie</span></span>
-<span id="cb28-3"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="ot">&lt;-</span> block_dat[, <span class="st">"Tie"</span>]</span>
-<span id="cb28-4"><a></a><span class="co"># color for each type of tie</span></span>
-<span id="cb28-5"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">recode</span>(block_dat[, <span class="st">"Tie"</span>], </span>
-<span id="cb28-6"><a></a>               <span class="st">"'friendship' = 'red'; 'task'='blue'; 'social' = 'green'"</span>)</span>
-<span id="cb28-7"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>color <span class="ot">&lt;-</span> cols</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">library</span>(car)</span>
+<span id="cb27-2"><a></a><span class="co"># type of tie</span></span>
+<span id="cb27-3"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="ot">&lt;-</span> block_dat[, <span class="st">"Tie"</span>]</span>
+<span id="cb27-4"><a></a><span class="co"># color for each type of tie</span></span>
+<span id="cb27-5"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">recode</span>(block_dat[, <span class="st">"Tie"</span>], </span>
+<span id="cb27-6"><a></a>               <span class="st">"'friendship' = 'red'; 'task'='blue'; 'social' = 'green'"</span>)</span>
+<span id="cb27-7"><a></a><span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>color <span class="ot">&lt;-</span> cols</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-6" class="slide level2">
 <h2>Plotting a Blockmodel</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>friend_edge <span class="ot">&lt;-</span> <span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="sc">%in%</span> <span class="st">"friendship"</span></span>
-<span id="cb29-2"><a></a>self_loop <span class="ot">&lt;-</span> <span class="fu">which_loop</span>(blockmod_igraph)</span>
-<span id="cb29-3"><a></a>arrow_mode <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(friend_edge <span class="sc">&amp;</span> <span class="sc">!</span>self_loop, <span class="at">yes =</span> <span class="st">"&gt;"</span>, <span class="at">no =</span> <span class="st">"-"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>friend_edge <span class="ot">&lt;-</span> <span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="sc">%in%</span> <span class="st">"friendship"</span></span>
+<span id="cb28-2"><a></a>self_loop <span class="ot">&lt;-</span> <span class="fu">which_loop</span>(blockmod_igraph)</span>
+<span id="cb28-3"><a></a>arrow_mode <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(friend_edge <span class="sc">&amp;</span> <span class="sc">!</span>self_loop, <span class="at">yes =</span> <span class="st">"&gt;"</span>, <span class="at">no =</span> <span class="st">"-"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>arrow_mode</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>arrow_mode</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "-" "-" "&gt;" "-" "-" "-" "-" "-" "-" "-" "-"</code></pre>
 </div>
@@ -658,28 +657,28 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <p>We also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops.</p>
 <p>We will set the angles such that all non-self loops have an angle of 0, all friendship self loops have an angle of <code>4 * pi / 3</code> and all social self loops have an angle of <code>3 * pi / 3</code> (there are no task self loops). This will ensure that the friendship and social self loops are not drawn on top of each other.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>edge_loop_angles <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(block_dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>edge_loop_angles <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(block_dat))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>edge_loop_angles[self_loop <span class="sc">&amp;</span> friend_edge] <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>edge_loop_angles[self_loop <span class="sc">&amp;</span> friend_edge] <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>social_edge <span class="ot">&lt;-</span> <span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="sc">%in%</span> <span class="st">"social"</span></span>
-<span id="cb34-2"><a></a>edge_loop_angles[self_loop <span class="sc">&amp;</span> social_edge] <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>social_edge <span class="ot">&lt;-</span> <span class="fu">E</span>(blockmod_igraph)<span class="sc">$</span>type <span class="sc">%in%</span> <span class="st">"social"</span></span>
+<span id="cb33-2"><a></a>edge_loop_angles[self_loop <span class="sc">&amp;</span> social_edge] <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">3</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="plotting-a-blockmodel-8" class="slide level2">
 <h2>Plotting a Blockmodel</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">plot</span>(blockmod_igraph, <span class="at">edge.arrow.mode =</span> arrow_mode,</span>
-<span id="cb35-2"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">65</span>, <span class="at">edge.arrow.width =</span> .<span class="dv">75</span>,</span>
-<span id="cb35-3"><a></a>     <span class="at">vertex.label =</span> <span class="fu">c</span>(<span class="st">"block 1"</span>, <span class="st">"block 2"</span>, <span class="st">"block 3"</span>, <span class="st">"block 4"</span>),</span>
-<span id="cb35-4"><a></a>     <span class="at">vertex.label.dist =</span> <span class="fl">4.5</span>, <span class="at">vertex.label.degree =</span> <span class="dv">0</span>,</span>
-<span id="cb35-5"><a></a>     <span class="at">edge.loop.angle =</span> edge_loop_angles, <span class="at">margin =</span> .<span class="dv">20</span>)</span>
-<span id="cb35-6"><a></a></span>
-<span id="cb35-7"><a></a><span class="fu">legend</span>(<span class="st">"left"</span>, <span class="fu">c</span>(<span class="st">"friendship"</span>, <span class="st">"task"</span>, <span class="st">"social"</span>),</span>
-<span id="cb35-8"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>),</span>
-<span id="cb35-9"><a></a>       <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">plot</span>(blockmod_igraph, <span class="at">edge.arrow.mode =</span> arrow_mode,</span>
+<span id="cb34-2"><a></a>     <span class="at">edge.arrow.size =</span> .<span class="dv">65</span>, <span class="at">edge.arrow.width =</span> .<span class="dv">75</span>,</span>
+<span id="cb34-3"><a></a>     <span class="at">vertex.label =</span> <span class="fu">c</span>(<span class="st">"block 1"</span>, <span class="st">"block 2"</span>, <span class="st">"block 3"</span>, <span class="st">"block 4"</span>),</span>
+<span id="cb34-4"><a></a>     <span class="at">vertex.label.dist =</span> <span class="fl">4.5</span>, <span class="at">vertex.label.degree =</span> <span class="dv">0</span>,</span>
+<span id="cb34-5"><a></a>     <span class="at">edge.loop.angle =</span> edge_loop_angles, <span class="at">margin =</span> .<span class="dv">20</span>)</span>
+<span id="cb34-6"><a></a></span>
+<span id="cb34-7"><a></a><span class="fu">legend</span>(<span class="st">"left"</span>, <span class="fu">c</span>(<span class="st">"friendship"</span>, <span class="st">"task"</span>, <span class="st">"social"</span>),</span>
+<span id="cb34-8"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>),</span>
+<span id="cb34-9"><a></a>       <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W9_presentation_files/figure-revealjs/unnamed-chunk-27-1.png" width="528" class="r-stretch"></section>

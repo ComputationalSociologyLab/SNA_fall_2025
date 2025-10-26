@@ -151,9 +151,9 @@ text(x, y, labels = 1:length(x), cex = 1)
 - Cluster the students into structurally equivalent positions based on the euclid distance
 ```{r}
 hc <- hclust(euclid_dist)
+hc_ids <- cutree(hc, h = 12)  
 plot(hc)
 plot_clusters <- rect.hclust(hc, h = 12)
-hc_ids <- cutree(hc, h = 12)  
 ```
 
 ## Role Analysis 
@@ -161,11 +161,12 @@ hc_ids <- cutree(hc, h = 12)
 - ex) a 'teacher' role has certain rights and responsibilities relative to actors playing the 'student' role.
 
 ## Role Analysis with Blockmodel
-- Dorm a matrix where the positions themselves are the nodes, or blocks
-- The previously found positions are the rows/columns of the newly constructed matrix
-  - ex) all actors in the 'red' position (1, 9, 10, 12 and 15 in the figure above) get collapsed into a single node, or block, labeled, "Block 1"; all nodes in the green position get collapsed into "Block 2", and so on. We will then analyze the resulting blockmodel in terms of the pattern of ties between blocks. 
+- Form a matrix where the positions themselves are the nodes, or blocks
+- All actors the last cluster (node 1, 9, 10, 12 and 15 in the figure above) fall into a single block...
+- Analyze the resulting blockmodel in terms of the pattern of ties between blocks. 
 
 ## Role Analysis with Blockmodel
+- Pass the matrix and the cluster for the parameter of the function `blockmodel`
 ```{r}
 library(sna)
 blockmod_friend <- blockmodel(friend_mat, ec = hc_ids)
@@ -173,8 +174,8 @@ blockmod_task <- blockmodel(task_mat, ec = hc_ids)
 blockmod_social <- blockmodel(social_mat, ec = hc_ids)
 ```
 ## Role Analysis with Blockmodel
-- The blockmodel shows us the (weighted) density of within and between block ties
-- Identify the possibility of asymmetries between the blocks
+- Blockmodel shows us the density of within and between block ties
+
 ```{r}
 blockmod_friend
 ```
@@ -184,10 +185,9 @@ blockmod_friend
 ```{r}
 # function returning edgelist between blocks
 block_model_edgelist <- function(block_model, relation_label, directed = T){
-  # Arguments: 
-  # block_model: blockmodel object 
-  # relation_label: label for type of tie, 
-  # directed: is blockmodel based on directed network?
+  # input: blockmodel object, label for type of tie, direction
+  # output : weighted edgelist btw the blocks
+  
 
   # First we grab the actual matrix from the blockmodel:
   block_mat <- block_model$block.model
