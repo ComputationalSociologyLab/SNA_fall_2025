@@ -15,7 +15,7 @@ execute:
 # Positions and Roles
 
 - Walk through a simple analysis to identify the logic of how to do a role analysis
-- Apply the analysis to the same dataset we used in two weeks ago....?
+- With the same dataset we used in two weeks ago....?
 - Describe the role structure that exists in the classroom
 - [OPTION] Explore network-level measures of hierarchy
 
@@ -28,23 +28,22 @@ execute:
 library(igraph)
 ```
 
-## Setting up the Session
-- Load edgelist dataset where there exists social tie between students
-```{r}
-url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
-class182_networkdata <- read.csv(file = url1)
-edgelist_friendship <- class182_networkdata[class182_networkdata$friend_tie > 0, 
-                                            c("ego", "alter", "friend_tie")]
-head(class182_networkdata) 
-```
 
 ## Setting up the Session
-- Load attribute dataset where there exists social tie between students
+- Load attribute dataset
 ```{r}
 url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"
 class182_attributes <- read.csv(file = url2)
 head(class182_attributes)
 
+```
+
+## Setting up the Session
+- Load edgelist dataset where there exists friend tie between students
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
+class182_networkdata <- read.csv(file = url1)
+head(class182_networkdata) 
 ```
 
 ## Setting up the Session
@@ -55,6 +54,9 @@ edgelist_friendship <- class182_networkdata[class182_networkdata$friend_tie > 0,
 net182_friend <- graph_from_data_frame(d = edgelist_friendship, directed = T, 
                                        vertices = class182_attributes) 
 ```
+
+
+
 
 
 ## Setting up the Session
@@ -82,14 +84,13 @@ net182_social <- as_undirected(net182_social, mode="collapse",
 ```
 
 
-## Let's apply the Role analysis 
-- Built to incorporate multiple relations
-- Doing a role/position analysis is to place nodes into equivalent positions
+## Getting Data Ready
+- Place nodes into equivalent positions
   - Here, equivalence is based on the idea of structural equivalence
-  - Nodes who are friends with the same people, do tasks with the same people, etc. should be in the same position.
+  - Nodes who are friends with the same people, do tasks with the same people, should be in the same position.
   
   
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Convert the networks into adjacency matrix
 ```{r}
 friend_mat <- as_adjacency_matrix(net182_friend, attr = "friend_tie", sparse = F) 
@@ -97,7 +98,7 @@ task_mat <- as_adjacency_matrix(net182_task, attr = "task_tie", sparse = F)
 social_mat <- as_adjacency_matrix(net182_social, attr = "social_tie", sparse = F)
 ```
 
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Standardize our columns so they are comparable
 $$
 Z = \frac{X - \mu}{\sigma}
@@ -111,22 +112,25 @@ social_mat_std <- (social_mat - mean(social_mat)) / sd(social_mat)
 ```
 
 
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Combine all of the standardized matrices into one matrix. 
 ```{r}
 friends_task_social_std <- cbind(friend_mat_std, friend_mat_in_std, 
                                  task_mat_std, social_mat_std)
 friends_task_social <- cbind(friend_mat, friend_mat_in, task_mat, social_mat) 
-# 16*16 adjacent matrix * 4
+# (16*16 adjacent matrix) * 4
 dim(friends_task_social_std) 
 ```
 
 ## Structural Equivalence
+- Based on the four adjacent matrix(16*16), we can calculate the distance between each node
+- how different/similar each node(student) is to every other node. 
 ```{r}
 euclid_dist <- dist(x = friends_task_social_std, method = "euclidean") 
 euclid_dist
 ```
 ## Structural Equivalence
+- Project the distances into two dimensions
 ```{r}
 fit <- cmdscale(d = euclid_dist, k = 2) 
 x <- fit[, 1]
@@ -144,7 +148,7 @@ text(x, y, labels = 1:length(x), cex = 1)
 ```
 
 ## Defining Positions
-- Cluster the nodes based on the euclid distance
+- Cluster the students into structurally equivalent positions based on the euclid distance
 ```{r}
 hc <- hclust(euclid_dist)
 plot(hc)
@@ -360,11 +364,6 @@ plot(blockmod_igraph, edge.arrow.mode = arrow_mode,
 legend("left", c("friendship", "task", "social"),
        col = c("red", "blue", "green"),
        lwd = 1, cex = .8)
-```
-
-
-```{r}
-arrow_mode
 ```
 
 ## Done!

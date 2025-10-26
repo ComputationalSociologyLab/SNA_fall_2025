@@ -206,7 +206,7 @@
 <h1>Positions and Roles</h1>
 <ul>
 <li>Walk through a simple analysis to identify the logic of how to do a role analysis</li>
-<li>Apply the analysis to the same dataset we used in two weeks ago….?</li>
+<li>With the same dataset we used in two weeks ago….?</li>
 <li>Describe the role structure that exists in the classroom</li>
 <li>[OPTION] Explore network-level measures of hierarchy</li>
 </ul>
@@ -223,34 +223,12 @@
 <section id="setting-up-the-session-1" class="slide level2">
 <h2>Setting up the Session</h2>
 <ul>
-<li>Load edgelist dataset where there exists social tie between students</li>
+<li>Load attribute dataset</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"</span></span>
-<span id="cb2-2"><a></a>class182_networkdata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1)</span>
-<span id="cb2-3"><a></a>edgelist_friendship <span class="ot">&lt;-</span> class182_networkdata[class182_networkdata<span class="sc">$</span>friend_tie <span class="sc">&gt;</span> <span class="dv">0</span>, </span>
-<span id="cb2-4"><a></a>                                            <span class="fu">c</span>(<span class="st">"ego"</span>, <span class="st">"alter"</span>, <span class="st">"friend_tie"</span>)]</span>
-<span id="cb2-5"><a></a><span class="fu">head</span>(class182_networkdata) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  ego alter friend_tie social_tie task_tie
-1   1     1          0        0.0      0.0
-2   1     2          0        0.0      0.0
-3   1     3          0        0.0      0.0
-4   1     4          0        0.0      0.0
-5   1     5          0        1.2      0.3
-6   1     6          0        0.0      0.0</code></pre>
-</div>
-</div>
-</section>
-<section id="setting-up-the-session-2" class="slide level2">
-<h2>Setting up the Session</h2>
-<ul>
-<li>Load attribute dataset where there exists social tie between students</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"</span></span>
-<span id="cb4-2"><a></a>class182_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
-<span id="cb4-3"><a></a><span class="fu">head</span>(class182_attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"</span></span>
+<span id="cb2-2"><a></a>class182_attributes <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url2)</span>
+<span id="cb2-3"><a></a><span class="fu">head</span>(class182_attributes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  ids  race grade gender
 1   1 white    10   male
@@ -259,6 +237,26 @@
 4   4 white    11 female
 5   5 white    10   male
 6   6 white    10 female</code></pre>
+</div>
+</div>
+</section>
+<section id="setting-up-the-session-2" class="slide level2">
+<h2>Setting up the Session</h2>
+<ul>
+<li>Load edgelist dataset where there exists friend tie between students</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"</span></span>
+<span id="cb4-2"><a></a>class182_networkdata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file =</span> url1)</span>
+<span id="cb4-3"><a></a><span class="fu">head</span>(class182_networkdata) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ego alter friend_tie social_tie task_tie
+1   1     1          0        0.0      0.0
+2   1     2          0        0.0      0.0
+3   1     3          0        0.0      0.0
+4   1     4          0        0.0      0.0
+5   1     5          0        1.2      0.3
+6   1     6          0        0.0      0.0</code></pre>
 </div>
 </div>
 </section>
@@ -304,19 +302,18 @@
 <span id="cb8-8"><a></a>                               <span class="at">edge.attr.comb =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-apply-the-role-analysis" class="slide level2">
-<h2>Let’s apply the Role analysis</h2>
+<section id="getting-data-ready" class="slide level2">
+<h2>Getting Data Ready</h2>
 <ul>
-<li>Built to incorporate multiple relations</li>
-<li>Doing a role/position analysis is to place nodes into equivalent positions
+<li>Place nodes into equivalent positions
 <ul>
 <li>Here, equivalence is based on the idea of structural equivalence</li>
-<li>Nodes who are friends with the same people, do tasks with the same people, etc. should be in the same position.</li>
+<li>Nodes who are friends with the same people, do tasks with the same people, should be in the same position.</li>
 </ul></li>
 </ul>
 </section>
-<section id="lets-apply-the-role-analysis-1" class="slide level2">
-<h2>Let’s apply the Role analysis</h2>
+<section id="getting-data-ready-1" class="slide level2">
+<h2>Getting Data Ready</h2>
 <ul>
 <li>Convert the networks into adjacency matrix</li>
 </ul>
@@ -326,8 +323,8 @@
 <span id="cb9-3"><a></a>social_mat <span class="ot">&lt;-</span> <span class="fu">as_adjacency_matrix</span>(net182_social, <span class="at">attr =</span> <span class="st">"social_tie"</span>, <span class="at">sparse =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-apply-the-role-analysis-2" class="slide level2">
-<h2>Let’s apply the Role analysis</h2>
+<section id="getting-data-ready-2" class="slide level2">
+<h2>Getting Data Ready</h2>
 <ul>
 <li>Standardize our columns so they are comparable <span class="math display">\[
 Z = \frac{X - \mu}{\sigma}
@@ -341,8 +338,8 @@ Z = \frac{X - \mu}{\sigma}
 <span id="cb10-5"><a></a>social_mat_std <span class="ot">&lt;-</span> (social_mat <span class="sc">-</span> <span class="fu">mean</span>(social_mat)) <span class="sc">/</span> <span class="fu">sd</span>(social_mat)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-apply-the-role-analysis-3" class="slide level2">
-<h2>Let’s apply the Role analysis</h2>
+<section id="getting-data-ready-3" class="slide level2">
+<h2>Getting Data Ready</h2>
 <ul>
 <li>Combine all of the standardized matrices into one matrix.</li>
 </ul>
@@ -350,7 +347,7 @@ Z = \frac{X - \mu}{\sigma}
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>friends_task_social_std <span class="ot">&lt;-</span> <span class="fu">cbind</span>(friend_mat_std, friend_mat_in_std, </span>
 <span id="cb11-2"><a></a>                                 task_mat_std, social_mat_std)</span>
 <span id="cb11-3"><a></a>friends_task_social <span class="ot">&lt;-</span> <span class="fu">cbind</span>(friend_mat, friend_mat_in, task_mat, social_mat) </span>
-<span id="cb11-4"><a></a><span class="co"># 16*16 adjacent matrix * 4</span></span>
+<span id="cb11-4"><a></a><span class="co"># (16*16 adjacent matrix) * 4</span></span>
 <span id="cb11-5"><a></a><span class="fu">dim</span>(friends_task_social_std) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 16 64</code></pre>
@@ -359,6 +356,10 @@ Z = \frac{X - \mu}{\sigma}
 </section>
 <section id="structural-equivalence" class="slide level2">
 <h2>Structural Equivalence</h2>
+<ul>
+<li>Based on the four adjacent matrix(16*16), we can calculate the distance between each node</li>
+<li>how different/similar each node(student) is to every other node.</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>euclid_dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(<span class="at">x =</span> friends_task_social_std, <span class="at">method =</span> <span class="st">"euclidean"</span>) </span>
 <span id="cb13-2"><a></a>euclid_dist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -416,6 +417,9 @@ Z = \frac{X - \mu}{\sigma}
 </section>
 <section id="structural-equivalence-1" class="slide level2">
 <h2>Structural Equivalence</h2>
+<ul>
+<li>Project the distances into two dimensions</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>fit <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(<span class="at">d =</span> euclid_dist, <span class="at">k =</span> <span class="dv">2</span>) </span>
 <span id="cb15-2"><a></a>x <span class="ot">&lt;-</span> fit[, <span class="dv">1</span>]</span>
@@ -437,7 +441,7 @@ Z = \frac{X - \mu}{\sigma}
 <section id="defining-positions" class="slide level2">
 <h2>Defining Positions</h2>
 <ul>
-<li>Cluster the nodes based on the euclid distance</li>
+<li>Cluster the students into structurally equivalent positions based on the euclid distance</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(euclid_dist)</span>
@@ -739,13 +743,7 @@ Block 4     0.0 0.00000000 0.00000000     NaN</code></pre>
 <span id="cb39-9"><a></a>       <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">cex =</span> .<span class="dv">8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W9_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="528" class="r-stretch"><div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>arrow_mode</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "-" "-" "&gt;" "-" "-" "-" "-" "-" "-" "-" "-"</code></pre>
-</div>
-</div>
-</section>
+<img data-src="W9_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="528" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
