@@ -86,8 +86,9 @@ net182_social <- as_undirected(net182_social, mode="collapse",
 
 ## Getting Data Ready
 - Cluster nodes which have similar positions
-  - Here, "similar" is based on the idea of structural equivalence
+  - "Similar" is based on the idea of structural equivalence
   - Nodes who are friends with the same people, do tasks with the same people, should be in the same position.
+- Calculate the distance btw the nodes based on the type of relationships(social, friends, tasks)
   
   
 ## Getting Data Ready
