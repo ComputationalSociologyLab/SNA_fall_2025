@@ -476,7 +476,7 @@ arrow_mode <- ifelse(friend_edge & !self_loop, yes = ">", no = "-")
 ```
 
 ```{r}
-arrow_mode
+which_loop(blockmod_igraph)
 ```
 We also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops. 
 
