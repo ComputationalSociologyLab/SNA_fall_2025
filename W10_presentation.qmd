@@ -1,66 +1,49 @@
+---
+title: "W10. Affiliations, fields, and cultural spaces"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-options(width=750)
-```
+# Affiliations, fields, and cultural spaces
 
-```{r message=F, warning=F}
-#manual installation for package "ldatuning"
-#install.packages("devtools")
-#library(devtools)
-#install_github("nikita-moor/ldatuning")
-```
-
-# Two-mode Networks: Affilitations and Dualities {#ch11-Two-mode-Networks}
-
-This tutorial walks through the analysis of two-mode (affiliation) data in R. We will cover how to plot two-mode network data using the **igraph** package, how to transform it into one mode data and how to calculate traditional measures, like centrality. The tutorial will draw directly on many of the previous tutorials, including [Chapter 5](#ch5-Network-Visualization-R) (visualization), [Chapter 8](#ch8-Network-Cohesion-Communities-R) (cohesion and groups), and [Chapter 9](#ch9-Network-Centrality-Hierarchy-R) (centrality). We will work with affiliation data collected by Daniel McFarland on student extracurricular affiliations. It is a longitudinal data set, with 3 waves - 1996, 1997, 1998, although we will only use the first wave, 1996. We consider dynamics on two-mode networks in [Chapter 13, Part 3](#ch13-Two-mode-Network-Models-ERGM-STERGM-R) (statistical models for two-mode networks). The data consist of students (anonymized) and the student clubs in which they are members (e.g., National Honor Society, wrestling team, cheerleading squad, etc.). The data thus allow us to capture the duality of social life in the school, as students are linked by being in the same clubs, and clubs are linked by sharing the same students.
-
-Substantively, we are motivated by the following questions: a) Which student clubs serve to integrate the school and which are more peripheral?  b) Which student clubs tend to share members at high rates? c) What is the shared feature, or theme, that brings these clubs together in a cluster?  Overall, we are interested in the manner in which membership in clubs serves to integrate (or divide) the school. 
-
+- Walks through the analysis of affiliation(two-mode) data
+- Work with the student extracurricular affiliations data
+  - Longitudinal data set, with 3 waves - 1996, 1997, 1998, although we will only use the first wave, 1996
+  - Capture the duality of social life in the school
+  
 ## Example Affiliation Data
-
-We will use the **igraph** package for this tutorial.
+- Use the **igraph** package for this tutorial.
 
 ```{r message=F, warning=F}
 library(igraph) 
 ```
 
-Our data are stored in three files: an affiliation matrix (showing which students are part of which clubs), a student attribute file (showing the attributes of the students), and a club attribute file (showing the attributes of the clubs). Let's read in the affiliation file from a URL:
-
+## Example Affiliation Data
+- Read in the matrix which contains students' club affiliation
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/affiliations_1996.txt"
-
 affiliations96 <- read.delim(file = url1, check.names = FALSE)
-```
-
-We need to preserve the original column names for labeling our visualizations so we use the "check.names = FALSE" argument. The affiliation matrix is organized with students on the rows and clubs on the columns. 
-
-```{r}
-dim(affiliations96)
-```
-
-We can see that there are 1295 students and 91 clubs. The affiliation matrix is based on a series of club membership dummy variables, coded "1" for membership, "0" for no membership. Let's take a look at the data (just the first 6 rows and 6 columns):
-
-```{r}
+# organized with students on the rows and clubs on the column 
+# Coded "1" for membership, "0" for no membership
 affiliations96[1:6, 1:6] 
 ```
 
-We can see, for example, that the second student in the data is part of the marching band while the first student is not. Note that the rownames of the matrix capture the ids of the students. To get a sense of the data, let’s look at the affiliations for the first student in 1996. Here we grab the first row in the affiliation data and locate the 1s in that row:
-
-```{r}
-affils_student1 <- affiliations96[1, ]
-affils_student1[which(affils_student1 == 1)]
-```
-
-We can see that student 1 was a member of the NHS, Spanish Club, Spanish NHS, Theatre Productions and Thespian Society. And now we will read in the attribute data. We have two files, one for the students and one for the clubs.
+## Example Affiliation Data
+- Read in the attribute data
+- one for the students and one for the clubs.
 
 ```{r}
 url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/attributes_students.txt"
-
 attributes_students <- read.delim(file = url2, stringsAsFactors = FALSE)
-
 url3 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/attributes_clubs.txt"
-
 attributes_clubs <- read.delim(file = url3, stringsAsFactors = FALSE)
 ```
 
@@ -1811,4 +1794,7 @@ plot(clust_cols, choice = "map", draw.tree = FALSE)
 ```
 
 In the end, we have a holistic representation of an academic field, here based on topics and departments, that can serve as a useful way of analyzing non-network data in a way that is consistent with network ideas. These kinds of analyses push us beyond what we may traditionally think of as the purview of network analysis (actors and the relationships between them) but the ideas of duality, niches, and position are widely applicable, offering important alternatives to traditional regression frameworks. 
+## Done!
 
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week \[Option\] in the assignment
