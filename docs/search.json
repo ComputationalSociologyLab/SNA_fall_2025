@@ -11,14 +11,14 @@
     "href": "W9_presentation.html#setting-up-the-session-1",
     "title": "W9. Positions and Roles",
     "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nLoad edgelist dataset where there exists social tie between students\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv\"\nclass182_networkdata &lt;- read.csv(file = url1)\nedgelist_friendship &lt;- class182_networkdata[class182_networkdata$friend_tie &gt; 0, \n                                            c(\"ego\", \"alter\", \"friend_tie\")]\nhead(class182_networkdata) \n\n  ego alter friend_tie social_tie task_tie\n1   1     1          0        0.0      0.0\n2   1     2          0        0.0      0.0\n3   1     3          0        0.0      0.0\n4   1     4          0        0.0      0.0\n5   1     5          0        1.2      0.3\n6   1     6          0        0.0      0.0"
+    "text": "Setting up the Session\n\nLoad attribute dataset\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv\"\nclass182_attributes &lt;- read.csv(file = url2)\nhead(class182_attributes)\n\n  ids  race grade gender\n1   1 white    10   male\n2   2 black    10 female\n3   3 white    10 female\n4   4 white    11 female\n5   5 white    10   male\n6   6 white    10 female"
   },
   {
     "objectID": "W9_presentation.html#setting-up-the-session-2",
     "href": "W9_presentation.html#setting-up-the-session-2",
     "title": "W9. Positions and Roles",
     "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nLoad attribute dataset where there exists social tie between students\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv\"\nclass182_attributes &lt;- read.csv(file = url2)\nhead(class182_attributes)\n\n  ids  race grade gender\n1   1 white    10   male\n2   2 black    10 female\n3   3 white    10 female\n4   4 white    11 female\n5   5 white    10   male\n6   6 white    10 female"
+    "text": "Setting up the Session\n\nLoad edgelist dataset where there exists friend tie between students\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv\"\nclass182_networkdata &lt;- read.csv(file = url1)\nhead(class182_networkdata) \n\n  ego alter friend_tie social_tie task_tie\n1   1     1          0        0.0      0.0\n2   1     2          0        0.0      0.0\n3   1     3          0        0.0      0.0\n4   1     4          0        0.0      0.0\n5   1     5          0        1.2      0.3\n6   1     6          0        0.0      0.0"
   },
   {
     "objectID": "W9_presentation.html#setting-up-the-session-3",
@@ -42,95 +42,81 @@
     "text": "Setting up the Session\n\nConstruct a undirected network for social tie\n\n\nedgelist_social &lt;- class182_networkdata[class182_networkdata$social_tie &gt; 0, \n                                      c(\"ego\", \"alter\", \"social_tie\")]\n\nnet182_social &lt;- graph_from_data_frame(d = edgelist_social, directed = T, \n                                       vertices = class182_attributes) \n\nnet182_social &lt;- as_undirected(net182_social, mode=\"collapse\", \n                               edge.attr.comb = \"mean\")"
   },
   {
-    "objectID": "W9_presentation.html#lets-apply-the-role-analysis",
-    "href": "W9_presentation.html#lets-apply-the-role-analysis",
+    "objectID": "W9_presentation.html#getting-data-ready",
+    "href": "W9_presentation.html#getting-data-ready",
     "title": "W9. Positions and Roles",
-    "section": "Let’s apply the Role analysis",
-    "text": "Let’s apply the Role analysis\n\nBuilt to incorporate multiple relations\nDoing a role/position analysis is to place nodes into equivalent positions\n\nHere, equivalence is based on the idea of structural equivalence\nNodes who are friends with the same people, do tasks with the same people, etc. should be in the same position."
+    "section": "Getting Data Ready",
+    "text": "Getting Data Ready\n\nCluster nodes which have similar positions\n\n“Similar” is based on the idea of structural equivalence\nNodes who are friends with the same people, do tasks with the same people, should be in the same position.\n\nCalculate the distance btw the nodes based on the type of relationships(social, friends, tasks)"
   },
   {
-    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-1",
-    "href": "W9_presentation.html#lets-apply-the-role-analysis-1",
+    "objectID": "W9_presentation.html#getting-data-ready-1",
+    "href": "W9_presentation.html#getting-data-ready-1",
     "title": "W9. Positions and Roles",
-    "section": "Let’s apply the Role analysis",
-    "text": "Let’s apply the Role analysis\n\nConvert the networks into adjacency matrix\n\n\nfriend_mat &lt;- as_adjacency_matrix(net182_friend, attr = \"friend_tie\", sparse = F) \ntask_mat &lt;- as_adjacency_matrix(net182_task, attr = \"task_tie\", sparse = F)\nsocial_mat &lt;- as_adjacency_matrix(net182_social, attr = \"social_tie\", sparse = F)"
+    "section": "Getting Data Ready",
+    "text": "Getting Data Ready\n\nConvert the networks into adjacency matrix\n\n\nfriend_mat &lt;- as_adjacency_matrix(net182_friend, attr = \"friend_tie\", sparse = F) \ntask_mat &lt;- as_adjacency_matrix(net182_task, attr = \"task_tie\", sparse = F)\nsocial_mat &lt;- as_adjacency_matrix(net182_social, attr = \"social_tie\", sparse = F)"
   },
   {
-    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-2",
-    "href": "W9_presentation.html#lets-apply-the-role-analysis-2",
+    "objectID": "W9_presentation.html#getting-data-ready-2",
+    "href": "W9_presentation.html#getting-data-ready-2",
     "title": "W9. Positions and Roles",
-    "section": "Let’s apply the Role analysis",
-    "text": "Let’s apply the Role analysis\n\nStandardize our columns so they are comparable \\[\nZ = \\frac{X - \\mu}{\\sigma}\n\\]\n\n\nfriend_mat_in &lt;- t(friend_mat)\nfriend_mat_std &lt;- (friend_mat - mean(friend_mat)) / sd(friend_mat)\nfriend_mat_in_std &lt;- t(friend_mat_std) # for the incoming friendship ties\ntask_mat_std &lt;- (task_mat - mean(task_mat)) / sd(task_mat)\nsocial_mat_std &lt;- (social_mat - mean(social_mat)) / sd(social_mat)"
+    "section": "Getting Data Ready",
+    "text": "Getting Data Ready\n\nStandardize our columns so they are comparable \\[\nZ = \\frac{X - \\mu}{\\sigma}\n\\]\n\n\nfriend_mat_in &lt;- t(friend_mat)\nfriend_mat_std &lt;- (friend_mat - mean(friend_mat)) / sd(friend_mat)\nfriend_mat_in_std &lt;- t(friend_mat_std) # for the incoming friendship ties\ntask_mat_std &lt;- (task_mat - mean(task_mat)) / sd(task_mat)\nsocial_mat_std &lt;- (social_mat - mean(social_mat)) / sd(social_mat)"
   },
   {
-    "objectID": "W9_presentation.html#lets-apply-the-role-analysis-3",
-    "href": "W9_presentation.html#lets-apply-the-role-analysis-3",
+    "objectID": "W9_presentation.html#getting-data-ready-3",
+    "href": "W9_presentation.html#getting-data-ready-3",
     "title": "W9. Positions and Roles",
-    "section": "Let’s apply the Role analysis",
-    "text": "Let’s apply the Role analysis\n\nCombine all of the standardized matrices into one matrix.\n\n\nfriends_task_social_std &lt;- cbind(friend_mat_std, friend_mat_in_std, \n                                 task_mat_std, social_mat_std)\nfriends_task_social &lt;- cbind(friend_mat, friend_mat_in, task_mat, social_mat) \n# 16*16 adjacent matrix * 4\ndim(friends_task_social_std) \n\n[1] 16 64"
+    "section": "Getting Data Ready",
+    "text": "Getting Data Ready\n\nCombine all of the standardized matrices into one matrix.\n\n\nfriends_task_social_std &lt;- cbind(friend_mat_std, friend_mat_in_std, \n                                 task_mat_std, social_mat_std)\nfriends_task_social &lt;- cbind(friend_mat, friend_mat_in, task_mat, social_mat) \n# (16*16 adjacent matrix) * 4\ndim(friends_task_social_std) \n\n[1] 16 64"
   },
   {
     "objectID": "W9_presentation.html#structural-equivalence",
     "href": "W9_presentation.html#structural-equivalence",
     "title": "W9. Positions and Roles",
     "section": "Structural Equivalence",
-    "text": "Structural Equivalence\n\neuclid_dist &lt;- dist(x = friends_task_social_std, method = \"euclidean\") \neuclid_dist\n\n           1         2         3         4         5         6         7\n2  12.277092                                                            \n3   9.337925 12.666789                                                  \n4   8.125464 10.447252  8.035579                                        \n5  11.104733 12.728916  9.647258  9.121137                              \n6  10.678168 12.565643  9.919998  8.088631  8.720639                    \n7   8.890135  7.850717  9.402618  6.784490 10.162484 10.479959          \n8  10.349860  7.464200  9.522193  8.039333 12.013896 10.297088  6.933562\n9  11.124331 13.784948 12.511439 10.298732 12.110515 10.470634 11.854747\n10  7.052583 11.970673  8.885192  8.234908 10.597375 10.001802  9.733430\n11 10.406593 13.215125  9.147026  8.618923 10.459737  8.211965 10.579496\n12  6.916288 12.388970 10.242419  9.154222 11.949265 11.860957 10.175290\n13 11.915949 11.955712 12.930734 10.482529 13.132799 12.897925  8.143778\n14  9.548177  8.919780 10.645521  7.001845  9.814018  9.120023  6.009304\n15  7.685769 11.528159 11.324092  8.700158 11.173555 10.468069 10.074406\n16 14.160821 15.140840 14.241848 11.869697 14.696566 14.161035 13.150494\n           8         9        10        11        12        13        14\n2                                                                       \n3                                                                       \n4                                                                       \n5                                                                       \n6                                                                       \n7                                                                       \n8                                                                       \n9  12.346245                                                            \n10 10.388199  9.711395                                                  \n11 10.744884 11.878246 10.115245                                        \n12 11.115321 11.186167  7.327656 11.847435                              \n13  9.159214 14.384530 12.409627 13.472127 13.132353                    \n14  7.686441 11.092270  9.562528 10.321041 10.841942  7.631703          \n15 11.100016  9.998283  6.135059 11.502730  7.631501 12.001112  9.012054\n16 13.698101 14.748241 14.138346 14.396936 14.307963 15.152258 13.497085\n          15\n2           \n3           \n4           \n5           \n6           \n7           \n8           \n9           \n10          \n11          \n12          \n13          \n14          \n15          \n16 14.495992"
-  },
-  {
-    "objectID": "W9_presentation.html#structural-equivalence-1",
-    "href": "W9_presentation.html#structural-equivalence-1",
-    "title": "W9. Positions and Roles",
-    "section": "Structural Equivalence",
-    "text": "Structural Equivalence\n\nfit &lt;- cmdscale(d = euclid_dist, k = 2) \nx &lt;- fit[, 1]\ny &lt;- fit[, 2]"
-  },
-  {
-    "objectID": "W9_presentation.html#structural-equivalence-2",
-    "href": "W9_presentation.html#structural-equivalence-2",
-    "title": "W9. Positions and Roles",
-    "section": "Structural Equivalence",
-    "text": "Structural Equivalence\n\nx &lt;- fit[, 1]\ny &lt;- fit[, 2]\nplot(x, y, xlab = \"Coordinate 1\", ylab = \"Coordinate 2\", \n     main = \"2 Dimensional MDS Solution\", type = \"n\") \n\ntext(x, y, labels = 1:length(x), cex = 1)"
+    "text": "Structural Equivalence\n\nBased on the four adjacent matrix(16*16), we can calculate the distance between each node\nhow different/similar each node(student) is to every other node.\n\n\neuclid_dist &lt;- dist(x = friends_task_social_std, method = \"euclidean\") \neuclid_dist\n\n           1         2         3         4         5         6         7\n2  12.277092                                                            \n3   9.337925 12.666789                                                  \n4   8.125464 10.447252  8.035579                                        \n5  11.104733 12.728916  9.647258  9.121137                              \n6  10.678168 12.565643  9.919998  8.088631  8.720639                    \n7   8.890135  7.850717  9.402618  6.784490 10.162484 10.479959          \n8  10.349860  7.464200  9.522193  8.039333 12.013896 10.297088  6.933562\n9  11.124331 13.784948 12.511439 10.298732 12.110515 10.470634 11.854747\n10  7.052583 11.970673  8.885192  8.234908 10.597375 10.001802  9.733430\n11 10.406593 13.215125  9.147026  8.618923 10.459737  8.211965 10.579496\n12  6.916288 12.388970 10.242419  9.154222 11.949265 11.860957 10.175290\n13 11.915949 11.955712 12.930734 10.482529 13.132799 12.897925  8.143778\n14  9.548177  8.919780 10.645521  7.001845  9.814018  9.120023  6.009304\n15  7.685769 11.528159 11.324092  8.700158 11.173555 10.468069 10.074406\n16 14.160821 15.140840 14.241848 11.869697 14.696566 14.161035 13.150494\n           8         9        10        11        12        13        14\n2                                                                       \n3                                                                       \n4                                                                       \n5                                                                       \n6                                                                       \n7                                                                       \n8                                                                       \n9  12.346245                                                            \n10 10.388199  9.711395                                                  \n11 10.744884 11.878246 10.115245                                        \n12 11.115321 11.186167  7.327656 11.847435                              \n13  9.159214 14.384530 12.409627 13.472127 13.132353                    \n14  7.686441 11.092270  9.562528 10.321041 10.841942  7.631703          \n15 11.100016  9.998283  6.135059 11.502730  7.631501 12.001112  9.012054\n16 13.698101 14.748241 14.138346 14.396936 14.307963 15.152258 13.497085\n          15\n2           \n3           \n4           \n5           \n6           \n7           \n8           \n9           \n10          \n11          \n12          \n13          \n14          \n15          \n16 14.495992"
   },
   {
     "objectID": "W9_presentation.html#defining-positions",
     "href": "W9_presentation.html#defining-positions",
     "title": "W9. Positions and Roles",
     "section": "Defining Positions",
-    "text": "Defining Positions\n\nCluster the nodes based on the euclid distance\n\n\nhc &lt;- hclust(euclid_dist)\nplot(hc)\nplot_clusters &lt;- rect.hclust(hc, h = 12)\n\n# save the cluster\nhc_ids &lt;- cutree(hc, h = 12)"
+    "text": "Defining Positions\n\nCluster the students into structurally equivalent positions based on the euclid distance\n\n\nhc &lt;- hclust(euclid_dist)\nhc_ids &lt;- cutree(hc, h = 12)  \nplot(hc)\nplot_clusters &lt;- rect.hclust(hc, h = 12)"
   },
   {
     "objectID": "W9_presentation.html#role-analysis",
     "href": "W9_presentation.html#role-analysis",
     "title": "W9. Positions and Roles",
     "section": "Role Analysis",
-    "text": "Role Analysis\n\nThe goal of a role analysis is to create a reduced version of the network, where the positions become the nodes of interest\nAnalyze the pattern of ties between positions\nex) a ‘teacher’ role has certain rights and responsibilities relative to actors playing the ‘student’ role.\n\nGet a sense of Role Analysis with plot\n\nDraw heatmap basd on the positions found above\ntake the matrix of friendship, social or task ties and create a plot where the values are colored by whether a tie exists between i and j\nThe key is reordering the rows/columns of the matrix to correspond to the positions from the clustering analysis\nThis makes it possible to see how nodes in different positions relate to one another; moving us closer to capturing roles in the classroom.\n\nGet a sense of Role Analysis with plot\n\nCreate a data frame with two columns, one for the ids of the nodes and one for the positions of the nodes.\nUtilize our 4 cluster solution from above to define the positions\n\n\nid_dat &lt;- data.frame(ids = class182_attributes$ids, position = hc_ids)\nid_dat &lt;- id_dat[order(id_dat$position), ]\nid_dat\n\n   ids position\n1    1        1\n9    9        1\n10  10        1\n12  12        1\n15  15        1\n2    2        2\n4    4        2\n7    7        2\n8    8        2\n13  13        2\n14  14        2\n3    3        3\n5    5        3\n6    6        3\n11  11        3\n16  16        4\n\n\nGet a sense of Role Analysis with plot\n\nReorder the social tie matrix with the order of position\n\n\nsocial_mat_rearrange &lt;- social_mat[id_dat$ids, id_dat$ids]\n\nGet a sense of Role Analysis with plot\n\nDraw a plot\n\n\nlibrary(RColorBrewer)\n\n# set color for each position\ncolumn_cols &lt;- c(\"red\", \"green\", \"black\", \"blue\")\n\nheatmap(social_mat_rearrange, Rowv = NA, Colv = NA, revC = T,\n        col = colorRampPalette(brewer.pal(6, \"Blues\"))(25),\n        ColSideColors = column_cols[id_dat$position],\n        RowSideColors = column_cols[id_dat$position], symm = T)"
+    "text": "Role Analysis\n\nAnalyze the pattern of ties between positions(clusters)\nex) a ‘teacher’ positions has certain rights and responsibilities relative to actors playing the ‘student’ positions"
   },
   {
     "objectID": "W9_presentation.html#role-analysis-with-blockmodel",
     "href": "W9_presentation.html#role-analysis-with-blockmodel",
     "title": "W9. Positions and Roles",
     "section": "Role Analysis with Blockmodel",
-    "text": "Role Analysis with Blockmodel\n\nDorm a matrix where the positions themselves are the nodes, or blocks\nThe previously found positions are the rows/columns of the newly constructed matrix\n\nex) all actors in the ‘red’ position (1, 9, 10, 12 and 15 in the figure above) get collapsed into a single node, or block, labeled, “Block 1”; all nodes in the green position get collapsed into “Block 2”, and so on. We will then analyze the resulting blockmodel in terms of the pattern of ties between blocks."
+    "text": "Role Analysis with Blockmodel\n\nAll actors fall into a position(here, cluster, block)\nCreate a matrix btw the blocks"
   },
   {
     "objectID": "W9_presentation.html#role-analysis-with-blockmodel-1",
     "href": "W9_presentation.html#role-analysis-with-blockmodel-1",
     "title": "W9. Positions and Roles",
     "section": "Role Analysis with Blockmodel",
-    "text": "Role Analysis with Blockmodel\n\nlibrary(sna)\nblockmod_friend &lt;- blockmodel(friend_mat, ec = hc_ids)\nblockmod_task &lt;- blockmodel(task_mat, ec = hc_ids)\nblockmod_social &lt;- blockmodel(social_mat, ec = hc_ids)"
+    "text": "Role Analysis with Blockmodel\n\nPass the matrix and the cluster for the parameter of the function blockmodel\n\n\nlibrary(sna)\nblockmod_friend &lt;- blockmodel(friend_mat, ec = hc_ids)\nblockmod_task &lt;- blockmodel(task_mat, ec = hc_ids)\nblockmod_social &lt;- blockmodel(social_mat, ec = hc_ids)"
   },
   {
     "objectID": "W9_presentation.html#role-analysis-with-blockmodel-2",
     "href": "W9_presentation.html#role-analysis-with-blockmodel-2",
     "title": "W9. Positions and Roles",
     "section": "Role Analysis with Blockmodel",
-    "text": "Role Analysis with Blockmodel\n\nThe blockmodel shows us the (weighted) density of within and between block ties\nIdentify the possibility of asymmetries between the blocks\n\n\nblockmod_friend\n\n\nNetwork Blockmodel:\n\nBlock membership:\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 1  2  3  2  3  3  2  2  1  1  3  1  2  2  1  4 \n\nReduced form blockmodel:\n\n     1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 \n        Block 1    Block 2    Block 3 Block 4\nBlock 1     0.9 0.03333333 0.05000000       0\nBlock 2     0.1 0.66666667 0.08333333       0\nBlock 3     0.4 0.12500000 1.16666667       0\nBlock 4     0.0 0.00000000 0.00000000     NaN"
+    "text": "Role Analysis with Blockmodel\n\nBlockmodel shows us the density of within and between block ties\n\n\nblockmod_friend\n\n\nNetwork Blockmodel:\n\nBlock membership:\n\n 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 \n 1  2  3  2  3  3  2  2  1  1  3  1  2  2  1  4 \n\nReduced form blockmodel:\n\n     1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 \n        Block 1    Block 2    Block 3 Block 4\nBlock 1     0.9 0.03333333 0.05000000       0\nBlock 2     0.1 0.66666667 0.08333333       0\nBlock 3     0.4 0.12500000 1.16666667       0\nBlock 4     0.0 0.00000000 0.00000000     NaN"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel",
     "href": "W9_presentation.html#plotting-a-blockmodel",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\n\nLet’s interprete the results of blockmodel with visualization\n\n\n# function returning edgelist between blocks\nblock_model_edgelist &lt;- function(block_model, relation_label, directed = T){\n  # Arguments: \n  # block_model: blockmodel object \n  # relation_label: label for type of tie, \n  # directed: is blockmodel based on directed network?\n\n  # First we grab the actual matrix from the blockmodel:\n  block_mat &lt;- block_model$block.model\n\n  # Here we set any NA to 0.\n  block_mat[is.na(block_mat)] &lt;- 0\n\n  # Now we create a little network based on the matrix.\n  net_block &lt;- network(block_mat, loops = T, \n                       directed = directed)\n\n  # Here we extract the edgelist:\n  edges_netblock &lt;- as.edgelist(net_block)\n\n  # Now we get the edge weights, stringing out the matrix\n  # into a vector. We only extract those weights corresponding\n  # to where an edge exists, defined by the edgelist \n  # extracted above.\n  weight_edge &lt;- c(block_mat[edges_netblock])\n\n  # Now we create a little data frame putting the information together.\n  block_edgelist &lt;- data.frame(edges_netblock, weight = weight_edge, \n                               Tie = relation_label)\n\n  # Here we create the additional weighting scheme,\n  # where weight is equal to 0, 1, or 2, depending if it is\n  # less than the mean, greater than the mean (but less than 1 sd above mean)\n  # or greater than 1 sd above the mean. \n  edge_mean &lt;- mean(block_mat)\n  edge_sd &lt;- sd(block_mat)\n  edge_max &lt;- max(block_mat)\n\n  block_edgelist$WeightRecode &lt;- cut(block_edgelist$weight, \n                                     breaks = c(0, edge_mean, \n                                                edge_mean + edge_sd, \n                                                edge_max),\n                                     include.lowest = T, \n                                     right = F, labels = c(\"0\", \"1\", \"2\")) \n\n  block_edgelist$WeightRecode &lt;- as.character(block_edgelist$WeightRecode)\n  block_edgelist$WeightRecode &lt;-as.numeric(block_edgelist$WeightRecode)\n\n  colnames(block_edgelist)[1:2] &lt;- c(\"sender\", \"receiver\")\n\n  block_edgelist\n}"
+    "text": "Plotting a Blockmodel\n\nLet’s interprete the results of blockmodel with visualization\n\n\n# function returning edgelist between blocks\nblock_model_edgelist &lt;- function(block_model, relation_label, directed = T){\n  # input: blockmodel object, label for type of tie, direction\n  # output : weighted edgelist btw the blocks\n  \n\n  # First we grab the actual matrix from the blockmodel:\n  block_mat &lt;- block_model$block.model\n\n  # Here we set any NA to 0.\n  block_mat[is.na(block_mat)] &lt;- 0\n\n  # Now we create a little network based on the matrix.\n  net_block &lt;- network(block_mat, loops = T, \n                       directed = directed)\n\n  # Here we extract the edgelist:\n  edges_netblock &lt;- as.edgelist(net_block)\n\n  # Now we get the edge weights, stringing out the matrix\n  # into a vector. We only extract those weights corresponding\n  # to where an edge exists, defined by the edgelist \n  # extracted above.\n  weight_edge &lt;- c(block_mat[edges_netblock])\n\n  # Now we create a little data frame putting the information together.\n  block_edgelist &lt;- data.frame(edges_netblock, weight = weight_edge, \n                               Tie = relation_label)\n\n  # Here we create the additional weighting scheme,\n  # where weight is equal to 0, 1, or 2, depending if it is\n  # less than the mean, greater than the mean (but less than 1 sd above mean)\n  # or greater than 1 sd above the mean. \n  edge_mean &lt;- mean(block_mat)\n  edge_sd &lt;- sd(block_mat)\n  edge_max &lt;- max(block_mat)\n\n  block_edgelist$WeightRecode &lt;- cut(block_edgelist$weight, \n                                     breaks = c(0, edge_mean, \n                                                edge_mean + edge_sd, \n                                                edge_max),\n                                     include.lowest = T, \n                                     right = F, labels = c(\"0\", \"1\", \"2\")) \n\n  block_edgelist$WeightRecode &lt;- as.character(block_edgelist$WeightRecode)\n  block_edgelist$WeightRecode &lt;-as.numeric(block_edgelist$WeightRecode)\n\n  colnames(block_edgelist)[1:2] &lt;- c(\"sender\", \"receiver\")\n\n  block_edgelist\n}"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel-1",
@@ -151,7 +137,7 @@
     "href": "W9_presentation.html#plotting-a-blockmodel-3",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\nAnd now we put together the three edgelists\n\n# stacking block edgelist using an `rbind()` function. \nblock_dat &lt;- rbind(blockedges_friend, blockedges_task, blockedges_social)\n# only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.\nblock_dat &lt;- block_dat[block_dat$WeightRecode %in% c(\"1\", \"2\"), ]"
+    "text": "Plotting a Blockmodel\nAnd now we put together the three edgelists\n\n# stacking block edgelist using an `rbind()` function. \nblock_dat &lt;- rbind(blockedges_friend, blockedges_task, blockedges_social)\nblock_dat &lt;- block_dat[block_dat$WeightRecode %in% c(\"1\", \"2\"), ]"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel-4",
@@ -165,35 +151,35 @@
     "href": "W9_presentation.html#plotting-a-blockmodel-5",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\n\nSet tie attributes to constructed network\n\n\nlibrary(car)\n# type of tie\nE(blockmod_igraph)$type &lt;- block_dat[, \"Tie\"]\n# color for each type of tie\ncols &lt;- recode(block_dat[, \"Tie\"], \n               \"'friendship' = 'red'; 'task'='blue'; 'social' = 'green'\")\nE(blockmod_igraph)$color &lt;- cols"
+    "text": "Plotting a Blockmodel\n\nSet tie attributes to constructed network\n\n\nlibrary(car)\n# type of tie\nE(blockmod_igraph)$type &lt;- block_dat[, \"Tie\"]\n# color for each type of tie\ncols &lt;- recode(block_dat[, \"Tie\"], \n               \"'friendship' = 'red'; 'task'='blue'; 'social' = 'green'\")\nE(blockmod_igraph)$color &lt;- cols\nE(blockmod_igraph)$width &lt;- block_dat[, \"WeightRecode\"]"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel-6",
     "href": "W9_presentation.html#plotting-a-blockmodel-6",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\n\nfriend_edge &lt;- E(blockmod_igraph)$type %in% \"friendship\"\nself_loop &lt;- which_loop(blockmod_igraph)\narrow_mode &lt;- ifelse(friend_edge & !self_loop, yes = \"&gt;\", no = \"-\")\n\n\narrow_mode\n\n [1] \"-\" \"-\" \"&gt;\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\""
+    "text": "Plotting a Blockmodel\n\nSet tie attributes to constructed network\n\n\nfriend_edge &lt;- E(blockmod_igraph)$type %in% \"friendship\"\nself_loop &lt;- which_loop(blockmod_igraph)\narrow_mode &lt;- ifelse(friend_edge & !self_loop, yes = \"&gt;\", no = \"-\")"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel-7",
     "href": "W9_presentation.html#plotting-a-blockmodel-7",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\nWe also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops.\nWe will set the angles such that all non-self loops have an angle of 0, all friendship self loops have an angle of 4 * pi / 3 and all social self loops have an angle of 3 * pi / 3 (there are no task self loops). This will ensure that the friendship and social self loops are not drawn on top of each other.\n\nedge_loop_angles &lt;- rep(0, nrow(block_dat))\n\n\nedge_loop_angles[self_loop & friend_edge] &lt;- 4 * pi / 3\n\n\nsocial_edge &lt;- E(blockmod_igraph)$type %in% \"social\"\nedge_loop_angles[self_loop & social_edge] &lt;- 3 * pi / 3"
+    "text": "Plotting a Blockmodel\n\nTweak the plotting of the loops\n\n\nedge_loop_angles &lt;- rep(0, nrow(block_dat))\nedge_loop_angles[self_loop & friend_edge] &lt;- 4 * pi / 3\nsocial_edge &lt;- E(blockmod_igraph)$type %in% \"social\"\nedge_loop_angles[self_loop & social_edge] &lt;- 3 * pi / 3"
   },
   {
     "objectID": "W9_presentation.html#plotting-a-blockmodel-8",
     "href": "W9_presentation.html#plotting-a-blockmodel-8",
     "title": "W9. Positions and Roles",
     "section": "Plotting a Blockmodel",
-    "text": "Plotting a Blockmodel\n\nplot(blockmod_igraph, edge.arrow.mode = arrow_mode,\n     edge.arrow.size = .65, edge.arrow.width = .75,\n     vertex.label = c(\"block 1\", \"block 2\", \"block 3\", \"block 4\"),\n     vertex.label.dist = 4.5, vertex.label.degree = 0,\n     edge.loop.angle = edge_loop_angles, margin = .20)\n\nlegend(\"left\", c(\"friendship\", \"task\", \"social\"),\n       col = c(\"red\", \"blue\", \"green\"),\n       lwd = 1, cex = .8)\n\n\n\narrow_mode\n\n [1] \"-\" \"-\" \"&gt;\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\" \"-\""
+    "text": "Plotting a Blockmodel\n\nplot(blockmod_igraph, edge.arrow.mode = arrow_mode,\n     edge.arrow.size = .65, edge.arrow.width = .75,\n     vertex.label = c(\"block 1\", \"block 2\", \"block 3\", \"block 4\"),\n     vertex.label.dist = 4.5, vertex.label.degree = 0,\n     edge.loop.angle = edge_loop_angles, margin = .20)\n\nlegend(\"left\", c(\"friendship\", \"task\", \"social\"),\n       col = c(\"red\", \"blue\", \"green\"),\n       lwd = 1, cex = .8)"
   },
   {
     "objectID": "W9_presentation.html#done",
     "href": "W9_presentation.html#done",
     "title": "W9. Positions and Roles",
     "section": "Done!",
-    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week [Option] in the assignment"
+    "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week [Option] in the assignment"
   },
   {
     "objectID": "W5_presentation.html#load-dataset",
@@ -228,7 +214,7 @@
     "href": "W5_presentation.html#create-frienship-network-1",
     "title": "W5. Network Cohesion and Communities",
     "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH bee9457 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from bee9457 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 9ce58ca DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 9ce58ca (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
@@ -291,7 +277,7 @@
     "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
     "title": "W5. Network Cohesion and Communities",
     "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 816b924 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 816b924 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 7066de4 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 7066de4 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",
@@ -445,7 +431,7 @@
     "href": "W3_presentation.html#detailed-information-of-our-network",
     "title": "W3. Visualization",
     "section": "Detailed information of our network",
-    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH 3982e11 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from 3982e11 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
+    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH ee9979e DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from ee9979e (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
   },
   {
     "objectID": "W3_presentation.html#plot-a-network-using-igraph",
@@ -704,7 +690,7 @@
     "href": "W4_presentation.html#plotting-ego-networks-2",
     "title": "W4. Ego, Dyads and Triads",
     "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 94d9436 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 94d9436 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 58030fe UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 58030fe (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 1ee538a UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 1ee538a (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
+    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH cd3dcdd UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from cd3dcdd (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 698269e UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 698269e (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 5dd019a UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 5dd019a (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
   },
   {
     "objectID": "W4_presentation.html#plotting-ego-networks-3",
@@ -1005,14 +991,14 @@
     "href": "W7_presentation.html#centralization-8",
     "title": "W7.Centrality",
     "section": "Centralization",
-    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from social ties\n\n\n# minumun value of ingree would be 0 so...\nden_social &lt;- density(indegree_social, from = 0) \nden_social\n\n\nCall:\n    density.default(x = indegree_social, from = 0)\n\nData: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989\n\n       x               y          \n Min.   :0.000   Min.   :0.00021  \n 1st Qu.:2.492   1st Qu.:0.02481  \n Median :4.984   Median :0.09198  \n Mean   :4.984   Mean   :0.08894  \n 3rd Qu.:7.475   3rd Qu.:0.15088  \n Max.   :9.967   Max.   :0.17842"
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from social ties\n\n\n# minumun value of ingree would be 0 so...\nden_social &lt;- density(indegree_social, from = 0) \nden_social\n\n\nCall:\n    density.default(x = indegree_social, from = 0)\n\nData: indegree_social (22 obs.);    Bandwidth 'bw' = 0.989\n\n       x               y            \n Min.   :0.000   Min.   :0.0002118  \n 1st Qu.:2.492   1st Qu.:0.0248385  \n Median :4.984   Median :0.0920633  \n Mean   :4.984   Mean   :0.0890183  \n 3rd Qu.:7.475   3rd Qu.:0.1509740  \n Max.   :9.967   Max.   :0.1785387"
   },
   {
     "objectID": "W7_presentation.html#centralization-9",
     "href": "W7_presentation.html#centralization-9",
     "title": "W7.Centrality",
     "section": "Centralization",
-    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from task ties\n\n\nden_task &lt;- density(degree_task, from = 0)\nden_task\n\n\nCall:\n    density.default(x = degree_task, from = 0)\n\nData: degree_task (22 obs.);    Bandwidth 'bw' = 0.362\n\n       x                y            \n Min.   : 0.000   Min.   :0.000e+00  \n 1st Qu.: 4.521   1st Qu.:0.000e+00  \n Median : 9.043   Median :2.000e-08  \n Mean   : 9.043   Mean   :5.269e-02  \n 3rd Qu.:13.564   3rd Qu.:4.507e-02  \n Max.   :18.086   Max.   :6.047e-01"
+    "text": "Centralization\n\nLet’s compare the two network with degree distribution\nCalculate the density of indegree values from task ties\n\n\nden_task &lt;- density(degree_task, from = 0)\nden_task\n\n\nCall:\n    density.default(x = degree_task, from = 0)\n\nData: degree_task (22 obs.);    Bandwidth 'bw' = 0.362\n\n       x                y          \n Min.   : 0.000   Min.   :0.00000  \n 1st Qu.: 4.521   1st Qu.:0.00000  \n Median : 9.043   Median :0.00000  \n Mean   : 9.043   Mean   :0.05275  \n 3rd Qu.:13.564   3rd Qu.:0.04508  \n Max.   :18.086   Max.   :0.60475"
   },
   {
     "objectID": "W7_presentation.html#centralization-10",

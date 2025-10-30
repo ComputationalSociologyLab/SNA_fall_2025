@@ -15,7 +15,7 @@ execute:
 # Positions and Roles
 
 - Walk through a simple analysis to identify the logic of how to do a role analysis
-- Apply the analysis to the same dataset we used in two weeks ago....?
+- With the same dataset we used in two weeks ago....?
 - Describe the role structure that exists in the classroom
 - [OPTION] Explore network-level measures of hierarchy
 
@@ -28,23 +28,22 @@ execute:
 library(igraph)
 ```
 
-## Setting up the Session
-- Load edgelist dataset where there exists social tie between students
-```{r}
-url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
-class182_networkdata <- read.csv(file = url1)
-edgelist_friendship <- class182_networkdata[class182_networkdata$friend_tie > 0, 
-                                            c("ego", "alter", "friend_tie")]
-head(class182_networkdata) 
-```
 
 ## Setting up the Session
-- Load attribute dataset where there exists social tie between students
+- Load attribute dataset
 ```{r}
 url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_attributedata.csv"
 class182_attributes <- read.csv(file = url2)
 head(class182_attributes)
 
+```
+
+## Setting up the Session
+- Load edgelist dataset where there exists friend tie between students
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/class182_networkdata.csv"
+class182_networkdata <- read.csv(file = url1)
+head(class182_networkdata) 
 ```
 
 ## Setting up the Session
@@ -55,6 +54,9 @@ edgelist_friendship <- class182_networkdata[class182_networkdata$friend_tie > 0,
 net182_friend <- graph_from_data_frame(d = edgelist_friendship, directed = T, 
                                        vertices = class182_attributes) 
 ```
+
+
+
 
 
 ## Setting up the Session
@@ -82,14 +84,14 @@ net182_social <- as_undirected(net182_social, mode="collapse",
 ```
 
 
-## Let's apply the Role analysis 
-- Built to incorporate multiple relations
-- Doing a role/position analysis is to place nodes into equivalent positions
-  - Here, equivalence is based on the idea of structural equivalence
-  - Nodes who are friends with the same people, do tasks with the same people, etc. should be in the same position.
+## Getting Data Ready
+- Cluster nodes which have similar positions
+  - "Similar" is based on the idea of structural equivalence
+  - Nodes who are friends with the same people, do tasks with the same people, should be in the same position.
+- Calculate the distance btw the nodes based on the type of relationships(social, friends, tasks)
   
   
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Convert the networks into adjacency matrix
 ```{r}
 friend_mat <- as_adjacency_matrix(net182_friend, attr = "friend_tie", sparse = F) 
@@ -97,7 +99,7 @@ task_mat <- as_adjacency_matrix(net182_task, attr = "task_tie", sparse = F)
 social_mat <- as_adjacency_matrix(net182_social, attr = "social_tie", sparse = F)
 ```
 
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Standardize our columns so they are comparable
 $$
 Z = \frac{X - \mu}{\sigma}
@@ -111,96 +113,43 @@ social_mat_std <- (social_mat - mean(social_mat)) / sd(social_mat)
 ```
 
 
-## Let's apply the Role analysis 
+## Getting Data Ready
 - Combine all of the standardized matrices into one matrix. 
 ```{r}
 friends_task_social_std <- cbind(friend_mat_std, friend_mat_in_std, 
                                  task_mat_std, social_mat_std)
 friends_task_social <- cbind(friend_mat, friend_mat_in, task_mat, social_mat) 
-# 16*16 adjacent matrix * 4
+# (16*16 adjacent matrix) * 4
 dim(friends_task_social_std) 
 ```
 
 ## Structural Equivalence
+- Based on the four adjacent matrix(16*16), we can calculate the distance between each node
+- how different/similar each node(student) is to every other node. 
 ```{r}
 euclid_dist <- dist(x = friends_task_social_std, method = "euclidean") 
 euclid_dist
 ```
-## Structural Equivalence
-```{r}
-fit <- cmdscale(d = euclid_dist, k = 2) 
-x <- fit[, 1]
-y <- fit[, 2]
-```
-
-## Structural Equivalence
-```{r}
-x <- fit[, 1]
-y <- fit[, 2]
-plot(x, y, xlab = "Coordinate 1", ylab = "Coordinate 2", 
-     main = "2 Dimensional MDS Solution", type = "n") 
-
-text(x, y, labels = 1:length(x), cex = 1)
-```
 
 ## Defining Positions
-- Cluster the nodes based on the euclid distance
+- Cluster the students into structurally equivalent positions based on the euclid distance
 ```{r}
 hc <- hclust(euclid_dist)
+hc_ids <- cutree(hc, h = 12)  
 plot(hc)
 plot_clusters <- rect.hclust(hc, h = 12)
-# save the cluster
-hc_ids <- cutree(hc, h = 12)  
 ```
 
 ## Role Analysis 
-- The goal of a role analysis is to create a reduced version of the network, where the positions become the nodes of interest
-- Analyze the pattern of ties between positions
-- ex) a 'teacher' role has certain rights and responsibilities relative to actors playing the 'student' role.
-
-### Get a sense of Role Analysis with plot
-- Draw heatmap basd on the positions found above
-- take the matrix of friendship, social or task ties and create a plot where the values are colored by whether a tie exists between i and j
-- The key is reordering the rows/columns of the matrix to correspond to the positions from the clustering analysis
-- This makes it possible to see how nodes in different positions relate to one another; moving us closer to capturing roles in the classroom.    
-
-### Get a sense of Role Analysis with plot
-- Create a data frame with two columns, one for the ids of the nodes and one for the positions of the nodes. 
-- Utilize our 4 cluster solution from above to define the positions
-```{r}
-id_dat <- data.frame(ids = class182_attributes$ids, position = hc_ids)
-id_dat <- id_dat[order(id_dat$position), ]
-id_dat
-```
-### Get a sense of Role Analysis with plot
-- Reorder the social tie matrix with the order of position
-```{r}
-social_mat_rearrange <- social_mat[id_dat$ids, id_dat$ids]
-```
-
-### Get a sense of Role Analysis with plot
-- Draw a plot 
-```{r message=F, warning=F}
-
-library(RColorBrewer)
-
-# set color for each position
-column_cols <- c("red", "green", "black", "blue")
-
-heatmap(social_mat_rearrange, Rowv = NA, Colv = NA, revC = T,
-        col = colorRampPalette(brewer.pal(6, "Blues"))(25),
-        ColSideColors = column_cols[id_dat$position],
-        RowSideColors = column_cols[id_dat$position], symm = T)
-
-```
-
+- Analyze the pattern of ties between positions(clusters)
+- ex) a 'teacher' positions has certain rights and responsibilities relative to actors playing the 'student' positions
 
 ## Role Analysis with Blockmodel
-- Dorm a matrix where the positions themselves are the nodes, or blocks
-- The previously found positions are the rows/columns of the newly constructed matrix
-  - ex) all actors in the 'red' position (1, 9, 10, 12 and 15 in the figure above) get collapsed into a single node, or block, labeled, "Block 1"; all nodes in the green position get collapsed into "Block 2", and so on. We will then analyze the resulting blockmodel in terms of the pattern of ties between blocks. 
+- All actors fall into a position(here, cluster, block)
+- Create a matrix btw the blocks
 
 ## Role Analysis with Blockmodel
+- Pass the matrix and the cluster for the parameter of the function `blockmodel`
 ```{r}
 library(sna)
 blockmod_friend <- blockmodel(friend_mat, ec = hc_ids)
@@ -208,8 +157,8 @@ blockmod_task <- blockmodel(task_mat, ec = hc_ids)
 blockmod_social <- blockmodel(social_mat, ec = hc_ids)
 ```
 ## Role Analysis with Blockmodel
-- The blockmodel shows us the (weighted) density of within and between block ties
-- Identify the possibility of asymmetries between the blocks
+- Blockmodel shows us the density of within and between block ties
+
 ```{r}
 blockmod_friend
 ```
@@ -219,10 +168,9 @@ blockmod_friend
 ```{r}
 # function returning edgelist between blocks
 block_model_edgelist <- function(block_model, relation_label, directed = T){
-  # Arguments: 
-  # block_model: blockmodel object 
-  # relation_label: label for type of tie, 
-  # directed: is blockmodel based on directed network?
+  # input: blockmodel object, label for type of tie, direction
+  # output : weighted edgelist btw the blocks
+  
 
   # First we grab the actual matrix from the blockmodel:
   block_mat <- block_model$block.model
@@ -297,7 +245,6 @@ And now we put together the three edgelists
 ```{r}
 # stacking block edgelist using an `rbind()` function. 
 block_dat <- rbind(blockedges_friend, blockedges_task, blockedges_social)
-# only include edges that have weights above the mean, so values of 1 or 2 in our recoded weighting scheme.
 block_dat <- block_dat[block_dat$WeightRecode %in% c("1", "2"), ]
 ```
 
@@ -319,32 +266,22 @@ E(blockmod_igraph)$type <- block_dat[, "Tie"]
 cols <- recode(block_dat[, "Tie"], 
                "'friendship' = 'red'; 'task'='blue'; 'social' = 'green'")
 E(blockmod_igraph)$color <- cols
+E(blockmod_igraph)$width <- block_dat[, "WeightRecode"]
 ```
 
 ## Plotting a Blockmodel
+- Set tie attributes to constructed network
 ```{r}
 friend_edge <- E(blockmod_igraph)$type %in% "friendship"
 self_loop <- which_loop(blockmod_igraph)
 arrow_mode <- ifelse(friend_edge & !self_loop, yes = ">", no = "-")
 ```
 
-```{r}
-arrow_mode
-```
 ## Plotting a Blockmodel
-We also need to tweak the plotting of the loops, so that the loops are not right on top of each other. This can be accomplished by changing the angle in which each loop is plotted (edge.loop.angle in the plot command). To accomplish this, we need to set the angle for every edge in the network, even those edges that are not self loops. 
-
-We will set the angles such that all non-self loops have an angle of 0, all friendship self loops have an angle of `4 * pi / 3` and all social self loops have an angle of `3 * pi / 3`  (there are no task self loops). This will ensure that the friendship and social self loops are not drawn on top of each other.
-
+- Tweak the plotting of the loops
 ```{r}
 edge_loop_angles <- rep(0, nrow(block_dat))
-```
-
-```{r}
 edge_loop_angles[self_loop & friend_edge] <- 4 * pi / 3
-```
-
-```{r}
 social_edge <- E(blockmod_igraph)$type %in% "social"
 edge_loop_angles[self_loop & social_edge] <- 3 * pi / 3
 ```
@@ -362,12 +299,7 @@ legend("left", c("friendship", "task", "social"),
        lwd = 1, cex = .8)
 ```
 
-
-```{r}
-arrow_mode
-```
-
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for centrality and hierarchy with triads, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week \[Option\] in the assignment

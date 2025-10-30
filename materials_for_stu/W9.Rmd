@@ -511,7 +511,7 @@ legend("left", c("friendship", "task", "social"),
 
 Looks like we have all the elements we want in the figure. 
 
-### Interpretation of Blockmodel
+### [OPTION] Interpretation of Blockmodel
 Now, let's take the plotted blockmodel and interpret the roles that emerge in this network, in terms of the pattern of ties that exist between blocks. The question here is what rules of behavior, or behavioral expectations, map onto each block, and then look at how these cohere into a larger social system.
 
 Let's begin by looking at block 4, as the pattern of friendship, social and task ties are so distinct here. Remember that block 4 consists only of node 16. Looking at the blockmodel figure, this node sends no friendship ties, socializes with block 1 and block 2 and has heavy task interactions with block 1 and block 2. They also do quite a bit more tasks than others in the classroom. We can see this by looking at the total level of task interactions for each block:
