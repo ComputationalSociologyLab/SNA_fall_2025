@@ -31,7 +31,7 @@ library(igraph)
 - Read in the matrix which contains students' club affiliation
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/affiliations_1996.txt"
-affiliations96 <- read.delim(file = url1, check.names = FALSE)
+affiliations96 <- read.delim(file = url1, check.names = FALSE, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
 # organized with students on the rows and clubs on the column 
 # Coded "1" for membership, "0" for no membership
 affiliations96[1:6, 1:6] 
@@ -118,7 +118,10 @@ str(affiliations96_nomiss)
 - "all" :  telling igraph to create mutual connections between student and club.
 
 ```{r}
-affil_net96 <- graph_from_biadjacency_matrix(incidence = affiliations96_nomiss, mode = "all")
+affil_net96 <- graph_from_biadjacency_matrix(
+  as.matrix(data.frame(lapply(affiliations96_nomiss, as.numeric))),
+  mode = "all"
+)
 affil_net96
 ```
 ## Example Affiliation Data
