@@ -364,7 +364,7 @@ We can see that our students are colored yellow, red, blue, etc., while the club
 
 While the two-mode network representation is useful and intuitive, it is often easier to actually analyze the one-mode projections of the network, and that is what we turn to next. 
 
-## Single Mode Networks
+## [OPTION] Single Mode Networks
 Having plotted our two-mode network for the 1996 year, we now move to an analysis that focuses on the one-mode projections of the network. We will produce two networks, one for student-to-student ties and one for club-to-club ties based on the student-to-club network analyzed above. For the student-to-student network, all of the nodes are students and we define a tie between two students based on the number of clubs they have in common. For the club-to-club network, all the nodes are clubs, and we define a tie between clubs based on the number of members they have in common. 
 
 ### Constructing One-Mode Projections
@@ -503,7 +503,7 @@ plot(club_net96, layout = layout_with_lgl)
 
 The plot offers important insight into the structure of club membership in the school. We can see that there are a number of grade-specific sports teams on the periphery and a core consisting of more generalist clubs, like Pep Club and National Honor Society (NHS). Now, we want to take the basic intuition from our plot and analyze the network more formally. We will consider key measures of centrality. 
 
-## Club-to-Club Network
+## [OPTION] Club-to-Club Network
 Here we will analyze the weighted version of the club-to-club network, based on the idea that some clubs share more members than others. We could, of course, also analyze the binary version of the network (equal to 1 if ij have at least one member in common and 0 if not). The problem with the binary network is that it equates two clubs who have one shared member with clubs who have 5 (6, 7, etc.) common members. Binary networks also tend to be quite dense, as they capture pretty weak relationships in the case of one-mode projections. Many clubs may share at least one member together, making the ties in the network not very differentiating. Thus, we will generally want to use the weighted version of the network when analyzing a one-mode projection of a two-mode network. 
 
 One thing we have to consider is what form the weights should take when doing different calculations. There are a number of different options and different weights are appropriate for different measures. igraph will use the edge weights on the igraph object by default. We can, however, tell igraph, within particular functions, to use a different set of weights, which will be useful in certain cases. Let's go ahead and create a couple different versions of the edge weights (based on the number of shared members). Let's first create a set of standardized edge weights. Here we take the number of members that i and j share but we divide by the standard deviation of those counts, thus standardizing the weights by the spread of the data. Standardizing the weights is useful as the centrality scores can be interpreted on a common metric; convenient, for example, if we are trying to make comparisons across networks.
