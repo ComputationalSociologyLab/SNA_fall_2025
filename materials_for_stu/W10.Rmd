@@ -166,7 +166,7 @@ attributes_nomiss <- attributes_students_clubs[not_missing, ]
 We are now in position to create our two-mode graph in igraph. The function is `graph_from_incidence_matrix()`. The main arguments are incidence (the two-mode affiliation matrix) and mode. Here we set mode to "all", telling igraph to create mutual connections between student and club.
 
 ```{r}
-affil_net96 <- graph_from_incidence_matrix(incidence = affiliations96_nomiss, 
+affil_net96 <- graph_from_biadjacency_matrix(incidence = affiliations96_nomiss, 
                                            mode = "all")
 ```
 
@@ -1529,7 +1529,7 @@ Our substantive case is based on the dissertation topics of PhD students in soci
 Let's start by loading some useful packages. 
 
 ```{r message=F, warning=F}
-install.packages("CAinterprTools")
+#install.packages("CAinterprTools")
 library(CAinterprTools)
 ```
 
