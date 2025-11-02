@@ -238,17 +238,19 @@ ca_mod1 <- CA(X = department_topic, graph = FALSE)
 ```
 
 ## Identify Space with Correspondence Analysis 
-- `fviz_ca_biplot()` give us the visualization of Correspondance Analysis
-- 1st Dimension : orange color with department  / 2nd Dimension : steelblue color with topic
+- `fviz_ca_biplot()` give us the visualization of Correspondence Analysis
 ```{r fig.height=7.5, fig.width=11.25}
-fviz_ca_biplot(ca_mod1, col.row = "orange", col.col = "steelblue", 
-               labelsize = 3, repel = T) + 
-  theme_minimal()+
-  scale_color_manual(
-    name = "",  # 범례 제목
-    values = c("orange", "steelblue"),
-    labels = c("Department", "Topic")
-  )
+p <- fviz_ca_biplot(
+  ca_mod1,
+  col.row = "orange",
+  col.col = "steelblue",
+  labelsize = 3,
+  repel = TRUE
+) +
+  theme_minimal()
+
+p + annotate("text", x = -0.8, y = 0.8, label = "● Department", color = "orange", size = 3.5, hjust = 0) +
+    annotate("text", x = -0.8, y = 0.7, label = "▲ Topic", color = "steelblue", size = 3.5, hjust = 0)
 ```
 
 ## Let's check the importance in each dimension

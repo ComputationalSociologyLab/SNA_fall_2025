@@ -561,18 +561,20 @@ H__History                                              47                12</co
 <section id="identify-space-with-correspondence-analysis-5" class="slide level2">
 <h2>Identify Space with Correspondence Analysis</h2>
 <ul>
-<li><code>fviz_ca_biplot()</code> give us the visualization of Correspondance Analysis</li>
-<li>1st Dimension : orange color with department / 2nd Dimension : steelblue color with topic</li>
+<li><code>fviz_ca_biplot()</code> give us the visualization of Correspondence Analysis</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
-<span id="cb29-2"><a></a>               <span class="at">labelsize =</span> <span class="dv">3</span>, <span class="at">repel =</span> T) <span class="sc">+</span> </span>
-<span id="cb29-3"><a></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb29-4"><a></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb29-5"><a></a>    <span class="at">name =</span> <span class="st">""</span>,  <span class="co"># 범례 제목</span></span>
-<span id="cb29-6"><a></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"orange"</span>, <span class="st">"steelblue"</span>),</span>
-<span id="cb29-7"><a></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Department"</span>, <span class="st">"Topic"</span>)</span>
-<span id="cb29-8"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>p <span class="ot">&lt;-</span> <span class="fu">fviz_ca_biplot</span>(</span>
+<span id="cb29-2"><a></a>  ca_mod1,</span>
+<span id="cb29-3"><a></a>  <span class="at">col.row =</span> <span class="st">"orange"</span>,</span>
+<span id="cb29-4"><a></a>  <span class="at">col.col =</span> <span class="st">"steelblue"</span>,</span>
+<span id="cb29-5"><a></a>  <span class="at">labelsize =</span> <span class="dv">3</span>,</span>
+<span id="cb29-6"><a></a>  <span class="at">repel =</span> <span class="cn">TRUE</span></span>
+<span id="cb29-7"><a></a>) <span class="sc">+</span></span>
+<span id="cb29-8"><a></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb29-9"><a></a></span>
+<span id="cb29-10"><a></a>p <span class="sc">+</span> <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">y =</span> <span class="fl">0.8</span>, <span class="at">label =</span> <span class="st">"● Department"</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a></a>    <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">y =</span> <span class="fl">0.7</span>, <span class="at">label =</span> <span class="st">"▲ Topic"</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">hjust =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="1080" class="r-stretch"></section>
