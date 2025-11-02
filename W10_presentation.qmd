@@ -201,8 +201,8 @@ legend("topleft",
 
 ## Identify Space with Correspondence Analysis 
 - RQ) How students in different departments fall into different topics?
-  - Add on the department information of students who submitted a dissertation between 1990 and 2013
-  - Understand the department/topic structure in a holistic manner, capturing the department-department, topic-topic and department-topic relationships
+  - Add on the department information of students who submitted a dissertation
+  - Understand the department/topic structure in a holistic manner
   - With Correspondence Analysis, find the association between departments and dissertation topics by mapping them in the same low-dimensional space
 
 
