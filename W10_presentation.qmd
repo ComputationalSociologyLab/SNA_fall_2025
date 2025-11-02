@@ -67,7 +67,7 @@ mat_abstract_words <- as.matrix(abstracts_dtm)
 ```
 
 ## Topic Modeling with LDA
-![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/png){width=30%}
+![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png){width=30%}
 ## Topic Modeling with LDA
 ```{r}
 burnin <- 200 # number of omitted Gibbs iterations at beginning
