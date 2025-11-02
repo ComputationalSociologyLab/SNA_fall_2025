@@ -21,8 +21,8 @@ execute:
 
 ## Affiliations and Structure
 - Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
-  - Two styles of node (one mode for the abstract, the other mode for keywords of abstract)
-  - keywords... Apply topic modeling (😁😁😁😁😁😁😁)
+  - Two styles of node (one mode for the words in abstract, the other mode for topic of abstract)
+  - topic, theme ... Apply topic modeling (😁😁😁😁😁😁😁)
 
 ## Getting the Data Ready
 - Read in the abstract data
@@ -67,15 +67,16 @@ abstracts_dtm <- DocumentTermMatrix(abstracts_corp)
 mat_abstract_words <- as.matrix(abstracts_dtm)
 ```
 
-## Topic Modeling with LDA
-![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png)
-
 
 ## Topic Modeling with LDA
 - Input of the topic modeling(LDA)
 ```{r}
 mat_abstract_words[1:5, 1:5] 
 ```
+## Topic Modeling with LDA
+![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png)
+
+
 
 ## Topic Modeling with LDA
 - Set options and conduct topic modeling(LDA)
