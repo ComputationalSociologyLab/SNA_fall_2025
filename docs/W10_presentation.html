@@ -295,7 +295,7 @@
 <p><img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png" style="width:30.0%"> ## Topic Modeling with LDA</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>burnin <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="co"># number of omitted Gibbs iterations at beginning</span></span>
-<span id="cb7-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations</span></span>
+<span id="cb7-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations.  </span></span>
 <span id="cb7-3"><a></a>thin <span class="ot">&lt;-</span> <span class="dv">2000</span> <span class="co"># number of omitted iterations between each kept iteration </span></span>
 <span id="cb7-4"><a></a>seed <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">2003</span>, <span class="dv">5</span>,<span class="dv">63</span>, <span class="dv">100001</span>, <span class="dv">765</span>) <span class="co">#seeds to enable reproducibility</span></span>
 <span id="cb7-5"><a></a>nstart <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># number of repeated random starts</span></span>

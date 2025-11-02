@@ -71,7 +71,7 @@ mat_abstract_words <- as.matrix(abstracts_dtm)
 ## Topic Modeling with LDA
 ```{r}
 burnin <- 200 # number of omitted Gibbs iterations at beginning
-iter <- 3000 # number of iterations
+iter <- 3000 # number of iterations.  
 thin <- 2000 # number of omitted iterations between each kept iteration 
 seed <- list(2003, 5,63, 100001, 765) #seeds to enable reproducibility
 nstart <- 5 # number of repeated random starts
