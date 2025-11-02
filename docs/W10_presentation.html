@@ -297,46 +297,64 @@
 <section id="topic-modeling-with-lda-1" class="slide level2">
 <h2>Topic Modeling with LDA</h2>
 <ul>
+<li>Input of the topic modeling(LDA)</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>mat_abstract_words[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Terms
+Docs abus africanamerican age analys analysi
+   1   14               1   1      1       3
+   2    0               0   0      0       3
+   3    1               0   0      0       3
+   4    0               0   0      0       0
+   5    0               0   0      1       0</code></pre>
+</div>
+</div>
+</section>
+<section id="topic-modeling-with-lda-2" class="slide level2">
+<h2>Topic Modeling with LDA</h2>
+<ul>
 <li>Set options and conduct topic modeling(LDA)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>burnin <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="co"># number of omitted Gibbs iterations at beginning</span></span>
-<span id="cb7-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations.  </span></span>
-<span id="cb7-3"><a></a>thin <span class="ot">&lt;-</span> <span class="dv">2000</span> <span class="co"># number of omitted iterations between each kept iteration </span></span>
-<span id="cb7-4"><a></a>seed <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">2003</span>, <span class="dv">5</span>,<span class="dv">63</span>, <span class="dv">100001</span>, <span class="dv">765</span>) <span class="co">#seeds to enable reproducibility</span></span>
-<span id="cb7-5"><a></a>nstart <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># number of repeated random starts</span></span>
-<span id="cb7-6"><a></a>best <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># only continue model on the best model</span></span>
-<span id="cb7-7"><a></a>k <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb7-8"><a></a>ldaOut <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
-<span id="cb7-9"><a></a>              <span class="at">control=</span><span class="fu">list</span>(<span class="at">nstart =</span> nstart, <span class="at">seed =</span> seed, <span class="at">best =</span> best,</span>
-<span id="cb7-10"><a></a>                           <span class="at">burnin =</span> burnin, <span class="at">iter =</span> iter, <span class="at">thin =</span> thin))</span>
-<span id="cb7-11"><a></a>ldaOut_topics <span class="ot">&lt;-</span> <span class="fu">topics</span>(ldaOut)</span>
-<span id="cb7-12"><a></a>topicProbabilities <span class="ot">&lt;-</span> ldaOut<span class="sc">@</span>gamma</span>
-<span id="cb7-13"><a></a>ldaOut_terms <span class="ot">&lt;-</span> <span class="fu">terms</span>(ldaOut, <span class="dv">10</span>)</span>
-<span id="cb7-14"><a></a></span>
-<span id="cb7-15"><a></a>fitmodel <span class="ot">&lt;-</span> <span class="fu">FindTopicsNumber</span>(<span class="at">dtm =</span> abstracts_dtm, </span>
-<span id="cb7-16"><a></a>                             <span class="at">topics =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">4</span>, <span class="at">to =</span> <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">2</span>), </span>
-<span id="cb7-17"><a></a>                             <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">"CaoJuan2009"</span>, <span class="st">"Arun2010"</span>), </span>
-<span id="cb7-18"><a></a>                             <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
-<span id="cb7-19"><a></a>                             <span class="at">control =</span> <span class="fu">list</span>(<span class="at">nstart =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="fu">c</span>(<span class="dv">30</span>), </span>
-<span id="cb7-20"><a></a>                                            <span class="at">best =</span> best, <span class="at">burnin =</span> burnin, </span>
-<span id="cb7-21"><a></a>                                            <span class="at">iter =</span> iter, <span class="at">thin =</span> thin), </span>
-<span id="cb7-22"><a></a>                             <span class="at">mc.cores =</span> <span class="dv">2</span>,  <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>burnin <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="co"># number of omitted Gibbs iterations at beginning</span></span>
+<span id="cb9-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations.  </span></span>
+<span id="cb9-3"><a></a>thin <span class="ot">&lt;-</span> <span class="dv">2000</span> <span class="co"># number of omitted iterations between each kept iteration </span></span>
+<span id="cb9-4"><a></a>seed <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">2003</span>, <span class="dv">5</span>,<span class="dv">63</span>, <span class="dv">100001</span>, <span class="dv">765</span>) <span class="co">#seeds to enable reproducibility</span></span>
+<span id="cb9-5"><a></a>nstart <span class="ot">&lt;-</span> <span class="dv">5</span> <span class="co"># number of repeated random starts</span></span>
+<span id="cb9-6"><a></a>best <span class="ot">&lt;-</span> <span class="cn">TRUE</span> <span class="co"># only continue model on the best model</span></span>
+<span id="cb9-7"><a></a>k <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb9-8"><a></a>ldaOut <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
+<span id="cb9-9"><a></a>              <span class="at">control=</span><span class="fu">list</span>(<span class="at">nstart =</span> nstart, <span class="at">seed =</span> seed, <span class="at">best =</span> best,</span>
+<span id="cb9-10"><a></a>                           <span class="at">burnin =</span> burnin, <span class="at">iter =</span> iter, <span class="at">thin =</span> thin))</span>
+<span id="cb9-11"><a></a>ldaOut_topics <span class="ot">&lt;-</span> <span class="fu">topics</span>(ldaOut)</span>
+<span id="cb9-12"><a></a>topicProbabilities <span class="ot">&lt;-</span> ldaOut<span class="sc">@</span>gamma</span>
+<span id="cb9-13"><a></a>ldaOut_terms <span class="ot">&lt;-</span> <span class="fu">terms</span>(ldaOut, <span class="dv">10</span>)</span>
+<span id="cb9-14"><a></a></span>
+<span id="cb9-15"><a></a>fitmodel <span class="ot">&lt;-</span> <span class="fu">FindTopicsNumber</span>(<span class="at">dtm =</span> abstracts_dtm, </span>
+<span id="cb9-16"><a></a>                             <span class="at">topics =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">4</span>, <span class="at">to =</span> <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">2</span>), </span>
+<span id="cb9-17"><a></a>                             <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">"CaoJuan2009"</span>, <span class="st">"Arun2010"</span>), </span>
+<span id="cb9-18"><a></a>                             <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
+<span id="cb9-19"><a></a>                             <span class="at">control =</span> <span class="fu">list</span>(<span class="at">nstart =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="fu">c</span>(<span class="dv">30</span>), </span>
+<span id="cb9-20"><a></a>                                            <span class="at">best =</span> best, <span class="at">burnin =</span> burnin, </span>
+<span id="cb9-21"><a></a>                                            <span class="at">iter =</span> iter, <span class="at">thin =</span> thin), </span>
+<span id="cb9-22"><a></a>                             <span class="at">mc.cores =</span> <span class="dv">2</span>,  <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>fit models... done.
 calculate metrics:
   CaoJuan2009... done.
   Arun2010... done.</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">FindTopicsNumber_plot</span>(fitmodel) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">FindTopicsNumber_plot</span>(fitmodel) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
-<span id="cb10-2"><a></a></span>
-<span id="cb10-3"><a></a>ldaOut2 <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
-<span id="cb10-4"><a></a>              <span class="at">control =</span> <span class="fu">list</span>(<span class="at">nstart =</span> nstart, <span class="at">seed =</span> seed, <span class="at">best =</span> best,</span>
-<span id="cb10-5"><a></a>                             <span class="at">burnin =</span> burnin, <span class="at">iter =</span> iter, <span class="at">thin =</span> thin))</span>
-<span id="cb10-6"><a></a>ldaOut_terms2 <span class="ot">&lt;-</span> <span class="fu">terms</span>(ldaOut2, <span class="dv">10</span>)</span>
-<span id="cb10-7"><a></a>ldaOut_terms2[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">14</span>, <span class="dv">20</span>, <span class="dv">23</span>, <span class="dv">24</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
+<span id="cb12-2"><a></a></span>
+<span id="cb12-3"><a></a>ldaOut2 <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
+<span id="cb12-4"><a></a>              <span class="at">control =</span> <span class="fu">list</span>(<span class="at">nstart =</span> nstart, <span class="at">seed =</span> seed, <span class="at">best =</span> best,</span>
+<span id="cb12-5"><a></a>                             <span class="at">burnin =</span> burnin, <span class="at">iter =</span> iter, <span class="at">thin =</span> thin))</span>
+<span id="cb12-6"><a></a>ldaOut_terms2 <span class="ot">&lt;-</span> <span class="fu">terms</span>(ldaOut2, <span class="dv">10</span>)</span>
+<span id="cb12-7"><a></a>ldaOut_terms2[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">14</span>, <span class="dv">20</span>, <span class="dv">23</span>, <span class="dv">24</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Topic 2     Topic 14    Topic 20       Topic 23 Topic 24  
  [1,] "involv"    "japanes"   "parent"       "women"  "program" 
@@ -351,29 +369,43 @@ calculate metrics:
 [10,] "learn"     "invest"    "matern"       "factor" "increas" </code></pre>
 </div>
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
-<section id="topic-modeling-with-lda-2" class="slide level2">
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
+<section id="topic-modeling-with-lda-3" class="slide level2">
 <h2>Topic Modeling with LDA</h2>
 <ul>
 <li>Result of the topic modeling(LDA)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>mat_abstract_words[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># extract the topic number which have highest probability among all topics</span></span>
+<span id="cb14-2"><a></a><span class="fu">topics</span>(ldaOut2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    Terms
-Docs abus africanamerican age analys analysi
-   1   14               1   1      1       3
-   2    0               0   0      0       3
-   3    1               0   0      0       3
-   4    0               0   0      0       0
-   5    0               0   0      1       0</code></pre>
+<pre><code>  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20 
+ 19  21  27  20  28   6  11  26  17   6  28   2   4   2   8  29  27   4  15  24 
+ 21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40 
+  4  13  21  25  17  27  10  11   4   9  22  24  25  12  13   3  28  22  22  13 
+ 41  42  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60 
+ 22  13  22   1  16  14   5   1  20  12  28  16  25   3  24  18  20   2   6   2 
+ 61  62  63  64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80 
+  5  10  15  25  27  15  16  20   9  29  24   3   7  23  15  15  28  28  17  14 
+ 81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100 
+  3  20  11   2  13  20  15  23   7  26  23   8  16  17   7  30  23  28  20  28 
+101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 
+ 23  20  19   8  28   3  10  14  23   6  26  20   5   1  12  30  15  19  24  22 
+121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 
+ 13   3  16  23  10   3  16  24  10  20   7  27   9  21   4  10  28   6  20   3 
+141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 
+ 18  21   2   6  20   1  25  12   2  23  15   2  10  27  10  24   8  18  12   3 
+161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 
+ 16  18  30  18  20   6   8  29  14  17  13  20   1  20  12  22  18  18  21   4 
+181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 
+  4  27  15  15  22  13   3  28  30  10  26  20  18  29  13  13  26  13   9 </code></pre>
 </div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network" class="slide level2">
 <h2>Let’s draw a Two mode network</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network-1" class="slide level2">
@@ -383,9 +415,9 @@ Docs abus africanamerican age analys analysi
 <li>Focus on the abstracts belongs to topic 20 (“family”) and topic 23 (“gender”)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>ldaOut_topics2 <span class="ot">&lt;-</span> <span class="fu">topics</span>(ldaOut2)</span>
-<span id="cb15-2"><a></a>in_20_23 <span class="ot">&lt;-</span> ldaOut_topics2 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">23</span>)</span>
-<span id="cb15-3"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words[in_20_23, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>ldaOut_topics2 <span class="ot">&lt;-</span> <span class="fu">topics</span>(ldaOut2)</span>
+<span id="cb17-2"><a></a>in_20_23 <span class="ot">&lt;-</span> ldaOut_topics2 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">23</span>)</span>
+<span id="cb17-3"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words[in_20_23, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network-2" class="slide level2">
@@ -394,8 +426,8 @@ Docs abus africanamerican age analys analysi
 <li>Reduce the words based on the frequency</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>worduse <span class="ot">&lt;-</span> <span class="fu">colSums</span>(mat_abstract_words_subset)</span>
-<span id="cb16-2"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words_subset [, worduse <span class="sc">&gt;</span> <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>worduse <span class="ot">&lt;-</span> <span class="fu">colSums</span>(mat_abstract_words_subset)</span>
+<span id="cb18-2"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words_subset [, worduse <span class="sc">&gt;</span> <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network-3" class="slide level2">
@@ -405,8 +437,8 @@ Docs abus africanamerican age analys analysi
 <li><code>graph_from_biadjacency_matrix</code></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>abstract_word_net <span class="ot">&lt;-</span> <span class="fu">graph_from_biadjacency_matrix</span>(mat_abstract_words_subset,</span>
-<span id="cb17-2"><a></a>                                                 <span class="at">mode =</span> <span class="st">"all"</span>, <span class="at">weighted =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>abstract_word_net <span class="ot">&lt;-</span> <span class="fu">graph_from_biadjacency_matrix</span>(mat_abstract_words_subset,</span>
+<span id="cb19-2"><a></a>                                                 <span class="at">mode =</span> <span class="st">"all"</span>, <span class="at">weighted =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network-4" class="slide level2">
@@ -415,29 +447,29 @@ Docs abus africanamerican age analys analysi
 <li>FALSE for abstracts, TRUE for words</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>type <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(abstract_word_net, <span class="st">"type"</span>) </span>
-<span id="cb18-2"><a></a><span class="fu">table</span>(type)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>type <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(abstract_word_net, <span class="st">"type"</span>) </span>
+<span id="cb20-2"><a></a><span class="fu">table</span>(type)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>type
 FALSE  TRUE 
    24   159 </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[type <span class="sc">==</span> <span class="cn">TRUE</span>] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">0</span>, <span class="at">green =</span> <span class="dv">1</span>, </span>
-<span id="cb20-2"><a></a>                                                <span class="at">blue =</span> <span class="dv">0</span>, <span class="at">alpha =</span> .<span class="dv">2</span>) </span>
-<span id="cb20-3"><a></a>in20 <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">which</span>(ldaOut_topics2 <span class="sc">==</span> <span class="dv">20</span>))</span>
-<span id="cb20-4"><a></a>in23 <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">which</span>(ldaOut_topics2 <span class="sc">==</span> <span class="dv">23</span>))</span>
-<span id="cb20-5"><a></a>which_topic20 <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name <span class="sc">%in%</span> in20</span>
-<span id="cb20-6"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[which_topic20] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">0</span>, <span class="at">green =</span> <span class="dv">0</span>, </span>
-<span id="cb20-7"><a></a>                                                 <span class="at">blue =</span> <span class="dv">1</span>, <span class="at">alpha =</span> .<span class="dv">2</span>)</span>
-<span id="cb20-8"><a></a>which_topic23 <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name <span class="sc">%in%</span> in23</span>
-<span id="cb20-9"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[which_topic23] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">1</span>, <span class="at">green =</span> <span class="dv">0</span>, </span>
-<span id="cb20-10"><a></a>                                                <span class="at">blue =</span> <span class="dv">0</span>, <span class="at">alpha =</span> .<span class="dv">2</span>)</span>
-<span id="cb20-11"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name</span>
-<span id="cb20-12"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>label.color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">2</span>, .<span class="dv">85</span>)</span>
-<span id="cb20-13"><a></a><span class="co">#V(abstract_word_net)$label.cex &lt;- .75</span></span>
-<span id="cb20-14"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb20-15"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>frame.color <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color</span>
-<span id="cb20-16"><a></a><span class="fu">E</span>(abstract_word_net)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(.<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">04</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[type <span class="sc">==</span> <span class="cn">TRUE</span>] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">0</span>, <span class="at">green =</span> <span class="dv">1</span>, </span>
+<span id="cb22-2"><a></a>                                                <span class="at">blue =</span> <span class="dv">0</span>, <span class="at">alpha =</span> .<span class="dv">2</span>) </span>
+<span id="cb22-3"><a></a>in20 <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">which</span>(ldaOut_topics2 <span class="sc">==</span> <span class="dv">20</span>))</span>
+<span id="cb22-4"><a></a>in23 <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">which</span>(ldaOut_topics2 <span class="sc">==</span> <span class="dv">23</span>))</span>
+<span id="cb22-5"><a></a>which_topic20 <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name <span class="sc">%in%</span> in20</span>
+<span id="cb22-6"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[which_topic20] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">0</span>, <span class="at">green =</span> <span class="dv">0</span>, </span>
+<span id="cb22-7"><a></a>                                                 <span class="at">blue =</span> <span class="dv">1</span>, <span class="at">alpha =</span> .<span class="dv">2</span>)</span>
+<span id="cb22-8"><a></a>which_topic23 <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name <span class="sc">%in%</span> in23</span>
+<span id="cb22-9"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color[which_topic23] <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="at">red =</span> <span class="dv">1</span>, <span class="at">green =</span> <span class="dv">0</span>, </span>
+<span id="cb22-10"><a></a>                                                <span class="at">blue =</span> <span class="dv">0</span>, <span class="at">alpha =</span> .<span class="dv">2</span>)</span>
+<span id="cb22-11"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>label <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name</span>
+<span id="cb22-12"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>label.color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, .<span class="dv">2</span>, .<span class="dv">85</span>)</span>
+<span id="cb22-13"><a></a><span class="co">#V(abstract_word_net)$label.cex &lt;- .75</span></span>
+<span id="cb22-14"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>size <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb22-15"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>frame.color <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color</span>
+<span id="cb22-16"><a></a><span class="fu">E</span>(abstract_word_net)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(.<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">04</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="lets-draw-a-two-mode-network-5" class="slide level2">
@@ -446,20 +478,20 @@ FALSE  TRUE
 <li>Here is the results</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">set.seed</span>(<span class="dv">106</span>)</span>
-<span id="cb21-2"><a></a><span class="fu">plot</span>(abstract_word_net, <span class="at">layout =</span> layout_with_fr)</span>
-<span id="cb21-3"><a></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
-<span id="cb21-4"><a></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Topic 20: Family"</span>, </span>
-<span id="cb21-5"><a></a>                  <span class="st">"Topic 23: Gender"</span>, </span>
-<span id="cb21-6"><a></a>                  <span class="st">"Words"</span>),</span>
-<span id="cb21-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),</span>
-<span id="cb21-8"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
-<span id="cb21-9"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
-<span id="cb21-10"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
-<span id="cb21-11"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">set.seed</span>(<span class="dv">106</span>)</span>
+<span id="cb23-2"><a></a><span class="fu">plot</span>(abstract_word_net, <span class="at">layout =</span> layout_with_fr)</span>
+<span id="cb23-3"><a></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
+<span id="cb23-4"><a></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Topic 20: Family"</span>, </span>
+<span id="cb23-5"><a></a>                  <span class="st">"Topic 23: Gender"</span>, </span>
+<span id="cb23-6"><a></a>                  <span class="st">"Words"</span>),</span>
+<span id="cb23-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),</span>
+<span id="cb23-8"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb23-9"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
+<span id="cb23-10"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
+<span id="cb23-11"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-11-1.png" width="912" class="r-stretch"></section></section>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-12-1.png" width="912" class="r-stretch"></section></section>
 <section>
 <section id="identify-space-with-correspondence-analysis" class="title-slide slide level1 center">
 <h1>Identify Space with Correspondence Analysis</h1>
@@ -478,11 +510,11 @@ FALSE  TRUE
 <li>Load some useful packages.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">library</span>(CAinterprTools)</span>
-<span id="cb22-2"><a></a><span class="fu">library</span>(FactoMineR)</span>
-<span id="cb22-3"><a></a><span class="fu">library</span>(factoextra)</span>
-<span id="cb22-4"><a></a><span class="fu">library</span>(gplots)</span>
-<span id="cb22-5"><a></a><span class="fu">library</span>(NbClust)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">library</span>(CAinterprTools)</span>
+<span id="cb24-2"><a></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb24-3"><a></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb24-4"><a></a><span class="fu">library</span>(gplots)</span>
+<span id="cb24-5"><a></a><span class="fu">library</span>(NbClust)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="correspondence-analysis-1" class="slide level2">
@@ -491,9 +523,9 @@ FALSE  TRUE
 <li>Read in the department data</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"</span></span>
-<span id="cb23-2"><a></a>department_topic <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> url1, <span class="at">header =</span> T)</span>
-<span id="cb23-3"><a></a>department_topic[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"</span></span>
+<span id="cb25-2"><a></a>department_topic <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> url1, <span class="at">header =</span> T)</span>
+<span id="cb25-3"><a></a>department_topic[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                         LIFE_COURSE SOCIOLOGY_OF_DEVIANCE
 SBS__Sociology                                   742                   715
@@ -514,8 +546,8 @@ H__History                                              47                12</co
 <li>Extract the department and and topic name of dataset</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>department_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(department_topic)</span>
-<span id="cb25-2"><a></a>topic_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(department_topic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>department_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(department_topic)</span>
+<span id="cb27-2"><a></a>topic_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(department_topic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="correspondence-analysis-3" class="slide level2">
@@ -525,7 +557,7 @@ H__History                                              47                12</co
 <li>e.g., Departments will be close together if students from those departments cover the same kinds of topics</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>ca_mod1 <span class="ot">&lt;-</span> <span class="fu">CA</span>(<span class="at">X =</span> department_topic, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>ca_mod1 <span class="ot">&lt;-</span> <span class="fu">CA</span>(<span class="at">X =</span> department_topic, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="correspondence-analysis-4" class="slide level2">
@@ -535,31 +567,31 @@ H__History                                              47                12</co
 <li>1st Dimension : orange color with department / 2nd Dimension : steelblue color with topic</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
-<span id="cb27-2"><a></a>               <span class="at">labelsize =</span> <span class="dv">3</span>, <span class="at">repel =</span> T) <span class="sc">+</span> </span>
-<span id="cb27-3"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
+<span id="cb29-2"><a></a>               <span class="at">labelsize =</span> <span class="dv">3</span>, <span class="at">repel =</span> T) <span class="sc">+</span> </span>
+<span id="cb29-3"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-16-1.png" width="1080" class="r-stretch"></section>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="1080" class="r-stretch"></section>
 <section id="lets-check-the-importance-in-each-dimension" class="slide level2">
 <h2>Let’s check the importance in each dimension</h2>
 <ul>
 <li>Access the contribution to each dimension in terms of specific objects</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb28-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
-</div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
-<section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
-<h2>Let’s check the importance in each dimension</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb29-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb30-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
+<section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
+<h2>Let’s check the importance in each dimension</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb31-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

@@ -69,6 +69,13 @@ mat_abstract_words <- as.matrix(abstracts_dtm)
 ## Topic Modeling with LDA
 ![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png)
 
+
+## Topic Modeling with LDA
+- Input of the topic modeling(LDA)
+```{r}
+mat_abstract_words[1:5, 1:5] 
+```
+
 ## Topic Modeling with LDA
 - Set options and conduct topic modeling(LDA)
 ```{r}
@@ -105,12 +112,13 @@ ldaOut_terms2[, c(2, 14, 20, 23, 24)]
 
 ```
 
+
 ## Topic Modeling with LDA
 - Result of the topic modeling(LDA)
 ```{r}
-mat_abstract_words[1:5, 1:5] 
+# extract the topic number which have highest probability among all topics
+topics(ldaOut2)
 ```
-
 
 ## Let's draw a Two mode network
 
@@ -145,6 +153,7 @@ abstract_word_net <- graph_from_biadjacency_matrix(mat_abstract_words_subset,
                                                  mode = "all", weighted = T)
 ```
 
+
 ## Let's draw a Two mode network
 - FALSE for abstracts, TRUE for words
 ```{r}
@@ -169,15 +178,20 @@ E(abstract_word_net)$color <- rgb(.5, .5, .5, .04)
 
 ```
 
+
+```{r}
+V(abstract_word_net)$name
+```
+
 ## Let's draw a Two mode network
 - Here is the results
 ```{r fig.height=9.5, fig.width=9.5}
 set.seed(106)
 plot(abstract_word_net, layout = layout_with_fr)
 legend("topleft",
-       legend = c("Topic 20: Family", 
-                  "Topic 23: Gender", 
-                  "Words"),
+       legend = c("Topic 20 (Family-related documents)", 
+                  "Topic 23 (Gender-related documents)", 
+                  "Word nodes (terms)"),
        col = c(rgb(0,0,1,0.6), rgb(1,0,0,0.6), rgb(0,1,0,0.6)),
        pch = 19, 
        pt.cex = 1.5,
