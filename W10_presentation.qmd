@@ -15,7 +15,7 @@ execute:
 # Affiliations, Structure, and Space
 - Walks through the analysis of affiliation data
   - e.g., student - student extracurricular affiliations 
-  - two styles of node (one mode for studets, the other mode for clubs)
+  - two styles of node (one node for students, the other node for clubs)
   - two-mode network!
 - Work with the abstract data...!!
 
@@ -73,6 +73,7 @@ mat_abstract_words <- as.matrix(abstracts_dtm)
 ```{r}
 mat_abstract_words[1:5, 1:5] 
 ```
+
 ## Topic Modeling with LDA
 ![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png)
 
@@ -180,19 +181,14 @@ E(abstract_word_net)$color <- rgb(.5, .5, .5, .04)
 
 ```
 
-
-```{r}
-V(abstract_word_net)$name
-```
-
 ## Let's draw a Two mode network
 - Here is the results
 ```{r fig.height=9.5, fig.width=9.5}
 set.seed(106)
 plot(abstract_word_net, layout = layout_with_fr)
 legend("topleft",
-       legend = c("Topic 20 (Family-related documents)", 
-                  "Topic 23 (Gender-related documents)", 
+       legend = c("Topic 20 (Family-related abstract)", 
+                  "Topic 23 (Gender-related abstract)", 
                   "Word nodes (terms)"),
        col = c(rgb(0,0,1,0.6), rgb(1,0,0,0.6), rgb(0,1,0,0.6)),
        pch = 19, 
@@ -202,9 +198,8 @@ legend("topleft",
 ```
 
 ## Identify Space with Correspondence Analysis 
-- RQ) How students in different departments fall into different topics?
+- RQ) How students in different departments belong to different topics? Which topics are 'close' to which other topics?
   - Add on the department information of students who submitted a dissertation
-  - Understand the department/topic structure in a holistic manner
   - With Correspondence Analysis, find the association between departments and dissertation topics by mapping them in the same low-dimensional space
 
 
@@ -248,7 +243,12 @@ ca_mod1 <- CA(X = department_topic, graph = FALSE)
 ```{r fig.height=7.5, fig.width=11.25}
 fviz_ca_biplot(ca_mod1, col.row = "orange", col.col = "steelblue", 
                labelsize = 3, repel = T) + 
-  theme_minimal()
+  theme_minimal()+
+  scale_color_manual(
+    name = "",  # 범례 제목
+    values = c("orange", "steelblue"),
+    labels = c("Department", "Topic")
+  )
 ```
 
 ## Let's check the importance in each dimension
