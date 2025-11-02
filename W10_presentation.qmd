@@ -13,12 +13,13 @@ execute:
 ---
 
 # Affiliations, Structure, and Space
-- Walks through the analysis of affiliation(two-mode) data
+- Walks through the analysis of affiliation data
   - e.g., student - student extracurricular affiliations 
   - two styles of node (one mode for studets, the other mode for clubs)
+  - two-mode network!
 - Work with the abstract data...!!
 
-# Affiliations and Structure
+## Affiliations and Structure
 - Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
   - Two styles of node (one mode for the abstract, the other mode for keywords of abstract)
   - keywords... Apply topic modeling (😁😁😁😁😁😁😁)
