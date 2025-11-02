@@ -1,0 +1,421 @@
+---
+title: "W10. Affiliations, fields, and cultural spaces"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Affiliations
+
+- Walks through the analysis of affiliation(two-mode) data
+- Work with the student extracurricular affiliations data
+  - Longitudinal data set, with 3 waves - 1996, 1997, 1998, although we will only use the first wave, 1996
+  - Capture the duality of social life in the school
+  - One mode(node) for student perspective, One mode(node) for club perspective
+  
+## Example Affiliation Data
+- Use the **igraph** package for this tutorial.
+
+```{r message=F, warning=F}
+library(igraph) 
+```
+
+## Example Affiliation Data
+- Read in the matrix which contains students' club affiliation
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/affiliations_1996.txt"
+affiliations96 <- read.delim(file = url1, check.names = FALSE, stringsAsFactors = FALSE, fileEncoding = "UTF-8")
+# organized with students on the rows and clubs on the column 
+# Coded "1" for membership, "0" for no membership
+affiliations96[1:6, 1:6] 
+```
+
+## Example Affiliation Data
+- The student data frame only includes students 
+
+```{r}
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/attributes_students.txt"
+attributes_students <- read.delim(file = url2, stringsAsFactors = FALSE)
+attributes_students[1:5, ]
+```
+
+## Example Affiliation Data
+- The club data frame only includes clubs and club specific attributes
+```{r}
+url3 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/attributes_clubs.txt"
+attributes_clubs <- read.delim(file = url3, stringsAsFactors = FALSE)
+attributes_clubs[1:5, ]
+```
+
+## Example Affiliation Data
+- Preprocess the data
+  - Combine the dataset for attributes
+![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/W10_for_data.png)
+```{r}
+shared_var_names <- c("ids", "type", "missing96", "missing97")
+
+shared <- rbind(attributes_students[, shared_var_names], 
+                attributes_clubs[, shared_var_names])
+
+num_clubs <- nrow(attributes_clubs)
+NA_dat_club <- rep(NA, num_clubs)
+
+student_var_names <- c("race", "gender", "grade96", "grade97")
+
+student_specific <- rbind(attributes_students[, student_var_names], 
+                          data.frame(race = NA_dat_club, 
+                                     gender = NA_dat_club,
+                                     grade96 = NA_dat_club,
+                                     grade97 = NA_dat_club))
+num_students <- nrow(attributes_students)
+NA_dat_student <- rep(NA, num_students)
+
+club_var_names<- c("club_type_detailed", "club_profile", 
+                   "club_feeder", "club_type_gender", 
+                   "club_type_grade")
+
+club_specific <- rbind(data.frame(club_type_detailed = NA_dat_student, 
+                                  club_profile = NA_dat_student,
+                                  club_feeder = NA_dat_student,
+                                  club_type_gender = NA_dat_student,
+                                  club_type_grade = NA_dat_student), 
+                       attributes_clubs[, club_var_names])
+
+attributes_students_clubs <- cbind(shared, student_specific, club_specific)
+not_missing <- attributes_students_clubs$missing96 == 0
+attributes_nomiss <- attributes_students_clubs[not_missing, ]
+
+
+
+is_student <- attributes_students_clubs$type == "student"
+not_missing_student <- not_missing[is_student]
+
+is_club <- attributes_students_clubs$type == "club"
+not_missing_club <- not_missing[is_club]
+
+```
+
+## Example Affiliation Data
+- Input Data for two-mode analysis
+```{r}
+# row index : student Id, column : name of the clubs
+affiliations96_nomiss <- affiliations96[not_missing_student, not_missing_club]
+affiliations96_nomiss
+```
+
+```{r}
+str(affiliations96_nomiss)
+```
+## Example Affiliation Data
+- Create our two-mode graph in igrap(`graph_from_incidence_matrix()`)
+- "all" :  telling igraph to create mutual connections between student and club.
+
+```{r}
+affil_net96 <- graph_from_biadjacency_matrix(
+  as.matrix(data.frame(lapply(affiliations96_nomiss, as.numeric))),
+  mode = "all"
+)
+affil_net96
+```
+## Example Affiliation Data
+- Put the attributes of the nodes onto the igraph object
+- `race`, `gender` for Student attribute, `club_type_detailed` and `club_profile` for club attribute
+```{r}
+affil_net96 <- set_vertex_attr(graph = affil_net96, name = "race", 
+                               value = attributes_nomiss$race)
+
+affil_net96 <- set_vertex_attr(graph = affil_net96, name = "gender", 
+                               value = attributes_nomiss$gender)
+
+affil_net96 <- set_vertex_attr(graph = affil_net96, name = "club_type_detailed", 
+                               value = attributes_nomiss$club_type_detailed)
+
+affil_net96 <- set_vertex_attr(graph = affil_net96, name = "club_profile", 
+                               value = attributes_nomiss$club_profile)
+
+affil_net96 <- set_vertex_attr(graph = affil_net96, name = "grade96", 
+                               value = attributes_nomiss$grade96)
+
+```
+
+## Plotting the Network
+- Set colors for each type
+- FALSE for students with red color, TRUE for clubs with green color
+```{r}
+type96 <- vertex_attr(affil_net96, "type")
+
+# set colors
+V(affil_net96)$color <- ifelse(type96,
+                               rgb(0, 1, 0, .5),  # TRUE → green
+                               rgb(1, 0, 0, .5))  # FALSE → red
+V(affil_net96)$frame.color <- V(affil_net96)$color
+V(affil_net96)$label <-NA
+V(affil_net96)$label.color <- rgb(0, 0, .2, .5)
+V(affil_net96)$label.cex <- .5
+V(affil_net96)$size <- 6
+E(affil_net96)$color <- rgb(.5, .5, 0, .2)
+
+# delete the isolated nods
+degree0 <- which(degree(affil_net96) == 0)
+affil_net96_noisolates <- delete_vertices(affil_net96, degree0)
+type96_noisolates <- vertex_attr(affil_net96_noisolates, "type")
+
+# set size of student nodes
+is_student <- !type96_noisolates
+V(affil_net96_noisolates)$size[is_student] <- 2
+E(affil_net96_noisolates)$color <- rgb(.5, .5, 0, .05)
+library(car)
+race <- V(affil_net96_noisolates)$race[is_student]
+V(affil_net96_noisolates)$color[is_student] <-
+  recode(race, "'white'='red'; 'Hispanic'='grey'; 'Asian'='blue'; 'black'='yellow'; 'Native American'='black'")
+V(affil_net96_noisolates)$frame.color[is_student] <- V(affil_net96_noisolates)$color[is_student]
+
+
+```
+
+## Plotting the Network
+- Let's create a vector that identifies if the node is a student or not.
+
+```{r echo=F, fig.height=7.5, fig.width=7.5}
+layout <- layout_with_fr(affil_net96_noisolates, grid = "nogrid")
+plot(affil_net96_noisolates, layout = layout)
+
+legend("bottomright",
+       legend = c("White", "Hispanic", "Asian", "Black", "Native American", "clubs"),
+       col = c("red", "grey", "blue", "yellow", "black", "green"),
+       pch = 19,          # 점 모양
+       pt.cex = 1,      # 점 크기
+       cex = 0.7,          # 글자 크기 줄이기
+       bty = "n",         # 테두리 제거
+       title = "Node type")
+```
+
+# Part 1. Network and Culture
+- Does dissertation topics of PhD students in sociology and related disciplines? 
+- Learn how to interpret the two-mode data 
+- one for keyword, one for dessertation abstract 
+- Apply the ideas of duality to a very different kind of data source, one based on words in documents (NLP...topic modeling method)
+- With the dessertation abstract data in sociology  
+
+
+## Getting the Data Ready
+```{r message=F, warning=F}
+library(NLP)          # basic processing of natural language
+library(tm)           # text mining package
+library(SnowballC)    # word stemming package
+library(topicmodels)  # package for modeling the topics
+library(ldatuning)    # package for evaluating the models
+```
+
+## Getting the Data Ready
+- Read in the abstract data
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/sociologysample.csv"
+abstracts <- read.csv(file = url1, stringsAsFactors = FALSE)
+```
+
+## Getting the Data Ready
+- Preprocessing is needed to apply topic modeling analysis
+```{r message=F, warning=F}
+abstracts_corp <- Corpus(VectorSource(abstracts$text))
+length(abstracts_corp)
+abstracts_corp <- tm_map(abstracts_corp, tolower)
+gsub_function <- function(x, pattern) gsub(pattern, replacement = " ", x)
+split_words <- content_transformer(gsub_function)
+abstracts_corp <- tm_map(abstracts_corp, split_words, pattern = "_")
+abstracts_corp <- tm_map(abstracts_corp, split_words, pattern = "/")
+abstracts_corp <- tm_map(abstracts_corp, removePunctuation)
+abstracts_corp <- tm_map(abstracts_corp, removeNumbers)
+abstracts_corp <- tm_map(abstracts_corp, removeWords, stopwords("english"))
+myStopwords <- c("dissertation", "chapter", "chapters", "research", 
+                 "researcher" ,"researchers" ,"study", "studies", 
+                 "studied", "studys", "studying", "one", "two", "three")
+abstracts_corp <- tm_map(abstracts_corp, removeWords, myStopwords)
+abstracts_corp <- tm_map(abstracts_corp, stripWhitespace)
+abstracts_corp <- tm_map(abstracts_corp, stemDocument)
+abstracts_dtm <- DocumentTermMatrix(abstracts_corp)
+mat_abstract_words <- as.matrix(abstracts_dtm)
+```
+
+## Topic Modeling 
+- put one page img for topic modeling
+
+## LDA: Initial Model
+- put one page img for LDA
+
+
+## LDA: Initial Model
+```{r}
+burnin <- 200 # number of omitted Gibbs iterations at beginning
+iter <- 3000 # number of iterations
+thin <- 2000 # number of omitted iterations between each kept iteration 
+seed <- list(2003, 5,63, 100001, 765) #seeds to enable reproducibility
+nstart <- 5 # number of repeated random starts
+best <- TRUE # only continue model on the best model
+k <- 5
+ldaOut <- LDA(x = abstracts_dtm, k = k, method = "Gibbs", 
+              control=list(nstart = nstart, seed = seed, best = best,
+                           burnin = burnin, iter = iter, thin = thin))
+ldaOut_topics <- topics(ldaOut)
+topicProbabilities <- ldaOut@gamma
+ldaOut_terms <- terms(ldaOut, 10)
+
+fitmodel <- FindTopicsNumber(dtm = abstracts_dtm, 
+                             topics = seq(from = 4, to = 40, by = 2), 
+                             metrics = c("CaoJuan2009", "Arun2010"), 
+                             method = "Gibbs", 
+                             control = list(nstart = 1, seed = c(30), 
+                                            best = best, burnin = burnin, 
+                                            iter = iter, thin = thin), 
+                             mc.cores = 2,  verbose = TRUE)
+FindTopicsNumber_plot(fitmodel) 
+k <- 30
+
+ldaOut2 <- LDA(x = abstracts_dtm, k = k, method = "Gibbs", 
+              control = list(nstart = nstart, seed = seed, best = best,
+                             burnin = burnin, iter = iter, thin = thin))
+ldaOut_terms2 <- terms(ldaOut2, 10)
+ldaOut_terms2[, c(2, 14, 20, 23, 24)]
+
+```
+
+
+
+
+## Let's draw a Text Network
+
+```{r message=F, warning=F}
+library(igraph)
+```
+
+## Let's draw a Text Network
+- Bring abstracts by words matrix 
+
+```{r}
+mat_abstract_words[1:5, 1:5] 
+```
+## Let's draw a Text Network
+- Bring abstracts by words matrix 
+- Focus on the abstracts belongs to topic 20 ("family") and topic 23 ("gender")
+
+```{r}
+ldaOut_topics2 <- topics(ldaOut2)
+in_20_23 <- ldaOut_topics2 %in% c(20, 23)
+mat_abstract_words_subset <- mat_abstract_words[in_20_23, ]
+```
+
+## Let's draw a Text Network
+- Reduce the words based on the frequency 
+```{r}
+worduse <- colSums(mat_abstract_words_subset)
+mat_abstract_words_subset <- mat_abstract_words_subset [, worduse > 5]
+```
+
+
+## Let's draw a Text Network
+- Construct two-mode(abstracts and words) network 
+```{r}
+abstract_word_net <- graph_from_biadjacency_matrix(mat_abstract_words_subset,
+                                                 mode = "all", weighted = T)
+
+```
+
+## Let's draw a Text Network
+- FALSE for abstracts, TRUE for words
+```{r}
+type <- vertex_attr(abstract_word_net, "type") 
+table(type)  
+V(abstract_word_net)$color[type == TRUE] <- rgb(red = 0, green = 1, 
+                                                blue = 0, alpha = .2) 
+in20 <- names(which(ldaOut_topics2 == 20))
+in23 <- names(which(ldaOut_topics2 == 23))
+which_topic20 <- V(abstract_word_net)$name %in% in20
+V(abstract_word_net)$color[which_topic20] <- rgb(red = 0, green = 0, 
+                                                 blue = 1, alpha = .2)
+which_topic23 <- V(abstract_word_net)$name %in% in23
+V(abstract_word_net)$color[which_topic23] <- rgb(red = 1, green = 0, 
+                                                blue = 0, alpha = .2)
+V(abstract_word_net)$label <- V(abstract_word_net)$name
+V(abstract_word_net)$label.color <- rgb(0, 0, .2, .85)
+#V(abstract_word_net)$label.cex <- .75
+V(abstract_word_net)$size <- 3
+V(abstract_word_net)$frame.color <- V(abstract_word_net)$color
+E(abstract_word_net)$color <- rgb(.5, .5, .5, .04)
+
+```
+
+## Let's draw a Text Network
+- Here is the results
+```{r fig.height=9.5, fig.width=9.5}
+set.seed(106)
+plot(abstract_word_net, layout = layout_with_fr)
+legend("topleft",
+       legend = c("Topic 20: Family", 
+                  "Topic 23: Gender", 
+                  "Words"),
+       col = c(rgb(0,0,1,0.6),    # 파랑
+               rgb(1,0,0,0.6),    # 빨강
+               rgb(0,1,0,0.6)),   # 초록
+       pch = 19, 
+       pt.cex = 1.5,
+       bty = "n", 
+       cex = 0.9)
+```
+
+# Part 2. Cultural Spaces
+- How students in different departments fall into different topics and what structures this relationship?
+- Add on the department information of students who submitted a dissertation between 1990 and 2013
+
+## Correspondence Analysis
+- Load some useful packages. 
+```{r message=F, warning=F}
+library(CAinterprTools)
+library(FactoMineR)
+library(factoextra)
+library(gplots)
+library(NbClust)
+```
+
+## Correspondence Analysis
+- Read in the department data 
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"
+department_topic <- read.table(file = url1, header = T)
+department_topic[1:4, 1:4]
+```
+
+## Correspondence Analysis
+- Extract the department and and topic name of dataset 
+```{r}
+department_names <- rownames(department_topic)
+topic_names <- colnames(department_topic)
+```
+
+
+## Correspondence Analysis
+- Place both the rows (departments) and the columns (topics) into the same space
+- e.g., Departments will be close together if students from those departments cover the same kinds of topics
+
+```{r}
+ca_mod1 <- CA(X = department_topic, graph = FALSE)
+```
+
+## Correspondence Analysis
+- `fviz_ca_biplot()` give us the result of correspondance analysis
+```{r fig.height=7.5, fig.width=11.25}
+fviz_ca_biplot(ca_mod1, col.row = "orange", col.col = "steelblue", 
+               labelsize = 3, repel = T) + 
+  theme_minimal()
+```
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week \[Option\] in the assignment
