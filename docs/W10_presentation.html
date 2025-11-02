@@ -292,7 +292,13 @@
 </section>
 <section id="topic-modeling-with-lda" class="slide level2">
 <h2>Topic Modeling with LDA</h2>
-<p><img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png" style="width:30.0%"> ## Topic Modeling with LDA</p>
+
+<img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png" class="r-stretch"></section>
+<section id="topic-modeling-with-lda-1" class="slide level2">
+<h2>Topic Modeling with LDA</h2>
+<ul>
+<li>Set options and conduct topic modeling(LDA)</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>burnin <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="co"># number of omitted Gibbs iterations at beginning</span></span>
 <span id="cb7-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations.  </span></span>
@@ -323,13 +329,7 @@ calculate metrics:
   Arun2010... done.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">FindTopicsNumber_plot</span>(fitmodel) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
-</figure>
-</div>
-</div>
+
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a>ldaOut2 <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
@@ -351,8 +351,8 @@ calculate metrics:
 [10,] "learn"     "invest"    "matern"       "factor" "increas" </code></pre>
 </div>
 </div>
-</section>
-<section id="topic-modeling-with-lda-1" class="slide level2">
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
+<section id="topic-modeling-with-lda-2" class="slide level2">
 <h2>Topic Modeling with LDA</h2>
 <ul>
 <li>Result of the topic modeling(LDA)</li>
