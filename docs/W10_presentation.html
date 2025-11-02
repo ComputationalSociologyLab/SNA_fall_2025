@@ -471,6 +471,57 @@ FALSE  TRUE
 <span id="cb22-15"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>frame.color <span class="ot">&lt;-</span> <span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>color</span>
 <span id="cb22-16"><a></a><span class="fu">E</span>(abstract_word_net)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(.<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">04</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">V</span>(abstract_word_net)<span class="sc">$</span>name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "4"             "49"            "57"            "68"           
+  [5] "74"            "82"            "86"            "88"           
+  [9] "91"            "97"            "99"            "101"          
+ [13] "102"           "109"           "112"           "124"          
+ [17] "130"           "139"           "145"           "150"          
+ [21] "165"           "172"           "174"           "192"          
+ [25] "age"           "analys"        "analysi"       "attach"       
+ [29] "child"         "control"       "data"          "educ"         
+ [33] "effect"        "employ"        "examin"        "expect"       
+ [37] "experi"        "factor"        "famili"        "found"        
+ [41] "function"      "high"          "impact"        "includ"       
+ [45] "influenc"      "interview"     "level"         "locus"        
+ [49] "marri"         "mother"        "multipl"       "number"       
+ [53] "parent"        "predict"       "regress"       "relat"        
+ [57] "relationship"  "sampl"         "school"        "sexual"       
+ [61] "signific"      "social"        "style"         "support"      
+ [65] "time"          "use"           "variabl"       "women"        
+ [69] "also"          "among"         "analyz"        "area"         
+ [73] "base"          "better"        "chang"         "concern"      
+ [77] "develop"       "differ"        "group"         "howev"        
+ [81] "peopl"         "perceiv"       "power"         "process"      
+ [85] "result"        "stress"        "strong"        "suggest"      
+ [89] "toward"        "activ"         "engag"         "ident"        
+ [93] "individu"      "interact"      "live"          "particip"     
+ [97] "percept"       "person"        "posit"         "rather"       
+[101] "report"        "self"          "servic"        "work"         
+[105] "american"      "children"      "cultur"        "low"          
+[109] "profession"    "role"          "socioeconom"   "status"       
+[113] "within"        "find"          "indic"         "new"          
+[117] "rais"          "compet"        "ethnic"        "gender"       
+[121] "home"          "measur"        "rate"          "whether"      
+[125] "express"       "involv"        "societi"       "subject"      
+[129] "sever"         "young"         "problem"       "theori"       
+[133] "legal"         "contact"       "race"          "associ"       
+[137] "behavior"      "author"        "learn"         "adopt"        
+[141] "identifi"      "immigr"        "orient"        "friend"       
+[145] "qualiti"       "reveal"        "satisfact"     "scale"        
+[149] "situat"        "divorc"        "regard"        "degre"        
+[153] "men"           "white"         "public"        "higher"       
+[157] "father"        "negoti"        "marriag"       "less"         
+[161] "adjust"        "dyad"          "husband"       "spous"        
+[165] "marit"         "daughter"      "amount"        "month"        
+[169] "aggress"       "inventori"     "feminin"       "masculin"     
+[173] "alcohol"       "homophobia"    "disclos"       "disclosur"    
+[177] "matern"        "handicap"      "racism"        "speech"       
+[181] "selfdisclosur" "esteem"        "sexism"       </code></pre>
+</div>
+</div>
 </section>
 <section id="lets-draw-a-two-mode-network-5" class="slide level2">
 <h2>Let’s draw a Two mode network</h2>
@@ -478,23 +529,22 @@ FALSE  TRUE
 <li>Here is the results</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">set.seed</span>(<span class="dv">106</span>)</span>
-<span id="cb23-2"><a></a><span class="fu">plot</span>(abstract_word_net, <span class="at">layout =</span> layout_with_fr)</span>
-<span id="cb23-3"><a></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
-<span id="cb23-4"><a></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Topic 20: Family"</span>, </span>
-<span id="cb23-5"><a></a>                  <span class="st">"Topic 23: Gender"</span>, </span>
-<span id="cb23-6"><a></a>                  <span class="st">"Words"</span>),</span>
-<span id="cb23-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),</span>
-<span id="cb23-8"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
-<span id="cb23-9"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
-<span id="cb23-10"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
-<span id="cb23-11"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">set.seed</span>(<span class="dv">106</span>)</span>
+<span id="cb25-2"><a></a><span class="fu">plot</span>(abstract_word_net, <span class="at">layout =</span> layout_with_fr)</span>
+<span id="cb25-3"><a></a><span class="fu">legend</span>(<span class="st">"topleft"</span>,</span>
+<span id="cb25-4"><a></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Topic 20 (Family-related documents)"</span>, </span>
+<span id="cb25-5"><a></a>                  <span class="st">"Topic 23 (Gender-related documents)"</span>, </span>
+<span id="cb25-6"><a></a>                  <span class="st">"Word nodes (terms)"</span>),</span>
+<span id="cb25-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),</span>
+<span id="cb25-8"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb25-9"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
+<span id="cb25-10"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
+<span id="cb25-11"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-12-1.png" width="912" class="r-stretch"></section></section>
-<section>
-<section id="identify-space-with-correspondence-analysis" class="title-slide slide level1 center">
-<h1>Identify Space with Correspondence Analysis</h1>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-13-1.png" width="912" class="r-stretch"></section>
+<section id="identify-space-with-correspondence-analysis" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li>RQ) How students in different departments fall into different topics?
 <ul>
@@ -504,28 +554,28 @@ FALSE  TRUE
 </ul></li>
 </ul>
 </section>
-<section id="correspondence-analysis" class="slide level2">
-<h2>Correspondence Analysis</h2>
+<section id="identify-space-with-correspondence-analysis-1" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li>Load some useful packages.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">library</span>(CAinterprTools)</span>
-<span id="cb24-2"><a></a><span class="fu">library</span>(FactoMineR)</span>
-<span id="cb24-3"><a></a><span class="fu">library</span>(factoextra)</span>
-<span id="cb24-4"><a></a><span class="fu">library</span>(gplots)</span>
-<span id="cb24-5"><a></a><span class="fu">library</span>(NbClust)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">library</span>(CAinterprTools)</span>
+<span id="cb26-2"><a></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb26-3"><a></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb26-4"><a></a><span class="fu">library</span>(gplots)</span>
+<span id="cb26-5"><a></a><span class="fu">library</span>(NbClust)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="correspondence-analysis-1" class="slide level2">
-<h2>Correspondence Analysis</h2>
+<section id="identify-space-with-correspondence-analysis-2" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li>Read in the department data</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"</span></span>
-<span id="cb25-2"><a></a>department_topic <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> url1, <span class="at">header =</span> T)</span>
-<span id="cb25-3"><a></a>department_topic[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"</span></span>
+<span id="cb27-2"><a></a>department_topic <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> url1, <span class="at">header =</span> T)</span>
+<span id="cb27-3"><a></a>department_topic[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                         LIFE_COURSE SOCIOLOGY_OF_DEVIANCE
 SBS__Sociology                                   742                   715
@@ -540,58 +590,58 @@ H__History                                              47                12</co
 </div>
 </div>
 </section>
-<section id="correspondence-analysis-2" class="slide level2">
-<h2>Correspondence Analysis</h2>
+<section id="identify-space-with-correspondence-analysis-3" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li>Extract the department and and topic name of dataset</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>department_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(department_topic)</span>
-<span id="cb27-2"><a></a>topic_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(department_topic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>department_names <span class="ot">&lt;-</span> <span class="fu">rownames</span>(department_topic)</span>
+<span id="cb29-2"><a></a>topic_names <span class="ot">&lt;-</span> <span class="fu">colnames</span>(department_topic)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="correspondence-analysis-3" class="slide level2">
-<h2>Correspondence Analysis</h2>
+<section id="identify-space-with-correspondence-analysis-4" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li>Place both the rows (departments) and the columns (topics) into the same space</li>
 <li>e.g., Departments will be close together if students from those departments cover the same kinds of topics</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>ca_mod1 <span class="ot">&lt;-</span> <span class="fu">CA</span>(<span class="at">X =</span> department_topic, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>ca_mod1 <span class="ot">&lt;-</span> <span class="fu">CA</span>(<span class="at">X =</span> department_topic, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="correspondence-analysis-4" class="slide level2">
-<h2>Correspondence Analysis</h2>
+<section id="identify-space-with-correspondence-analysis-5" class="slide level2">
+<h2>Identify Space with Correspondence Analysis</h2>
 <ul>
 <li><code>fviz_ca_biplot()</code> give us the visualization of Correspondance Analysis</li>
 <li>1st Dimension : orange color with department / 2nd Dimension : steelblue color with topic</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
-<span id="cb29-2"><a></a>               <span class="at">labelsize =</span> <span class="dv">3</span>, <span class="at">repel =</span> T) <span class="sc">+</span> </span>
-<span id="cb29-3"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
+<span id="cb31-2"><a></a>               <span class="at">labelsize =</span> <span class="dv">3</span>, <span class="at">repel =</span> T) <span class="sc">+</span> </span>
+<span id="cb31-3"><a></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="1080" class="r-stretch"></section>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="1080" class="r-stretch"></section>
 <section id="lets-check-the-importance-in-each-dimension" class="slide level2">
 <h2>Let’s check the importance in each dimension</h2>
 <ul>
 <li>Access the contribution to each dimension in terms of specific objects</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb30-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
-</div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
-<section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
-<h2>Let’s check the importance in each dimension</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb31-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb32-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
+<h2>Let’s check the importance in each dimension</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb33-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

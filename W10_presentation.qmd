@@ -18,7 +18,7 @@ execute:
   - two styles of node (one mode for studets, the other mode for clubs)
 - Work with the abstract data...!!
 
-# Affiliations
+# Affiliations and Structure
 - Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
   - Two styles of node (one mode for the abstract, the other mode for keywords of abstract)
   - keywords... Apply topic modeling (😁😁😁😁😁😁😁)
@@ -199,14 +199,14 @@ legend("topleft",
        cex = 0.9)
 ```
 
-# Identify Space with Correspondence Analysis 
+## Identify Space with Correspondence Analysis 
 - RQ) How students in different departments fall into different topics?
   - Add on the department information of students who submitted a dissertation between 1990 and 2013
   - Understand the department/topic structure in a holistic manner, capturing the department-department, topic-topic and department-topic relationships
   - With Correspondence Analysis, find the association between departments and dissertation topics by mapping them in the same low-dimensional space
 
 
-## Correspondence Analysis
+## Identify Space with Correspondence Analysis 
 - Load some useful packages. 
 ```{r message=F, warning=F}
 library(CAinterprTools)
@@ -216,7 +216,7 @@ library(gplots)
 library(NbClust)
 ```
 
-## Correspondence Analysis
+## Identify Space with Correspondence Analysis 
 - Read in the department data 
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"
@@ -224,7 +224,7 @@ department_topic <- read.table(file = url1, header = T)
 department_topic[1:4, 1:4]
 ```
 
-## Correspondence Analysis
+## Identify Space with Correspondence Analysis 
 - Extract the department and and topic name of dataset 
 ```{r}
 department_names <- rownames(department_topic)
@@ -232,7 +232,7 @@ topic_names <- colnames(department_topic)
 ```
 
 
-## Correspondence Analysis
+## Identify Space with Correspondence Analysis 
 - Place both the rows (departments) and the columns (topics) into the same space
 - e.g., Departments will be close together if students from those departments cover the same kinds of topics
 
@@ -240,7 +240,7 @@ topic_names <- colnames(department_topic)
 ca_mod1 <- CA(X = department_topic, graph = FALSE)
 ```
 
-## Correspondence Analysis
+## Identify Space with Correspondence Analysis 
 - `fviz_ca_biplot()` give us the visualization of Correspondance Analysis
 - 1st Dimension : orange color with department  / 2nd Dimension : steelblue color with topic
 ```{r fig.height=7.5, fig.width=11.25}
