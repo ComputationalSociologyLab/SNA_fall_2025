@@ -225,7 +225,6 @@ V(affil_net96)$color[type96 == TRUE] <- rgb(red = 0, green = 1,
 Notice that we index the `V(g)$color` object by using the `type96` variable used above. Students correspond to False in the type variable and clubs correspond to True. From here on out, we do not specify "red = ", "green = ", "blue = ", and "alpha = ". These are the default arguments (R knows the first number corresponds to red, the second to green, and so on). Now we'll set some other graph attributes:
 
 ```{r}
-V(affil_net96)$label <- V(affil_net96)$name # setting label of nodes
 V(affil_net96)$label.color <- rgb(0, 0, .2, .5) # set the color of the labels
 V(affil_net96)$label.cex <- .5 # make the labels of the nodes smaller
 V(affil_net96)$size <- 6 # set size of nodes to 6
@@ -1407,6 +1406,7 @@ library(igraph)
 We will make use of the abstracts by words matrix extracted earlier. Let’s take a look at the first five rows and columns. The values in the matrix show the number of times that abstract used that word. 
 
 ```{r}
+
 mat_abstract_words[1:5, 1:5] 
 ```
 

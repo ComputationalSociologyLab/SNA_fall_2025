@@ -9,7 +9,7 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.8.24">
 
-  <title>W5. Network Cohesion and Communities – W10. Affiliations, fields, and cultural spaces</title>
+  <title>W5. Network Cohesion and Communities – W10. Affiliations, Structure, and Space</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -195,14 +195,14 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">W10. Affiliations, fields, and cultural spaces</h1>
+  <h1 class="title">W10. Affiliations, Structure, and Space</h1>
 
 <div class="quarto-title-authors">
 </div>
 
 </section>
-<section id="affiliations" class="title-slide slide level1 center">
-<h1>Affiliations</h1>
+<section id="affiliations-structure-and-space" class="title-slide slide level1 center">
+<h1>Affiliations, Structure, and Space</h1>
 <ul>
 <li>Walks through the analysis of affiliation(two-mode) data
 <ul>
@@ -214,13 +214,12 @@
 </section>
 
 <section>
-<section id="affiliations-1" class="title-slide slide level1 center">
+<section id="affiliations" class="title-slide slide level1 center">
 <h1>Affiliations</h1>
 <ul>
-<li>RQ) How students in different departments fall into different topics?
+<li>Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
 <ul>
 <li>Two styles of node (one mode for the abstract, the other mode for keywords of abstract)</li>
-<li>Understand the department/topic structure in a holistic manner, capturing the department-department, topic-topic and department-topic relationships</li>
 <li>keywords… Apply topic modeling (😁😁😁😁😁😁😁)</li>
 </ul></li>
 </ul>
@@ -293,16 +292,7 @@
 </section>
 <section id="topic-modeling-with-lda" class="slide level2">
 <h2>Topic Modeling with LDA</h2>
-
-<img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/png.png" style="width:30.0%" class="r-stretch"></section>
-<section id="lda-initial-model" class="slide level2">
-<h2>LDA: Initial Model</h2>
-<ul>
-<li>put one page img for LDA</li>
-</ul>
-</section>
-<section id="lda-initial-model-1" class="slide level2">
-<h2>LDA: Initial Model</h2>
+<p><img data-src="https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/png.png" style="width:30.0%"> ## Topic Modeling with LDA</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>burnin <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="co"># number of omitted Gibbs iterations at beginning</span></span>
 <span id="cb7-2"><a></a>iter <span class="ot">&lt;-</span> <span class="dv">3000</span> <span class="co"># number of iterations</span></span>
@@ -333,7 +323,13 @@ calculate metrics:
   Arun2010... done.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">FindTopicsNumber_plot</span>(fitmodel) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960"></p>
+</figure>
+</div>
+</div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>k <span class="ot">&lt;-</span> <span class="dv">30</span></span>
 <span id="cb10-2"><a></a></span>
 <span id="cb10-3"><a></a>ldaOut2 <span class="ot">&lt;-</span> <span class="fu">LDA</span>(<span class="at">x =</span> abstracts_dtm, <span class="at">k =</span> k, <span class="at">method =</span> <span class="st">"Gibbs"</span>, </span>
@@ -355,20 +351,14 @@ calculate metrics:
 [10,] "learn"     "invest"    "matern"       "factor" "increas" </code></pre>
 </div>
 </div>
-<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
-<section id="lets-draw-a-text-network" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
-<section id="lets-draw-a-text-network-1" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="topic-modeling-with-lda-1" class="slide level2">
+<h2>Topic Modeling with LDA</h2>
 <ul>
-<li>Bring abstracts by words matrix</li>
+<li>Result of the topic modeling(LDA)</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>mat_abstract_words[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>mat_abstract_words[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Terms
 Docs abus africanamerican age analys analysi
@@ -380,8 +370,14 @@ Docs abus africanamerican age analys analysi
 </div>
 </div>
 </section>
-<section id="lets-draw-a-text-network-2" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="lets-draw-a-two-mode-network" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(igraph)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lets-draw-a-two-mode-network-1" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
 <ul>
 <li>Bring abstracts by words matrix</li>
 <li>Focus on the abstracts belongs to topic 20 (“family”) and topic 23 (“gender”)</li>
@@ -392,8 +388,8 @@ Docs abus africanamerican age analys analysi
 <span id="cb15-3"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words[in_20_23, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-draw-a-text-network-3" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="lets-draw-a-two-mode-network-2" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
 <ul>
 <li>Reduce the words based on the frequency</li>
 </ul>
@@ -402,18 +398,19 @@ Docs abus africanamerican age analys analysi
 <span id="cb16-2"><a></a>mat_abstract_words_subset <span class="ot">&lt;-</span> mat_abstract_words_subset [, worduse <span class="sc">&gt;</span> <span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-draw-a-text-network-4" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="lets-draw-a-two-mode-network-3" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
 <ul>
-<li>Construct two-mode(abstracts and words) network</li>
+<li>Construct two-mode(abstract and keywords) network</li>
+<li><code>graph_from_biadjacency_matrix</code></li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>abstract_word_net <span class="ot">&lt;-</span> <span class="fu">graph_from_biadjacency_matrix</span>(mat_abstract_words_subset,</span>
 <span id="cb17-2"><a></a>                                                 <span class="at">mode =</span> <span class="st">"all"</span>, <span class="at">weighted =</span> T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-draw-a-text-network-5" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="lets-draw-a-two-mode-network-4" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
 <ul>
 <li>FALSE for abstracts, TRUE for words</li>
 </ul>
@@ -443,8 +440,8 @@ FALSE  TRUE
 <span id="cb20-16"><a></a><span class="fu">E</span>(abstract_word_net)<span class="sc">$</span>color <span class="ot">&lt;-</span> <span class="fu">rgb</span>(.<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">5</span>, .<span class="dv">04</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="lets-draw-a-text-network-6" class="slide level2">
-<h2>Let’s draw a Text Network</h2>
+<section id="lets-draw-a-two-mode-network-5" class="slide level2">
+<h2>Let’s draw a Two mode network</h2>
 <ul>
 <li>Here is the results</li>
 </ul>
@@ -455,22 +452,24 @@ FALSE  TRUE
 <span id="cb21-4"><a></a>       <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Topic 20: Family"</span>, </span>
 <span id="cb21-5"><a></a>                  <span class="st">"Topic 23: Gender"</span>, </span>
 <span id="cb21-6"><a></a>                  <span class="st">"Words"</span>),</span>
-<span id="cb21-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>),    <span class="co"># 파랑</span></span>
-<span id="cb21-8"><a></a>               <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>),    <span class="co"># 빨강</span></span>
-<span id="cb21-9"><a></a>               <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),   <span class="co"># 초록</span></span>
-<span id="cb21-10"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
-<span id="cb21-11"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
-<span id="cb21-12"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
-<span id="cb21-13"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-7"><a></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.6</span>), <span class="fu">rgb</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.6</span>)),</span>
+<span id="cb21-8"><a></a>       <span class="at">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb21-9"><a></a>       <span class="at">pt.cex =</span> <span class="fl">1.5</span>,</span>
+<span id="cb21-10"><a></a>       <span class="at">bty =</span> <span class="st">"n"</span>, </span>
+<span id="cb21-11"><a></a>       <span class="at">cex =</span> <span class="fl">0.9</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-11-1.png" width="912" class="r-stretch"></section></section>
 <section>
-<section id="part-2.-cultural-spaces" class="title-slide slide level1 center">
-<h1>Part 2. Cultural Spaces</h1>
+<section id="identify-space-with-correspondence-analysis" class="title-slide slide level1 center">
+<h1>Identify Space with Correspondence Analysis</h1>
 <ul>
-<li>How students in different departments fall into different topics and what structures this relationship?</li>
+<li>RQ) How students in different departments fall into different topics?
+<ul>
 <li>Add on the department information of students who submitted a dissertation between 1990 and 2013</li>
+<li>Understand the department/topic structure in a holistic manner, capturing the department-department, topic-topic and department-topic relationships</li>
+<li>With Correspondence Analysis, find the association between departments and dissertation topics by mapping them in the same low-dimensional space</li>
+</ul></li>
 </ul>
 </section>
 <section id="correspondence-analysis" class="slide level2">
@@ -532,7 +531,8 @@ H__History                                              47                12</co
 <section id="correspondence-analysis-4" class="slide level2">
 <h2>Correspondence Analysis</h2>
 <ul>
-<li><code>fviz_ca_biplot()</code> give us the result of correspondance analysis</li>
+<li><code>fviz_ca_biplot()</code> give us the visualization of Correspondance Analysis</li>
+<li>1st Dimension : orange color with department / 2nd Dimension : steelblue color with topic</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">fviz_ca_biplot</span>(ca_mod1, <span class="at">col.row =</span> <span class="st">"orange"</span>, <span class="at">col.col =</span> <span class="st">"steelblue"</span>, </span>
@@ -541,11 +541,30 @@ H__History                                              47                12</co
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-16-1.png" width="1080" class="r-stretch"></section>
+<section id="lets-check-the-importance-in-each-dimension" class="slide level2">
+<h2>Let’s check the importance in each dimension</h2>
+<ul>
+<li>Access the contribution to each dimension in terms of specific objects</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb28-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="960" class="r-stretch"></section>
+<section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
+<h2>Let’s check the importance in each dimension</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb29-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+</div>
+<img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
 <li>Please check KLMS for the assignment of this week(til Friday)</li>
-<li>If you want to study in-depth knowledge for analyzing the Blockmodel and Local Equivalence, please check this week [Option] in the assignment</li>
+<li>If you want to study in-depth knowledge for analyzing the two-mode analysis and hierarchical clustering for correspondence analysis, please check this week [Option] in the assignment</li>
 </ul>
 
 
