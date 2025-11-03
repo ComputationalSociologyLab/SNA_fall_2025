@@ -1,5 +1,5 @@
 ---
-title: "W10. Affiliations, Structure, and Space"
+title: "W10. Affiliations, Fields, and Space"
 format: 
   revealjs:
     theme: default
@@ -12,14 +12,14 @@ execute:
   fig-asp: null
 ---
 
-# Affiliations, Structure, and Space
+# Affiliations, Fields, and Space
 - Walks through the analysis of affiliation data
   - e.g., student - student extracurricular affiliations 
   - two styles of node (one node for students, the other node for clubs)
   - two-mode network!
 - Work with the abstract data...!!
 
-## Affiliations and Structure
+## Affiliations and Fields
 - Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
   - Two styles of node (one mode for the words in abstract, the other mode for topic of abstract)
   - topic, theme ... Apply topic modeling (😁😁😁😁😁😁😁)
