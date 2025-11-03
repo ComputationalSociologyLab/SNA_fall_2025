@@ -573,8 +573,23 @@ H__History                                              47                12</co
 <span id="cb29-7"><a></a>) <span class="sc">+</span></span>
 <span id="cb29-8"><a></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb29-9"><a></a></span>
-<span id="cb29-10"><a></a><span class="co">#p + annotate("text", x = -0.8, y = 0.8, label = "● Department", color = "orange", size = 3.5, hjust = 0) +</span></span>
-<span id="cb29-11"><a></a><span class="co">#    annotate("text", x = -0.8, y = 0.7, label = "▲ Topic", color = "steelblue", size = 3.5, hjust = 0)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb29-10"><a></a>p <span class="sc">+</span> <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">y =</span> <span class="fl">0.8</span>, <span class="at">label =</span> <span class="st">"● Department"</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a></a>    <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.8</span>, <span class="at">y =</span> <span class="fl">0.7</span>, <span class="at">label =</span> <span class="st">"▲ Topic"</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">hjust =</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-1.png" width="1080"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-17-2.png" width="1080"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="lets-check-the-importance-in-each-dimension" class="slide level2">
@@ -583,16 +598,16 @@ H__History                                              47                12</co
 <li>Access the contribution to each dimension in terms of specific objects</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb30-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb31-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
 <section id="lets-check-the-importance-in-each-dimension-1" class="slide level2">
 <h2>Let’s check the importance in each dimension</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb31-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">fviz_contrib</span>(ca_mod1, <span class="at">choice =</span> <span class="st">"col"</span>, <span class="at">axes =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb32-2"><a></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fl">8.0</span>, <span class="at">angle =</span> <span class="dv">75</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W10_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>

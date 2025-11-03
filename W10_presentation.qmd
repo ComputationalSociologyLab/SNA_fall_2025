@@ -249,8 +249,9 @@ p <- fviz_ca_biplot(
 ) +
   theme_minimal()
 
-#p + annotate("text", x = -0.8, y = 0.8, label = "● Department", color = "orange", size = 3.5, hjust = 0) +
-#    annotate("text", x = -0.8, y = 0.7, label = "▲ Topic", color = "steelblue", size = 3.5, hjust = 0)
+p + annotate("text", x = -0.8, y = 0.8, label = "● Department", color = "orange", size = 3.5, hjust = 0) +
+    annotate("text", x = -0.8, y = 0.7, label = "▲ Topic", color = "steelblue", size = 3.5, hjust = 0)
+p
 ```
 
 ## Let's check the importance in each dimension
