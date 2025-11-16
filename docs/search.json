@@ -214,7 +214,7 @@
     "href": "W5_presentation.html#create-frienship-network-1",
     "title": "W5. Network Cohesion and Communities",
     "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH c9611b8 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from c9611b8 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH 9651066 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from 9651066 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
@@ -277,7 +277,7 @@
     "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
     "title": "W5. Network Cohesion and Communities",
     "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH c82ae8e UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from c82ae8e (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 5d863e6 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 5d863e6 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",
@@ -431,7 +431,7 @@
     "href": "W3_presentation.html#detailed-information-of-our-network",
     "title": "W3. Visualization",
     "section": "Detailed information of our network",
-    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH 0ae0272 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from 0ae0272 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
+    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH c7624e2 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from c7624e2 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
   },
   {
     "objectID": "W3_presentation.html#plot-a-network-using-igraph",
@@ -760,7 +760,7 @@
     "href": "W12_presentation.html#setting-up-the-session-3",
     "title": "W12. Statistical models of networks",
     "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nRecode the 0s and 1s into male and female\n\n\nschool_attributes$gender_recode &lt;- recode(school_attributes$gender, \n                                          as.factor = F, \n                                          \"0 = 'male'; 1 = 'female'\")\nattribute_list &lt;- do.call(list, school_attributes)"
+    "text": "Setting up the Session\n\nRecode the 0s and 1s into male and female\n\n\nschool_attributes$gender_recode &lt;- recode(school_attributes$gender, \n                                          as.factor = F, \n                                          \"0 = 'male'; 1 = 'female'\")\nattribute_list &lt;- do.call(list, school_attributes) \nattribute_list$gender_recode\n\n [1] \"female\" \"female\" \"male\"   \"male\"   \"female\" \"female\" \"male\"   \"female\"\n [9] \"female\" \"male\"   \"male\"   \"male\"   \"female\" \"female\" \"female\" \"female\"\n[17] \"male\"   \"female\" \"male\"   \"male\"   \"female\" \"male\"   \"male\"   \"male\"  \n[25] \"male\"   \"female\" \"female\" \"female\" \"male\"   \"male\"   \"female\" \"male\""
   },
   {
     "objectID": "W12_presentation.html#setting-up-the-session-4",
@@ -770,25 +770,25 @@
     "text": "Setting up the Session\n\nConstruct a network(with network package)\n\n\nschool_net &lt;- network(x = school_mat, directed = T, \n                      vertex.attr = attribute_list) \nschool_net\n\n Network attributes:\n  vertices = 32 \n  directed = TRUE \n  hyper = FALSE \n  loops = FALSE \n  multiple = FALSE \n  bipartite = FALSE \n  total edges= 124 \n    missing edges= 0 \n    non-missing edges= 124 \n\n Vertex attribute names: \n    gender gender_recode grade ids ses vertex.names \n\nNo edge attributes"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-statistics",
-    "href": "W12_presentation.html#descriptive-statistics",
+    "objectID": "W12_presentation.html#descriptive-analysis",
+    "href": "W12_presentation.html#descriptive-analysis",
     "title": "W12. Statistical models of networks",
-    "section": "Descriptive Statistics",
-    "text": "Descriptive Statistics\n\nplot(school_net)"
+    "section": "Descriptive Analysis",
+    "text": "Descriptive Analysis\n\nplot(school_net)"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-statistics-1",
-    "href": "W12_presentation.html#descriptive-statistics-1",
+    "objectID": "W12_presentation.html#descriptive-analysis-1",
+    "href": "W12_presentation.html#descriptive-analysis-1",
     "title": "W12. Statistical models of networks",
-    "section": "Descriptive Statistics",
-    "text": "Descriptive Statistics\n\ncols &lt;- recode(school_attributes$gender, as.factor = F,\n               \"0 = 'blue'; 1 = 'pink'\")\nplot(school_net, vertex.col = cols)"
+    "section": "Descriptive Analysis",
+    "text": "Descriptive Analysis\n\ncols &lt;- recode(school_attributes$gender, as.factor = F,\n               \"0 = 'blue'; 1 = 'pink'\")\nplot(school_net, vertex.col = cols)"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-statistics-2",
-    "href": "W12_presentation.html#descriptive-statistics-2",
+    "objectID": "W12_presentation.html#descriptive-analysis-2",
+    "href": "W12_presentation.html#descriptive-analysis-2",
     "title": "W12. Statistical models of networks",
-    "section": "Descriptive Statistics",
-    "text": "Descriptive Statistics\n\nsocial divisions by grade\n\n\nplot(school_net, vertex.col = school_attributes$grade)"
+    "section": "Descriptive Analysis",
+    "text": "Descriptive Analysis\n\nsocial divisions by grade\n\n\nplot(school_net, vertex.col = school_attributes$grade)"
   },
   {
     "objectID": "W12_presentation.html#fitting-an-ergm",
@@ -802,7 +802,21 @@
     "href": "W12_presentation.html#fitting-an-ergm-1",
     "title": "W12. Statistical models of networks",
     "section": "Fitting an ERGM",
-    "text": "Fitting an ERGM\n\nformula = the set of terms we want to include in the model.\ncontrol = list of options used in the MCMC algorithm\nconstraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample"
+    "text": "Fitting an ERGM\n\nCalculate the probability of every possible network\nThe number of possible networks is unbelievably huge\nInstead of looking at all possible networks,\nRandomly sample some networks that the model is likely to produce"
+  },
+  {
+    "objectID": "W12_presentation.html#fitting-an-ergm-2",
+    "href": "W12_presentation.html#fitting-an-ergm-2",
+    "title": "W12. Statistical models of networks",
+    "section": "Fitting an ERGM",
+    "text": "Fitting an ERGM\n\nMCMC(Markov Chain Monte Carlo)\n\nGenerates many random networks that follow the model’s rules\nUses them to estimate how the model behaves"
+  },
+  {
+    "objectID": "W12_presentation.html#fitting-an-ergm-3",
+    "href": "W12_presentation.html#fitting-an-ergm-3",
+    "title": "W12. Statistical models of networks",
+    "section": "Fitting an ERGM",
+    "text": "Fitting an ERGM\n\nformula = the set of terms we want to include in the model\ncontrol = list of options used in the MCMC sample\nconstraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample"
   },
   {
     "objectID": "W12_presentation.html#simple-ergm",
@@ -1061,7 +1075,7 @@
     "href": "W4_presentation.html#plotting-ego-networks-2",
     "title": "W4. Ego, Dyads and Triads",
     "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 3b71a85 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 3b71a85 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 7c36df2 UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 7c36df2 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 96c8db4 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 96c8db4 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
+    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH ac660e5 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from ac660e5 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH f1e58b7 UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from f1e58b7 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 0da9ce7 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 0da9ce7 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
   },
   {
     "objectID": "W4_presentation.html#plotting-ego-networks-3",

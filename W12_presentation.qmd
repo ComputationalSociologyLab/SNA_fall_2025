@@ -14,7 +14,7 @@ execute:
 
 # Statistical models of networks 
 - Focus on the method ERGM(exponential-family random graph models)
-- Apply the model toa small school-based network(at one time point)
+- Apply the model to a small school-based network(at one time point)
   - Do boys tend to have more friends than girls? 
   - Is gender homophily a strong driver of tie formation? 
 
@@ -54,6 +54,7 @@ school_attributes$gender_recode <- recode(school_attributes$gender,
                                           as.factor = F, 
                                           "0 = 'male'; 1 = 'female'")
 attribute_list <- do.call(list, school_attributes) 
+attribute_list$gender_recode
 ```
 
 ## Setting up the Session
@@ -65,19 +66,19 @@ school_net <- network(x = school_mat, directed = T,
 school_net
 ```
 
-## Descriptive Statistics
+## Descriptive Analysis
 ```{r fig.height=7.5, fig.width=7.5}
 plot(school_net)
 ```
 
-## Descriptive Statistics
+## Descriptive Analysis
 ```{r fig.height=7.5, fig.width=7.5}
 cols <- recode(school_attributes$gender, as.factor = F,
                "0 = 'blue'; 1 = 'pink'")
 plot(school_net, vertex.col = cols) 
 ```
 
-## Descriptive Statistics
+## Descriptive Analysis
 - social divisions by grade
 ```{r fig.height=7.5, fig.width=7.5}
 plot(school_net, vertex.col = school_attributes$grade) 
@@ -91,8 +92,19 @@ plot(school_net, vertex.col = school_attributes$grade)
 - Interpret it as a network features like reciprocity and homophily
 
 ## Fitting an ERGM
-- formula = the set of terms we want to include in the model. 
-- control = list of options used in the MCMC algorithm
+- Calculate the probability of every possible network
+- The number of possible networks is unbelievably huge
+- Instead of looking at all possible networks,
+- Randomly sample some networks that the model is likely to produce
+
+## Fitting an ERGM
+- MCMC(Markov Chain Monte Carlo)
+  - Generates many random networks that follow the model’s rules
+  - Uses them to estimate how the model behaves
+
+## Fitting an ERGM
+- formula = the set of terms we want to include in the model
+- control = list of options used in the MCMC sample
 - constraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample
 
 ## Simple ERGM
