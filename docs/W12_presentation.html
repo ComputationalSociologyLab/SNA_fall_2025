@@ -312,9 +312,6 @@ No edge attributes</code></pre>
 <img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-6-1.png" width="720" class="r-stretch"></section>
 <section id="descriptive-statistics-1" class="slide level2">
 <h2>Descriptive Statistics</h2>
-<ul>
-<li>Strong gender homophily</li>
-</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>cols <span class="ot">&lt;-</span> <span class="fu">recode</span>(school_attributes<span class="sc">$</span>gender, <span class="at">as.factor =</span> F,</span>
 <span id="cb10-2"><a></a>               <span class="st">"0 = 'blue'; 1 = 'pink'"</span>)</span>
@@ -325,7 +322,7 @@ No edge attributes</code></pre>
 <section id="descriptive-statistics-2" class="slide level2">
 <h2>Descriptive Statistics</h2>
 <ul>
-<li>and weaker gender homophily</li>
+<li>social divisions by grade</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">plot</span>(school_net, <span class="at">vertex.col =</span> school_attributes<span class="sc">$</span>grade) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -344,7 +341,7 @@ No edge attributes</code></pre>
 <h2>Fitting an ERGM</h2>
 <ul>
 <li>formula = the set of terms we want to include in the model.</li>
-<li>control = list of options used in the algorithm</li>
+<li>control = list of options used in the MCMC algorithm</li>
 <li>constraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample</li>
 </ul>
 </section>
@@ -352,6 +349,7 @@ No edge attributes</code></pre>
 <h2>Simple ERGM</h2>
 <ul>
 <li>Run an ERGM with only edges as a predictor</li>
+<li>Explain the school network as a function of the number of edges in the network</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>mod_rand <span class="ot">&lt;-</span> <span class="fu">ergm</span>(<span class="at">formula =</span> school_net <span class="sc">~</span> edges) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -361,6 +359,7 @@ No edge attributes</code></pre>
 <h2>Simple ERGM</h2>
 <ul>
 <li>Let’s take a look at the model results.</li>
+<li><code>exp(-1.946) / (1 + exp(-1.946))</code> = .125 (log-odds to probability)</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">summary</span>(mod_rand) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -385,7 +384,7 @@ AIC: 749.5  BIC: 754.4  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <section id="add-options-to-ergm" class="slide level2">
 <h2>1) Add options to ERGM</h2>
 <ul>
-<li>Let’s add <code>nodematch</code> terms for gender and grade
+<li>Let’s add <code>nodematch</code> terms for gender and grade in formula
 <ul>
 <li>Count the number of times that an edge exists where i and j have the same attribute</li>
 </ul></li>
@@ -423,11 +422,10 @@ AIC: 641.7  BIC: 656.4  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <section id="add-options-to-ergm-2" class="slide level2">
 <h2>2) Add options to ERGM</h2>
 <ul>
-<li>Whether boys (compared to girls) send out and/or receive more ties</li>
-<li>Add <code>nodeifactor</code> terms which capture if the mean number of ties coming in</li>
-<li>Add <code>nodeofactor</code> terms which capture if the mean number of ties going out<br>
-</li>
-<li>Add analogous terms for grade using <code>nodeicov</code> and <code>nodeocov</code></li>
+<li>Whether boys (compared to girls) send out and/or receive more ties
+<ul>
+<li>Add <code>nodeifactor</code> terms which capture if the mean number of ties coming in, <code>nodeofactor</code> for going out</li>
+</ul></li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>mod_homoph2 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span></span>
@@ -716,43 +714,13 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 <section id="adding-gwesp-to-the-model-1" class="slide level2">
 <h2>Adding GWESP to the Model</h2>
 <ul>
-<li>Looking at the diagnostics:</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">mcmc.diagnostics</span>(mod_homoph_mutual_gwesp1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-2.png" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-3.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="adding-gwesp-to-the-model-2" class="slide level2">
-<h2>Adding GWESP to the Model</h2>
-<ul>
 <li>plotting the last network from the MCMC sample.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">plot</span>(mod_homoph_mutual_gwesp1<span class="sc">$</span>newnetwork) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">plot</span>(mod_homoph_mutual_gwesp1<span class="sc">$</span>newnetwork) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-27-1.png" width="960" class="r-stretch"></section>
+<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

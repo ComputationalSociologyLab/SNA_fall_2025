@@ -71,8 +71,6 @@ plot(school_net)
 ```
 
 ## Descriptive Statistics
-- Strong gender homophily 
-
 ```{r fig.height=7.5, fig.width=7.5}
 cols <- recode(school_attributes$gender, as.factor = F,
                "0 = 'blue'; 1 = 'pink'")
@@ -80,8 +78,7 @@ plot(school_net, vertex.col = cols)
 ```
 
 ## Descriptive Statistics
-- and weaker gender homophily
-
+- social divisions by grade
 ```{r fig.height=7.5, fig.width=7.5}
 plot(school_net, vertex.col = school_attributes$grade) 
 ```
@@ -95,24 +92,26 @@ plot(school_net, vertex.col = school_attributes$grade)
 
 ## Fitting an ERGM
 - formula = the set of terms we want to include in the model. 
-- control = list of options used in the algorithm
+- control = list of options used in the MCMC algorithm
 - constraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample
 
 ## Simple ERGM
 - Run an ERGM with only edges as a predictor
+- Explain the school network as a function of the number of edges in the network 
 ```{r, message=F, results='hide'}
 mod_rand <- ergm(formula = school_net ~ edges) 
 ```
 
 ## Simple ERGM
 - Let’s take a look at the model results. 
+- `exp(-1.946) / (1 + exp(-1.946))` = .125 (log-odds to probability)
 ```{r}
 summary(mod_rand) 
 ```
 
 
 ## 1) Add options to ERGM
-- Let's add `nodematch` terms for gender and grade
+- Let's add `nodematch` terms for gender and grade in formula
   - Count the number of times that an edge exists where i and j have the same attribute
 ```{r message=F, warning=F}
 mod_homoph1 <- ergm(school_net ~ edges + nodematch("gender_recode") + 
@@ -125,9 +124,8 @@ summary(mod_homoph1)
 ```
 
 ## 2) Add options to ERGM
--  Whether boys (compared to girls) send out and/or receive more ties
-  - Add `nodeifactor` terms which capture if the mean number of ties coming in 
-  - Add `nodeofactor` terms which capture if the mean number of ties going out  
+- Whether boys (compared to girls) send out and/or receive more ties
+  - Add `nodeifactor` terms which capture if the mean number of ties coming in, `nodeofactor` for going out
   - Add analogous terms for grade using `nodeicov` and `nodeocov`
 
 ```{r message=F, warning=F}
@@ -162,7 +160,7 @@ mod_homoph_mutual1 <- ergm(school_net ~ edges +
                                                   MCMC.samplesize = 6000)) 
 ```
 
-## 4) Checking Model Convergence
+## 4) Checking Model Works Well
 - MCMC... Make sure that the algorithm converged
 - Let's see how the model looks using a `mcmc.diagnostics()` function:
 
@@ -172,9 +170,6 @@ mcmc.diagnostics(mod_homoph_mutual1, vars.per.page = 4)
 dev.off()
 
 ```
-
-The function plots the MCMC sample of network statistics for each term included in the model. The plots show how far the statistics calculated on the sampled networks are from the true value, calculated on the observed network. The plots on the left hand show the statistics taken from each individual sample (plotted in order), while the right hand side shows the distribution of sample statistics. A 'nice' looking plot would have the sample statistics centered around 0, with some (but not extreme) variance sample to sample, suggesting that the specified model is well-behaved and can produce networks consistent with the observed data.
-
 ## 5) Checking Statistical Result 
 
 ```{r message=F}
@@ -273,12 +268,6 @@ mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges +
                      
 ```
 
-## Adding GWESP to the Model
-- Looking at the diagnostics:
-
-```{r results='hide', warning = F}
-mcmc.diagnostics(mod_homoph_mutual_gwesp1)
-```
 
 ## Adding GWESP to the Model
 - plotting the last network from the MCMC sample.
