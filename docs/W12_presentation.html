@@ -500,88 +500,23 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <li><code>mutual</code> term counts the number of pairs where i-&gt;j and j-&gt;i exist.</li>
 <li>MCMC estimation : useful to set the input parameters to the estimation routine</li>
 </ul></li>
+<li>If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">set.seed</span>(<span class="dv">1012</span>)</span>
-<span id="cb22-2"><a></a></span>
-<span id="cb22-3"><a></a>mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
-<span id="cb22-4"><a></a>                             <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb22-5"><a></a>                             <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb22-6"><a></a>                             <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb22-7"><a></a>                             <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb22-8"><a></a>                             <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span></span>
-<span id="cb22-9"><a></a>                             mutual, </span>
-<span id="cb22-10"><a></a>                           <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>,</span>
-<span id="cb22-11"><a></a>                                                  <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="checking-model-works-well" class="slide level2">
-<h2>4) Checking Model Works Well</h2>
-<ul>
-<li>MCMC… Make sure that the algorithm converged</li>
-<li>Let’s see how the model looks using a <code>mcmc.diagnostics()</code> function:</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">pdf</span>(<span class="st">"mcmc_diagnostics.pdf"</span>, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">8</span>)</span>
-<span id="cb23-2"><a></a><span class="fu">mcmc.diagnostics</span>(mod_homoph_mutual1, <span class="at">vars.per.page =</span> <span class="dv">4</span>)</span>
-<span id="cb23-3"><a></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="checking-statistical-result" class="slide level2">
-<h2>5) Checking Statistical Result</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Call:
-ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
-    nodematch("grade") + nodeifactor("gender_recode") + nodeofactor("gender_recode") + 
-    nodeicov("grade") + nodeocov("grade") + mutual, control = control.ergm(MCMC.burnin = 50000, 
-    MCMC.samplesize = 6000))
-
-Monte Carlo Maximum Likelihood Results:
-
-                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.46872    0.70547      0  -9.169  &lt; 1e-04 ***
-nodematch.gender_recode         0.02772    0.18945      0   0.146  0.88369    
-nodematch.grade                 1.74006    0.21541      0   8.078  &lt; 1e-04 ***
-nodeifactor.gender_recode.male  0.28339    0.24137      0   1.174  0.24037    
-nodeofactor.gender_recode.male  0.45580    0.23983      0   1.900  0.05737 .  
-nodeicov.grade                  0.21543    0.06848      0   3.146  0.00165 ** 
-nodeocov.grade                  0.10188    0.06828      0   1.492  0.13572    
-mutual                          2.35763    0.36276      0   6.499  &lt; 1e-04 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-     Null Deviance: 1375.2  on 992  degrees of freedom
- Residual Deviance:  546.8  on 984  degrees of freedom
- 
-AIC: 562.8  BIC: 602  (Smaller is better. MC Std. Err. = 0.1519)</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>mod_homoph_mutual1b <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb22-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb22-4"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a></a>                              <span class="co">#added!</span></span>
+<span id="cb22-6"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
+<span id="cb22-7"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
+<span id="cb22-8"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="add-options-to-ergm-again" class="slide level2">
-<h2>5) Add options to ERGM again</h2>
-<ul>
-<li>Push this intuition a little further
-<ul>
-<li>If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads</li>
-</ul></li>
-</ul>
+<h2>3) Add options to ERGM again</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>mod_homoph_mutual1b <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
-<span id="cb26-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span></span>
-<span id="cb26-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb26-4"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span></span>
-<span id="cb26-5"><a></a>                              <span class="co">#added!</span></span>
-<span id="cb26-6"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
-<span id="cb26-7"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
-<span id="cb26-8"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="add-options-to-ergm-again-1" class="slide level2">
-<h2>5) Add options to ERGM again</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
@@ -592,25 +527,25 @@ ergm(formula = school_net ~ edges + nodematch("gender_recode") +
 Monte Carlo Maximum Likelihood Results:
 
                                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.06819    0.67324      0  -9.013  &lt; 1e-04 ***
-nodematch.gender_recode         0.04863    0.18954      0   0.257  0.79750    
-nodematch.grade                 1.69186    0.20902      0   8.094  &lt; 1e-04 ***
-nodeicov.grade                  0.21676    0.06784      0   3.195  0.00140 ** 
-nodeocov.grade                  0.09894    0.06811      0   1.453  0.14631    
-mutual.by.gender_recode.female  0.92294    0.25763      0   3.582  0.00034 ***
-mutual.by.gender_recode.male    1.45228    0.21951      0   6.616  &lt; 1e-04 ***
+edges                          -6.08496    0.67372      0  -9.032  &lt; 1e-04 ***
+nodematch.gender_recode         0.04858    0.18685      0   0.260 0.794864    
+nodematch.grade                 1.70278    0.21192      0   8.035  &lt; 1e-04 ***
+nodeicov.grade                  0.21471    0.06906      0   3.109 0.001875 ** 
+nodeocov.grade                  0.10265    0.06826      0   1.504 0.132627    
+mutual.by.gender_recode.female  0.91118    0.25790      0   3.533 0.000411 ***
+mutual.by.gender_recode.male    1.45269    0.22258      0   6.527  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
      Null Deviance: 1375.2  on 992  degrees of freedom
- Residual Deviance:  551.4  on 985  degrees of freedom
+ Residual Deviance:  550.7  on 985  degrees of freedom
  
-AIC: 565.4  BIC: 599.7  (Smaller is better. MC Std. Err. = 0.2344)</code></pre>
+AIC: 564.7  BIC: 599  (Smaller is better. MC Std. Err. = 0.2343)</code></pre>
 </div>
 </div>
 </section>
-<section id="add-options-to-ergm-again-2" class="slide level2">
-<h2>6) Add options to ERGM again</h2>
+<section id="add-options-to-ergm-again-1" class="slide level2">
+<h2>4) Add options to ERGM again</h2>
 <ul>
 <li>Include a control for degree differences (by gender) in the model
 <ul>
@@ -618,21 +553,21 @@ AIC: 565.4  BIC: 599.7  (Smaller is better. MC Std. Err. = 0.2344)</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>mod_homoph_mutual1c <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span></span>
-<span id="cb29-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb29-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb29-4"><a></a>                              <span class="co">#added!</span></span>
-<span id="cb29-5"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb29-6"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb29-7"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
-<span id="cb29-8"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
-<span id="cb29-9"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>mod_homoph_mutual1c <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span></span>
+<span id="cb25-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb25-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a></a>                              <span class="co">#added!</span></span>
+<span id="cb25-5"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb25-6"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb25-7"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
+<span id="cb25-8"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
+<span id="cb25-9"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="add-options-to-ergm-again-3" class="slide level2">
-<h2>6) Add options to ERGM again</h2>
+<section id="add-options-to-ergm-again-2" class="slide level2">
+<h2>4) Add options to ERGM again</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
@@ -643,21 +578,21 @@ ergm(formula = school_net ~ edges + nodematch("gender_recode") +
 Monte Carlo Maximum Likelihood Results:
 
                                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.35109    0.71008      0  -8.944  &lt; 1e-04 ***
-nodematch.gender_recode         0.05563    0.19035      0   0.292 0.770082    
-nodematch.grade                 1.72196    0.21108      0   8.158  &lt; 1e-04 ***
-nodeofactor.gender_recode.male  0.49878    0.29636      0   1.683 0.092369 .  
-nodeicov.grade                  0.21855    0.07013      0   3.116 0.001831 ** 
-nodeocov.grade                  0.09716    0.06815      0   1.426 0.153962    
-mutual.by.gender_recode.female  1.14881    0.30207      0   3.803 0.000143 ***
-mutual.by.gender_recode.male    1.25276    0.23856      0   5.251  &lt; 1e-04 ***
+edges                          -6.35477    0.69582      0  -9.133  &lt; 1e-04 ***
+nodematch.gender_recode         0.04896    0.19350      0   0.253  0.80025    
+nodematch.grade                 1.72154    0.21693      0   7.936  &lt; 1e-04 ***
+nodeofactor.gender_recode.male  0.50079    0.29794      0   1.681  0.09280 .  
+nodeicov.grade                  0.21820    0.06741      0   3.237  0.00121 ** 
+nodeocov.grade                  0.09835    0.06878      0   1.430  0.15275    
+mutual.by.gender_recode.female  1.15685    0.29703      0   3.895  &lt; 1e-04 ***
+mutual.by.gender_recode.male    1.24254    0.24633      0   5.044  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-     Null Deviance: 1375  on 992  degrees of freedom
- Residual Deviance:  548  on 984  degrees of freedom
+     Null Deviance: 1375.2  on 992  degrees of freedom
+ Residual Deviance:  548.4  on 984  degrees of freedom
  
-AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
+AIC: 564.4  BIC: 603.6  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 </div>
 </div>
 </section>
@@ -677,9 +612,9 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 <li>Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1, </span>
-<span id="cb32-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
-<span id="cb32-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1c, </span>
+<span id="cb28-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
+<span id="cb28-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="goodness-of-fit-2" class="slide level2">
@@ -692,56 +627,53 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
-<span id="cb33-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
+<span id="cb29-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"></section>
+<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
 <section id="adding-gwesp-to-the-model" class="slide level2">
 <h2>Adding GWESP to the Model</h2>
 <ul>
-<li>Add a term to the model that will capture the tendency for nodes who are tied to have the same friends</li>
-<li>Capture clustering using a triangle term
-<ul>
+<li>Add a Geometrically Weighted Edgewise Shared Partners to the model that will capture the tendency for nodes who are tied to have the same friends</li>
 <li>A triangle is defined as all cases where i-j and j-k exist and then either k-&gt;i or i-&gt;k exist</li>
-</ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
-<span id="cb34-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb34-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb34-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb34-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb34-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb34-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
-<span id="cb34-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
-<span id="cb34-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
-<span id="cb34-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
-<span id="cb34-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
-<span id="cb34-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
-<span id="cb34-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
-<span id="cb34-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb30-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb30-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb30-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb30-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb30-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb30-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
+<span id="cb30-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
+<span id="cb30-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
+<span id="cb30-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
+<span id="cb30-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
+<span id="cb30-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
+<span id="cb30-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
+<span id="cb30-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="simulate-a-network-with-the-ergm-result" class="slide level2">
 <h2>Simulate a Network with the ERGM Result</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>sim_schoolnet <span class="ot">&lt;-</span> <span class="fu">simulate</span>(mod_homoph_mutual_gwesp1, <span class="at">nsim =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="dv">1012</span>,</span>
-<span id="cb35-2"><a></a>                          <span class="at">control =</span> <span class="fu">control.simulate.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">100000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>sim_schoolnet <span class="ot">&lt;-</span> <span class="fu">simulate</span>(mod_homoph_mutual_gwesp1, <span class="at">nsim =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="dv">1012</span>,</span>
+<span id="cb31-2"><a></a>                          <span class="at">control =</span> <span class="fu">control.simulate.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">100000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="adding-gwesp-to-the-model-1" class="slide level2">
-<h2>Adding GWESP to the Model</h2>
+<section id="simulate-a-network-with-the-ergm-result-1" class="slide level2">
+<h2>Simulate a Network with the ERGM Result</h2>
 <ul>
 <li>plotting the true network and simulated network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb36-2"><a></a><span class="fu">plot</span>(school_net, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"True Network"</span>)</span>
-<span id="cb36-3"><a></a><span class="fu">plot</span>(sim_schoolnet, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"Simulated Network"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb32-2"><a></a><span class="fu">plot</span>(school_net, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"True Network"</span>)</span>
+<span id="cb32-3"><a></a><span class="fu">plot</span>(sim_schoolnet, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"Simulated Network"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
+<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

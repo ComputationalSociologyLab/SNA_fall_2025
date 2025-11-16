@@ -157,41 +157,7 @@ summary(mod_homoph2)
 - Add  a mutual term to the mode to identify reciprocity
   - `mutual` term counts the number of pairs where i->j and j->i exist. 
   - MCMC estimation : useful to set the input parameters to the estimation routine
-  
-```{r message=F, warning=F}
-set.seed(1012)
-
-mod_homoph_mutual1 <- ergm(school_net ~ edges + 
-                             nodematch("gender_recode") + 
-                             nodematch("grade") + 
-                             nodeifactor("gender_recode") + 
-                             nodeofactor("gender_recode") + 
-                             nodeicov("grade") + nodeocov("grade") +
-                             mutual, 
-                           control = control.ergm(MCMC.burnin = 50000,
-                                                  MCMC.samplesize = 6000)) 
-```
-
-## 4) Checking Model Works Well
-- MCMC... Make sure that the algorithm converged
-- Let's see how the model looks using a `mcmc.diagnostics()` function:
-
-```{r results='hide'}
-pdf("mcmc_diagnostics.pdf", width = 10, height = 8)
-mcmc.diagnostics(mod_homoph_mutual1, vars.per.page = 4)
-dev.off()
-
-```
-## 5) Checking Statistical Result 
-
-```{r message=F}
-summary(mod_homoph_mutual1)
-```
-
-
-## 5) Add options to ERGM again
-- Push this intuition a little further 
-  - If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads
+- If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads
 
 ```{r message=F}
 mod_homoph_mutual1b <- ergm(school_net ~ edges + 
@@ -204,12 +170,12 @@ mod_homoph_mutual1b <- ergm(school_net ~ edges +
                                                    MCMC.samplesize = 6000))
 ```
 
-## 5) Add options to ERGM again
+## 3) Add options to ERGM again
 ```{r}
 summary(mod_homoph_mutual1b)
 ```
 
-## 6) Add options to ERGM again
+## 4) Add options to ERGM again
 - Include a control for degree differences (by gender) in the model
   - If boys are more likely to be involved in mutual dyads because they send out more ties or because expectations of reciprocity are higher among boys
 
@@ -225,7 +191,7 @@ mod_homoph_mutual1c <- ergm(school_net ~ edges +
                                                    MCMC.samplesize = 6000))
 ```
 
-## 6) Add options to ERGM again
+## 4) Add options to ERGM again
 ```{r}
 summary(mod_homoph_mutual1c)
 ```
@@ -238,7 +204,7 @@ summary(mod_homoph_mutual1c)
 - Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value
 
 ```{r}
-gof_mod_homoph_mutual1 <- gof(mod_homoph_mutual1, 
+gof_mod_homoph_mutual1 <- gof(mod_homoph_mutual1c, 
                               GOF = ~ distance + espartners + model,
                               control = control.gof.ergm(seed = 110)) 
 ```
@@ -254,9 +220,8 @@ plot(gof_mod_homoph_mutual1)
 ```
 
 ## Adding GWESP to the Model
-- Add a term to the model that will capture the tendency for nodes who are tied to have the same friends
-- Capture clustering using a triangle term
-  - A triangle is defined as all cases where i-j and j-k exist and then either k->i or i->k exist
+- Add a Geometrically Weighted Edgewise Shared Partners to the model that will capture the tendency for nodes who are tied to have the same friends
+- A triangle is defined as all cases where i-j and j-k exist and then either k->i or i->k exist
 
 ```{r message=F, warning=F}
 mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges + 
@@ -284,7 +249,7 @@ sim_schoolnet <- simulate(mod_homoph_mutual_gwesp1, nsim = 1, seed = 1012,
 ```
 
 
-## Adding GWESP to the Model
+## Simulate a Network with the ERGM Result
 - plotting the true network and simulated network
 ```{r}
 par(mfrow = c(1, 2))

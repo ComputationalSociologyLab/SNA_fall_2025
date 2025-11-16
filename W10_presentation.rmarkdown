@@ -1,0 +1,273 @@
+---
+title: "W10. Affiliations, Fields, and Space"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Affiliations, Fields, and Space
+- Walks through the analysis of affiliation data
+  - e.g., student - student extracurricular affiliations 
+  - two styles of node (one node for students, the other node for clubs)
+  - two-mode network!
+- Work with the abstract data...!!
+
+## Affiliations and Fields
+- Objectives) Analyze the texts in abstract to uncover the underlying structure of the field of sociology,
+  - Two styles of node (one mode for the words in abstract, the other mode for topic of abstract)
+  - topic, theme ... Apply topic modeling (😁😁😁😁😁😁😁)
+
+## Getting the Data Ready
+- Read in the abstract data
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/sociologysample.csv"
+abstracts <- read.csv(file = url1, stringsAsFactors = FALSE)
+head(abstracts)
+```
+
+
+## Getting the Data Ready
+```{r message=F, warning=F}
+library(NLP)          # basic processing of natural language
+library(tm)           # text mining package
+library(SnowballC)    # word stemming package
+library(topicmodels)  # package for modeling the topics
+library(ldatuning)    # package for evaluating the models
+```
+
+
+
+## Getting the Data Ready
+- Preprocessing is needed to apply topic modeling analysis
+```{r message=F, warning=F}
+abstracts_corp <- Corpus(VectorSource(abstracts$text))
+length(abstracts_corp)
+abstracts_corp <- tm_map(abstracts_corp, tolower)
+gsub_function <- function(x, pattern) gsub(pattern, replacement = " ", x)
+split_words <- content_transformer(gsub_function)
+abstracts_corp <- tm_map(abstracts_corp, split_words, pattern = "_")
+abstracts_corp <- tm_map(abstracts_corp, split_words, pattern = "/")
+abstracts_corp <- tm_map(abstracts_corp, removePunctuation)
+abstracts_corp <- tm_map(abstracts_corp, removeNumbers)
+abstracts_corp <- tm_map(abstracts_corp, removeWords, stopwords("english"))
+myStopwords <- c("dissertation", "chapter", "chapters", "research", 
+                 "researcher" ,"researchers" ,"study", "studies", 
+                 "studied", "studys", "studying", "one", "two", "three")
+abstracts_corp <- tm_map(abstracts_corp, removeWords, myStopwords)
+abstracts_corp <- tm_map(abstracts_corp, stripWhitespace)
+abstracts_corp <- tm_map(abstracts_corp, stemDocument)
+abstracts_dtm <- DocumentTermMatrix(abstracts_corp)
+mat_abstract_words <- as.matrix(abstracts_dtm)
+```
+
+
+## Topic Modeling with LDA
+- Input of the topic modeling(LDA)
+```{r}
+mat_abstract_words[1:5, 1:5] 
+```
+
+## Topic Modeling with LDA
+![](https://raw.githubusercontent.com/ComputationalSociologyLab/SNA_fall_2025/main/img/LDA_sample.png)
+
+
+
+## Topic Modeling with LDA
+- Set options and conduct topic modeling(LDA)
+```{r}
+burnin <- 200 # number of omitted Gibbs iterations at beginning
+iter <- 3000 # number of iterations.  
+thin <- 2000 # number of omitted iterations between each kept iteration 
+seed <- list(2003, 5,63, 100001, 765) #seeds to enable reproducibility
+nstart <- 5 # number of repeated random starts
+best <- TRUE # only continue model on the best model
+k <- 5
+ldaOut <- LDA(x = abstracts_dtm, k = k, method = "Gibbs", 
+              control=list(nstart = nstart, seed = seed, best = best,
+                           burnin = burnin, iter = iter, thin = thin))
+ldaOut_topics <- topics(ldaOut)
+topicProbabilities <- ldaOut@gamma
+ldaOut_terms <- terms(ldaOut, 10)
+
+fitmodel <- FindTopicsNumber(dtm = abstracts_dtm, 
+                             topics = seq(from = 4, to = 40, by = 2), 
+                             metrics = c("CaoJuan2009", "Arun2010"), 
+                             method = "Gibbs", 
+                             control = list(nstart = 1, seed = c(30), 
+                                            best = best, burnin = burnin, 
+                                            iter = iter, thin = thin), 
+                             mc.cores = 2,  verbose = TRUE)
+FindTopicsNumber_plot(fitmodel) 
+k <- 30
+
+ldaOut2 <- LDA(x = abstracts_dtm, k = k, method = "Gibbs", 
+              control = list(nstart = nstart, seed = seed, best = best,
+                             burnin = burnin, iter = iter, thin = thin))
+ldaOut_terms2 <- terms(ldaOut2, 10)
+ldaOut_terms2[, c(2, 14, 20, 23, 24)]
+
+```
+
+
+## Topic Modeling with LDA
+- Result of the topic modeling(LDA)
+```{r}
+# extract the topic number which have highest probability among all topics
+topics(ldaOut2)
+```
+
+## Let's draw a Two mode network
+
+```{r message=F, warning=F}
+library(igraph)
+```
+
+
+## Let's draw a Two mode network
+- Bring abstracts by words matrix 
+- Focus on the abstracts belongs to topic 20 ("family") and topic 23 ("gender")
+
+```{r}
+ldaOut_topics2 <- topics(ldaOut2)
+in_20_23 <- ldaOut_topics2 %in% c(20, 23)
+mat_abstract_words_subset <- mat_abstract_words[in_20_23, ]
+```
+
+## Let's draw a Two mode network
+- Reduce the words based on the frequency 
+```{r}
+worduse <- colSums(mat_abstract_words_subset)
+mat_abstract_words_subset <- mat_abstract_words_subset [, worduse > 5]
+```
+
+
+## Let's draw a Two mode network
+- Construct two-mode(abstract and keywords) network 
+- `graph_from_biadjacency_matrix`
+```{r}
+abstract_word_net <- graph_from_biadjacency_matrix(mat_abstract_words_subset,
+                                                 mode = "all", weighted = T)
+```
+
+
+## Let's draw a Two mode network
+- FALSE for abstracts, TRUE for words
+```{r}
+type <- vertex_attr(abstract_word_net, "type") 
+table(type)  
+V(abstract_word_net)$color[type == TRUE] <- rgb(red = 0, green = 1, 
+                                                blue = 0, alpha = .2) 
+in20 <- names(which(ldaOut_topics2 == 20))
+in23 <- names(which(ldaOut_topics2 == 23))
+which_topic20 <- V(abstract_word_net)$name %in% in20
+V(abstract_word_net)$color[which_topic20] <- rgb(red = 0, green = 0, 
+                                                 blue = 1, alpha = .2)
+which_topic23 <- V(abstract_word_net)$name %in% in23
+V(abstract_word_net)$color[which_topic23] <- rgb(red = 1, green = 0, 
+                                                blue = 0, alpha = .2)
+V(abstract_word_net)$label <- V(abstract_word_net)$name
+V(abstract_word_net)$label.color <- rgb(0, 0, .2, .85)
+#V(abstract_word_net)$label.cex <- .75
+V(abstract_word_net)$size <- 3
+V(abstract_word_net)$frame.color <- V(abstract_word_net)$color
+E(abstract_word_net)$color <- rgb(.5, .5, .5, .04)
+
+```
+
+## Let's draw a Two mode network
+- Here is the results
+```{r fig.height=9.5, fig.width=9.5}
+set.seed(106)
+plot(abstract_word_net, layout = layout_with_fr)
+legend("topleft",
+       legend = c("Topic 20 (Family-related abstract)", 
+                  "Topic 23 (Gender-related abstract)", 
+                  "Word nodes (terms)"),
+       col = c(rgb(0,0,1,0.6), rgb(1,0,0,0.6), rgb(0,1,0,0.6)),
+       pch = 19, 
+       pt.cex = 1.5,
+       bty = "n", 
+       cex = 0.9)
+```
+
+## Identify Space with Correspondence Analysis 
+- RQ) How students in different departments belong to different topics? Which topics are 'close' to which other topics?
+  - Add on the department information of students who submitted a dissertation
+  - With Correspondence Analysis, find the association between departments and dissertation topics by mapping them in the same low-dimensional space
+
+
+## Identify Space with Correspondence Analysis 
+- Load some useful packages. 
+```{r message=F, warning=F}
+library(CAinterprTools)
+library(FactoMineR)
+library(factoextra)
+library(gplots)
+library(NbClust)
+```
+
+## Identify Space with Correspondence Analysis 
+- Read in the department data 
+```{r}
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/department_topic_data.txt"
+department_topic <- read.table(file = url1, header = T)
+department_topic[1:4, 1:4]
+```
+
+## Identify Space with Correspondence Analysis 
+- Extract the department and and topic name of dataset 
+```{r}
+department_names <- rownames(department_topic)
+topic_names <- colnames(department_topic)
+```
+
+
+## Identify Space with Correspondence Analysis 
+- Place both the rows (departments) and the columns (topics) into the same space
+- e.g., Departments will be close together if students from those departments cover the same kinds of topics
+
+```{r}
+ca_mod1 <- CA(X = department_topic, graph = FALSE)
+```
+
+## Identify Space with Correspondence Analysis 
+- `fviz_ca_biplot()` give us the visualization of Correspondence Analysis
+```{r fig.height=7.5, fig.width=11.25}
+p <- fviz_ca_biplot(
+  ca_mod1,
+  col.row = "orange",
+  col.col = "steelblue",
+  labelsize = 3,
+  repel = TRUE
+) +
+  theme_minimal()
+
+p + annotate("text", x = -0.8, y = 0.8, label = "● Department", color = "orange", size = 3.5, hjust = 0) +
+    annotate("text", x = -0.8, y = 0.7, label = "▲ Topic", color = "steelblue", size = 3.5, hjust = 0)
+p
+```
+
+## Let's check the importance in each dimension
+- Access the contribution to each dimension in terms of specific objects
+```{r}
+fviz_contrib(ca_mod1, choice = "col", axes = 1) +
+  theme(axis.text.x = element_text(size = 8.0, angle = 75)) 
+```
+## Let's check the importance in each dimension
+```{r}
+fviz_contrib(ca_mod1, choice = "col", axes = 2) +
+  theme(axis.text.x = element_text(size = 8.0, angle = 75)) 
+```
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for analyzing the two-mode analysis and hierarchical clustering for correspondence analysis, please check this week \[Option\] in the assignment
+
