@@ -763,10 +763,6 @@ stergm_mod4 <- tergm(net_dynamic_4periods ~
 
 The model with gwesp is estimated with MCMC estimation so we need to check the diagnostics, to make sure the model is converging. This is directly analogous to the kind of diagnostics we saw in the ERGM case. 
 
-```{r message=F, warning=F, results='hide'}
-mcmc.diagnostics(stergm_mod4, vars.per.page = 4)
-```
-
 There are two sets of diagnostics; first for the formation model and then for the persistence model. Looks okay on the whole, although we might consider rerunning with different input parameters or a simpler model. Let's take a look at the model results. 
 
 ```{r}
@@ -1146,14 +1142,6 @@ mod3b <- ergm(bnet96_nomiss ~ edges +
 
 ```
 
-The first thing to note is that the model is now being fit using MCMC techniques. This means that we should check if the model is fitting well. Let's use the `mcmc.diagnostics()` function.
-
-```{r results='hide'}
-mcmc.diagnostics(mod3b)
-```
-
-Looks okay in general, so let's go ahead and interpret the results. 
-
 ```{r}
 summary(mod3b)
 ```
@@ -1470,11 +1458,6 @@ Moving to the persistence model, we see that students tend to stay in clubs (or 
 
 More generally, we can see that service clubs tend to be integrating in the school, as students join and stay in these clubs at high rates. This is partly due to the low level of commitment, serving as easy to join 'blow-off' clubs. Still, as we saw in [Chapter 11](#ch11-Two-mode-Networks), these clubs are heterogeneous along gender and grade lines, serving a potentially important role in bringing disparate parts of the school together. The fact that students tend to stay in these clubs makes the integrating story more compelling. On the other hand, we see how high profile clubs serve, if anything, to divide the school: high profile clubs tend to be smaller and exclusive, and members are likely to remain members through time.
 
-Let's check to make sure the model is fitting okay.
-
-```{r, results='hide'}
-mcmc.diagnostics(stergm_mod3)
-```
 
 Looks generally okay, so let's move to our fourth model, where we add nodefactor and nodematch terms for race. To limit the run time of this model, we will only include nodefactor terms for the club features (although the results are substantively similar if we also included nodematch terms for `club_type_detailed` and `club_profile`). We will also tweak some of the control arguments.
 

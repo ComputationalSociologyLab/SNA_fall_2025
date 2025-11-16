@@ -157,7 +157,6 @@ summary(mod_homoph2)
 - Add  a mutual term to the mode to identify reciprocity
   - `mutual` term counts the number of pairs where i->j and j->i exist. 
   - MCMC estimation : useful to set the input parameters to the estimation routine
-- If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads
 
 ```{r message=F}
 mod_homoph_mutual1b <- ergm(school_net ~ edges + 
@@ -175,7 +174,7 @@ mod_homoph_mutual1b <- ergm(school_net ~ edges +
 summary(mod_homoph_mutual1b)
 ```
 
-## 4) Add options to ERGM again
+## 3) Add options to ERGM again
 - Include a control for degree differences (by gender) in the model
   - If boys are more likely to be involved in mutual dyads because they send out more ties or because expectations of reciprocity are higher among boys
 
@@ -183,15 +182,15 @@ summary(mod_homoph_mutual1b)
 mod_homoph_mutual1c <- ergm(school_net ~ edges +
                               nodematch("gender_recode") + 
                               nodematch("grade") + 
-                              #added!
                               nodeofactor("gender_recode") + 
                               nodeicov("grade") + nodeocov("grade") + 
+                              #added!
                               mutual(by = "gender_recode"),
                             control = control.ergm(MCMC.burnin = 50000, 
                                                    MCMC.samplesize = 6000))
 ```
 
-## 4) Add options to ERGM again
+## 3) Add options to ERGM again
 ```{r}
 summary(mod_homoph_mutual1c)
 ```

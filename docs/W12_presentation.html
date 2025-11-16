@@ -500,7 +500,6 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <li><code>mutual</code> term counts the number of pairs where i-&gt;j and j-&gt;i exist.</li>
 <li>MCMC estimation : useful to set the input parameters to the estimation routine</li>
 </ul></li>
-<li>If boys have more reciprocated ties than girls, and thus are involved in more mutual dyads</li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>mod_homoph_mutual1b <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
@@ -527,25 +526,25 @@ ergm(formula = school_net ~ edges + nodematch("gender_recode") +
 Monte Carlo Maximum Likelihood Results:
 
                                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.08496    0.67372      0  -9.032  &lt; 1e-04 ***
-nodematch.gender_recode         0.04858    0.18685      0   0.260 0.794864    
-nodematch.grade                 1.70278    0.21192      0   8.035  &lt; 1e-04 ***
-nodeicov.grade                  0.21471    0.06906      0   3.109 0.001875 ** 
-nodeocov.grade                  0.10265    0.06826      0   1.504 0.132627    
-mutual.by.gender_recode.female  0.91118    0.25790      0   3.533 0.000411 ***
-mutual.by.gender_recode.male    1.45269    0.22258      0   6.527  &lt; 1e-04 ***
+edges                          -6.05800    0.68851      0  -8.799  &lt; 1e-04 ***
+nodematch.gender_recode         0.05022    0.18776      0   0.267 0.789093    
+nodematch.grade                 1.69768    0.21508      0   7.893  &lt; 1e-04 ***
+nodeicov.grade                  0.21374    0.06820      0   3.134 0.001724 ** 
+nodeocov.grade                  0.10100    0.06762      0   1.494 0.135272    
+mutual.by.gender_recode.female  0.91545    0.25638      0   3.571 0.000356 ***
+mutual.by.gender_recode.male    1.45306    0.21785      0   6.670  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
      Null Deviance: 1375.2  on 992  degrees of freedom
- Residual Deviance:  550.7  on 985  degrees of freedom
+ Residual Deviance:  551.1  on 985  degrees of freedom
  
-AIC: 564.7  BIC: 599  (Smaller is better. MC Std. Err. = 0.2343)</code></pre>
+AIC: 565.1  BIC: 599.4  (Smaller is better. MC Std. Err. = 0.2432)</code></pre>
 </div>
 </div>
 </section>
 <section id="add-options-to-ergm-again-1" class="slide level2">
-<h2>4) Add options to ERGM again</h2>
+<h2>3) Add options to ERGM again</h2>
 <ul>
 <li>Include a control for degree differences (by gender) in the model
 <ul>
@@ -556,16 +555,16 @@ AIC: 564.7  BIC: 599  (Smaller is better. MC Std. Err. = 0.2343)</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>mod_homoph_mutual1c <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span></span>
 <span id="cb25-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
 <span id="cb25-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb25-4"><a></a>                              <span class="co">#added!</span></span>
-<span id="cb25-5"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb25-6"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb25-5"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb25-6"><a></a>                              <span class="co">#added!</span></span>
 <span id="cb25-7"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
 <span id="cb25-8"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
 <span id="cb25-9"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="add-options-to-ergm-again-2" class="slide level2">
-<h2>4) Add options to ERGM again</h2>
+<h2>3) Add options to ERGM again</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -578,21 +577,21 @@ ergm(formula = school_net ~ edges + nodematch("gender_recode") +
 Monte Carlo Maximum Likelihood Results:
 
                                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.35477    0.69582      0  -9.133  &lt; 1e-04 ***
-nodematch.gender_recode         0.04896    0.19350      0   0.253  0.80025    
-nodematch.grade                 1.72154    0.21693      0   7.936  &lt; 1e-04 ***
-nodeofactor.gender_recode.male  0.50079    0.29794      0   1.681  0.09280 .  
-nodeicov.grade                  0.21820    0.06741      0   3.237  0.00121 ** 
-nodeocov.grade                  0.09835    0.06878      0   1.430  0.15275    
-mutual.by.gender_recode.female  1.15685    0.29703      0   3.895  &lt; 1e-04 ***
-mutual.by.gender_recode.male    1.24254    0.24633      0   5.044  &lt; 1e-04 ***
+edges                          -6.36599    0.69913      0  -9.106  &lt; 1e-04 ***
+nodematch.gender_recode         0.05533    0.18669      0   0.296 0.766933    
+nodematch.grade                 1.72229    0.20949      0   8.221  &lt; 1e-04 ***
+nodeofactor.gender_recode.male  0.49761    0.29275      0   1.700 0.089172 .  
+nodeicov.grade                  0.21982    0.06824      0   3.221 0.001277 ** 
+nodeocov.grade                  0.09753    0.06779      0   1.439 0.150248    
+mutual.by.gender_recode.female  1.14899    0.30047      0   3.824 0.000131 ***
+mutual.by.gender_recode.male    1.23942    0.23999      0   5.164  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-     Null Deviance: 1375.2  on 992  degrees of freedom
- Residual Deviance:  548.4  on 984  degrees of freedom
+     Null Deviance: 1375  on 992  degrees of freedom
+ Residual Deviance:  548  on 984  degrees of freedom
  
-AIC: 564.4  BIC: 603.6  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
+AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.2222)</code></pre>
 </div>
 </div>
 </section>
