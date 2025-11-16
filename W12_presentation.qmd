@@ -153,7 +153,7 @@ mod_homoph2 <- ergm(school_net ~ edges + nodematch("gender_recode") +
 summary(mod_homoph2) 
 ```
 
-## 3) Add options to ERGM
+## 3) Add options to ERGM again
 - Add  a mutual term to the mode to identify reciprocity
   - `mutual` term counts the number of pairs where i->j and j->i exist. 
   - MCMC estimation : useful to set the input parameters to the estimation routine
@@ -167,11 +167,6 @@ mod_homoph_mutual1b <- ergm(school_net ~ edges +
                               mutual(by = "gender_recode"),
                             control = control.ergm(MCMC.burnin = 50000, 
                                                    MCMC.samplesize = 6000))
-```
-
-## 3) Add options to ERGM again
-```{r}
-summary(mod_homoph_mutual1b)
 ```
 
 ## 3) Add options to ERGM again
@@ -189,6 +184,7 @@ mod_homoph_mutual1c <- ergm(school_net ~ edges +
                             control = control.ergm(MCMC.burnin = 50000, 
                                                    MCMC.samplesize = 6000))
 ```
+
 
 ## 3) Add options to ERGM again
 ```{r}
@@ -239,6 +235,13 @@ mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges +
                                                         ))
                      
 ```
+
+
+## Adding GWESP to the Model
+```{r message=F, warning=F}
+summary(mod_homoph_mutual_gwesp1)
+```
+
 
 ## Simulate a Network with the ERGM Result
 

@@ -492,8 +492,8 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 </div>
 </div>
 </section>
-<section id="add-options-to-ergm-4" class="slide level2">
-<h2>3) Add options to ERGM</h2>
+<section id="add-options-to-ergm-again" class="slide level2">
+<h2>3) Add options to ERGM again</h2>
 <ul>
 <li>Add a mutual term to the mode to identify reciprocity
 <ul>
@@ -512,37 +512,6 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <span id="cb22-8"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="add-options-to-ergm-again" class="slide level2">
-<h2>3) Add options to ERGM again</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Call:
-ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
-    nodematch("grade") + nodeicov("grade") + nodeocov("grade") + 
-    mutual(by = "gender_recode"), control = control.ergm(MCMC.burnin = 50000, 
-    MCMC.samplesize = 6000))
-
-Monte Carlo Maximum Likelihood Results:
-
-                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.05800    0.68851      0  -8.799  &lt; 1e-04 ***
-nodematch.gender_recode         0.05022    0.18776      0   0.267 0.789093    
-nodematch.grade                 1.69768    0.21508      0   7.893  &lt; 1e-04 ***
-nodeicov.grade                  0.21374    0.06820      0   3.134 0.001724 ** 
-nodeocov.grade                  0.10100    0.06762      0   1.494 0.135272    
-mutual.by.gender_recode.female  0.91545    0.25638      0   3.571 0.000356 ***
-mutual.by.gender_recode.male    1.45306    0.21785      0   6.670  &lt; 1e-04 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-     Null Deviance: 1375.2  on 992  degrees of freedom
- Residual Deviance:  551.1  on 985  degrees of freedom
- 
-AIC: 565.1  BIC: 599.4  (Smaller is better. MC Std. Err. = 0.2432)</code></pre>
-</div>
-</div>
-</section>
 <section id="add-options-to-ergm-again-1" class="slide level2">
 <h2>3) Add options to ERGM again</h2>
 <ul>
@@ -552,21 +521,21 @@ AIC: 565.1  BIC: 599.4  (Smaller is better. MC Std. Err. = 0.2432)</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>mod_homoph_mutual1c <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span></span>
-<span id="cb25-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb25-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb25-4"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb25-5"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb25-6"><a></a>                              <span class="co">#added!</span></span>
-<span id="cb25-7"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
-<span id="cb25-8"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
-<span id="cb25-9"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>mod_homoph_mutual1c <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span></span>
+<span id="cb23-2"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb23-3"><a></a>                              <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb23-4"><a></a>                              <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb23-5"><a></a>                              <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb23-6"><a></a>                              <span class="co">#added!</span></span>
+<span id="cb23-7"><a></a>                              <span class="fu">mutual</span>(<span class="at">by =</span> <span class="st">"gender_recode"</span>),</span>
+<span id="cb23-8"><a></a>                            <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">50000</span>, </span>
+<span id="cb23-9"><a></a>                                                   <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="add-options-to-ergm-again-2" class="slide level2">
 <h2>3) Add options to ERGM again</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual1c)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call:
 ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
@@ -577,21 +546,21 @@ ergm(formula = school_net ~ edges + nodematch("gender_recode") +
 Monte Carlo Maximum Likelihood Results:
 
                                Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
-edges                          -6.36599    0.69913      0  -9.106  &lt; 1e-04 ***
-nodematch.gender_recode         0.05533    0.18669      0   0.296 0.766933    
-nodematch.grade                 1.72229    0.20949      0   8.221  &lt; 1e-04 ***
-nodeofactor.gender_recode.male  0.49761    0.29275      0   1.700 0.089172 .  
-nodeicov.grade                  0.21982    0.06824      0   3.221 0.001277 ** 
-nodeocov.grade                  0.09753    0.06779      0   1.439 0.150248    
-mutual.by.gender_recode.female  1.14899    0.30047      0   3.824 0.000131 ***
-mutual.by.gender_recode.male    1.23942    0.23999      0   5.164  &lt; 1e-04 ***
+edges                          -6.35795    0.71793      0  -8.856  &lt; 1e-04 ***
+nodematch.gender_recode         0.05148    0.18855      0   0.273  0.78484    
+nodematch.grade                 1.70835    0.21157      0   8.074  &lt; 1e-04 ***
+nodeofactor.gender_recode.male  0.50198    0.29758      0   1.687  0.09163 .  
+nodeicov.grade                  0.21836    0.06942      0   3.145  0.00166 ** 
+nodeocov.grade                  0.09846    0.06830      0   1.442  0.14944    
+mutual.by.gender_recode.female  1.15860    0.30117      0   3.847  0.00012 ***
+mutual.by.gender_recode.male    1.24840    0.23904      0   5.223  &lt; 1e-04 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-     Null Deviance: 1375  on 992  degrees of freedom
- Residual Deviance:  548  on 984  degrees of freedom
+     Null Deviance: 1375.2  on 992  degrees of freedom
+ Residual Deviance:  548.3  on 984  degrees of freedom
  
-AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.2222)</code></pre>
+AIC: 564.3  BIC: 603.5  (Smaller is better. MC Std. Err. = 0.2324)</code></pre>
 </div>
 </div>
 </section>
@@ -611,9 +580,9 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.2222)</code></pre>
 <li>Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1c, </span>
-<span id="cb28-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
-<span id="cb28-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1c, </span>
+<span id="cb26-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
+<span id="cb26-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="goodness-of-fit-2" class="slide level2">
@@ -626,11 +595,11 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.2222)</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
-<span id="cb29-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
+<span id="cb27-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
+<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
 <section id="adding-gwesp-to-the-model" class="slide level2">
 <h2>Adding GWESP to the Model</h2>
 <ul>
@@ -638,20 +607,55 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.2222)</code></pre>
 <li>A triangle is defined as all cases where i-j and j-k exist and then either k-&gt;i or i-&gt;k exist</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
-<span id="cb30-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb30-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb30-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb30-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb30-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb30-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
-<span id="cb30-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
-<span id="cb30-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
-<span id="cb30-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
-<span id="cb30-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
-<span id="cb30-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
-<span id="cb30-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
-<span id="cb30-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb28-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb28-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb28-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb28-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb28-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb28-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
+<span id="cb28-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
+<span id="cb28-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
+<span id="cb28-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
+<span id="cb28-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
+<span id="cb28-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
+<span id="cb28-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
+<span id="cb28-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="adding-gwesp-to-the-model-1" class="slide level2">
+<h2>Adding GWESP to the Model</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">summary</span>(mod_homoph_mutual_gwesp1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call:
+ergm(formula = school_net ~ edges + nodematch("gender_recode") + 
+    nodematch("grade") + nodeifactor("gender_recode") + nodeofactor("gender_recode") + 
+    nodeicov("grade") + nodeocov("grade") + mutual + gwesp(decay = 0.5, 
+    fixed = T), control = control.ergm(MCMLE.maxit = 20, MCMC.samplesize = 5000, 
+    MCMC.burnin = 25000, MCMC.interval = 10000, MCMC.effectiveSize = 500, 
+    seed = 123))
+
+Monte Carlo Maximum Likelihood Results:
+
+                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    
+edges                          -5.13218    0.44885      0 -11.434   &lt;1e-04 ***
+nodematch.gender_recode         0.02581    0.19784      0   0.130   0.8962    
+nodematch.grade                 1.40642    0.17378      0   8.093   &lt;1e-04 ***
+nodeifactor.gender_recode.male  0.11296    0.21320      0   0.530   0.5962    
+nodeofactor.gender_recode.male  0.27324    0.21076      0   1.296   0.1948    
+nodeicov.grade                  0.10168    0.05738      0   1.772   0.0764 .  
+nodeocov.grade                  0.01121    0.05642      0   0.199   0.8426    
+mutual                          1.83183    0.38152      0   4.801   &lt;1e-04 ***
+gwesp.OTP.fixed.0.5             0.79911    0.13528      0   5.907   &lt;1e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+     Null Deviance: 1375.2  on 992  degrees of freedom
+ Residual Deviance:  510.5  on 983  degrees of freedom
+ 
+AIC: 528.5  BIC: 572.6  (Smaller is better. MC Std. Err. = 0.1652)</code></pre>
+</div>
 </div>
 </section>
 <section id="simulate-a-network-with-the-ergm-result" class="slide level2">

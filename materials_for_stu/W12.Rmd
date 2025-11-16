@@ -1239,39 +1239,6 @@ summary(mod5b)
 
 It looks like clubs still share members at higher rates than expected by chance, controlling for racial segregation in club membership. As a final model, let’s add back in the nodefactor and nodematch terms for club attributes (club type and club profile). Here, we will change a few of the arguments in control.ergm to try and speed up the run time (e.g., relaxing the convergence criterion a bit). This can still take quite a bit to run.
 
-```{r warning=F, message=F}
-mod5c <- ergm(bnet96_nomiss ~ edges + 
-               Offset(~nodemix("studentgender_clubgender", 
-                              levels2 = gender_terms), 
-                      coef = offset_coefs_gender) + 
-                Offset(~nodemix("studentgrade96_clubgrade", 
-                              levels2 = grade_terms), 
-                      coef = offset_coefs_grade) + 
-                b2factor("club_type_detailed", levels = -2) + 
-                b2nodematch("club_type_detailed", beta = .25) + 
-                b2factor("club_profile", levels = c(3, 1, 4)) + 
-                b2nodematch("club_profile", beta = .25) +
-                b1factor("race", levels = -c(1, 3, 4)) + 
-                b1nodematch("race", beta = .15) + 
-                gwb2nsp(3, fixed = T),
-              control = control.ergm(MCMC.burnin = 30000,
-                                  MCMC.samplesize = 5000, 
-                                  parallel = 4,
-                                  parallel.type = "PSOCK",
-                                  MCMLE.confidence.boost = 1.25,
-                                  MCMLE.confidence = .95))
-```
-
-```{r}
-summary(mod5c)
-```
-
-We see that the coefficient on gwb2nsp is negative, and the fit is not improved over `mod4` (at least with BIC), which has the same terms but excludes gwb2nsp. Thus, while clubs do share members at fairly high rates (looking at `mod5a` and `mod5b`), this is explained by the fact that students join clubs with similar attributes. This suggests that students join sets of clubs together, and that we have effectively identified what those clusters are. We see students track along club type and profile: high profile team sports; low profile team sports; low profile academic interest clubs, and so on. If students had crossed club type more strongly (joining wrestling and French club) then we might have seen a positive, significant coefficient for gwb2nsp, even controlling for homophily on club attributes. 
-
-Our final model includes a large number of terms, but a researcher might consider running even more complicated models; for example, adjusting more carefully for the level of connectivity in the network. There are a number of options here. First, we could include stronger controls for the size, or degree, of the clubs. For example, we could include dummy terms for each club, rather than the nodefactor terms currently employed (using b2sociality). Second, we could control for the number of two-paths between clubs. This would allow us to estimate the homophily coefficients net of the baseline tendency for clubs to be connected to other clubs (through students). The basic idea is to include a term that counts all two-paths between clubs. We would accomplish this by including a b2nodematch term for an attribute where clubs all have the same value; the type attribute in this case. We would set beta to the same value as with the other b2nodematch terms: `b2nodematch("type", beta = .25)`. Finally, we could control for the number of two-paths between students, using an analogous b1nodematch term: `b1nodematch("type", beta = .15)`. Note that we are unlikely to include all of these terms in the same model (given the estimation problems). 
-
-Overall, we have learned a lot from our initial ERG models. For example, we see that students are more likely to be in clubs where there are other student's of the same race. We also see that students are members of clubs that match on type and profile, so that incongruent membership is discouraged. And finally, we see that there are high levels of overlap in club memberships (so clustering of students in clubs); this is explained, however, by the tracked nature of club membership, where students join clubs of a similar type and profile. More generally, we see the ideas of intersecting social circles and duality come out in this formal analysis (see [Chapter 11](#ch11-Two-mode-Networks)); as individuals are constituted by the club 'track' they are in (academic, sports, etc.), while the divides between clubs (i.e., the status hierarchy) is based on the memberships of students. 
-
 ## Two-mode Longitudinal Networks
 We have so far run an initial set of cross-sectional models. We now turn to network change, where we want to model how students change club memberships over time. We thus want to predict when students add an edge (join a club) or drop an edge (quit a club). Here we will employ STERGMs, which we explored previously in [Part 2](#ch13-Longitudinal-Network-Models-STERGM-R). The basic idea is to run two models, formation and persistence. For formation, we predict the adding of an edge, given that the edge did not exist in the previous period; for persistence, we predict the keeping of an edge, given that the edge did exist in the previous period. 
 
