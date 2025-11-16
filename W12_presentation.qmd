@@ -222,14 +222,8 @@ summary(mod_homoph_mutual1c)
   - Test whether the micro-level tie formation processes assumed in the model are sufficient to reproduce the features of the network as a whole 
 
 ## Goodness of Fit
-- Check if our model can reproduce distance and the shared partner distribution from the true network
-  - Distance captures the distribution of shortest paths between all ij pairs
-```{r}
-summary(school_net ~ esp(0:10)) 
-```
-## Goodness of Fit
 -  `gof()` function will simulate a set of networks based on the estimated model
-- Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution) 
+- Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value
 
 ```{r}
 gof_mod_homoph_mutual1 <- gof(mod_homoph_mutual1, 
@@ -238,7 +232,9 @@ gof_mod_homoph_mutual1 <- gof(mod_homoph_mutual1,
 ```
 
 ## Goodness of Fit
-- plot the goodness of fit statistics.
+- Plot the goodness of fit statistics.
+  - boxplot for distribution of simulation results
+  - thick line plot for statistics in true network
 
 ```{r}
 par(mfrow = c(1, 3)) 
@@ -268,16 +264,24 @@ mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges +
                      
 ```
 
+## Simulate a Network with the ERGM Result
+
+```{r message=F, warning=F}
+sim_schoolnet <- simulate(mod_homoph_mutual_gwesp1, nsim = 1, seed = 1012,
+                          control = control.simulate.ergm(MCMC.burnin = 100000))
+```
+
 
 ## Adding GWESP to the Model
-- plotting the last network from the MCMC sample.
-
+- plotting the true network and simulated network
 ```{r}
-plot(mod_homoph_mutual_gwesp1$newnetwork) 
+par(mfrow = c(1, 2))
+plot(school_net, vertex.col = "grade", main = "True Network")
+plot(sim_schoolnet, vertex.col = "grade", main = "Simulated Network") 
 ```
 
 
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for analyzing the two-mode analysis and hierarchical clustering for correspondence analysis, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for statistical models of network, please check this week \[Option\] in the assignment

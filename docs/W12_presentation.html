@@ -425,6 +425,7 @@ AIC: 641.7  BIC: 656.4  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <li>Whether boys (compared to girls) send out and/or receive more ties
 <ul>
 <li>Add <code>nodeifactor</code> terms which capture if the mean number of ties coming in, <code>nodeofactor</code> for going out</li>
+<li>Add analogous terms for grade using <code>nodeicov</code> and <code>nodeocov</code></li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -488,8 +489,8 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <span id="cb21-11"><a></a>                                                  <span class="at">MCMC.samplesize =</span> <span class="dv">6000</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="checking-model-convergence" class="slide level2">
-<h2>4) Checking Model Convergence</h2>
+<section id="checking-model-works-well" class="slide level2">
+<h2>4) Checking Model Works Well</h2>
 <ul>
 <li>MCMC… Make sure that the algorithm converged</li>
 <li>Let’s see how the model looks using a <code>mcmc.diagnostics()</code> function:</li>
@@ -499,7 +500,6 @@ AIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)</code></pre>
 <span id="cb22-2"><a></a><span class="fu">mcmc.diagnostics</span>(mod_homoph_mutual1, <span class="at">vars.per.page =</span> <span class="dv">4</span>)</span>
 <span id="cb22-3"><a></a><span class="fu">dev.off</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The function plots the MCMC sample of network statistics for each term included in the model. The plots show how far the statistics calculated on the sampled networks are from the true value, calculated on the observed network. The plots on the left hand show the statistics taken from each individual sample (plotted in order), while the right hand side shows the distribution of sample statistics. A ‘nice’ looking plot would have the sample statistics centered around 0, with some (but not extreme) variance sample to sample, suggesting that the specified model is well-behaved and can produce networks consistent with the observed data.</p>
 </section>
 <section id="checking-statistical-result" class="slide level2">
 <h2>5) Checking Statistical Result</h2>
@@ -647,44 +647,30 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 <section id="goodness-of-fit-1" class="slide level2">
 <h2>Goodness of Fit</h2>
 <ul>
-<li>Check if our model can reproduce distance and the shared partner distribution from the true network
-<ul>
-<li>Distance captures the distribution of shortest paths between all ij pairs</li>
-</ul></li>
+<li><code>gof()</code> function will simulate a set of networks based on the estimated model</li>
+<li>Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">summary</span>(school_net <span class="sc">~</span> <span class="fu">esp</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">10</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> esp.OTP0  esp.OTP1  esp.OTP2  esp.OTP3  esp.OTP4  esp.OTP5  esp.OTP6  esp.OTP7 
-       24        37        29        19        12         2         1         0 
- esp.OTP8  esp.OTP9 esp.OTP10 
-        0         0         0 </code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1, </span>
+<span id="cb31-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
+<span id="cb31-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="goodness-of-fit-2" class="slide level2">
 <h2>Goodness of Fit</h2>
 <ul>
-<li><code>gof()</code> function will simulate a set of networks based on the estimated model</li>
-<li>Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution)</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>gof_mod_homoph_mutual1 <span class="ot">&lt;-</span> <span class="fu">gof</span>(mod_homoph_mutual1, </span>
-<span id="cb33-2"><a></a>                              <span class="at">GOF =</span> <span class="sc">~</span> distance <span class="sc">+</span> espartners <span class="sc">+</span> model,</span>
-<span id="cb33-3"><a></a>                              <span class="at">control =</span> <span class="fu">control.gof.ergm</span>(<span class="at">seed =</span> <span class="dv">110</span>)) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="goodness-of-fit-3" class="slide level2">
-<h2>Goodness of Fit</h2>
+<li>Plot the goodness of fit statistics.
 <ul>
-<li>plot the goodness of fit statistics.</li>
+<li>boxplot for distribution of simulation results</li>
+<li>thick line plot for statistics in true network</li>
+</ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
-<span id="cb34-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)) </span>
+<span id="cb32-2"><a></a><span class="fu">plot</span>(gof_mod_homoph_mutual1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-24-1.png" width="960" class="r-stretch"></section>
+<img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-23-1.png" width="960" class="r-stretch"></section>
 <section id="adding-gwesp-to-the-model" class="slide level2">
 <h2>Adding GWESP to the Model</h2>
 <ul>
@@ -695,29 +681,38 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
-<span id="cb35-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb35-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb35-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb35-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
-<span id="cb35-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
-<span id="cb35-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
-<span id="cb35-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
-<span id="cb35-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
-<span id="cb35-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
-<span id="cb35-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
-<span id="cb35-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
-<span id="cb35-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
-<span id="cb35-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>mod_homoph_mutual_gwesp1 <span class="ot">&lt;-</span> <span class="fu">ergm</span>(school_net <span class="sc">~</span> edges <span class="sc">+</span> </span>
+<span id="cb33-2"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb33-3"><a></a>                                   <span class="fu">nodematch</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb33-4"><a></a>                                   <span class="fu">nodeifactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb33-5"><a></a>                                   <span class="fu">nodeofactor</span>(<span class="st">"gender_recode"</span>) <span class="sc">+</span> </span>
+<span id="cb33-6"><a></a>                                   <span class="fu">nodeicov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> <span class="fu">nodeocov</span>(<span class="st">"grade"</span>) <span class="sc">+</span> </span>
+<span id="cb33-7"><a></a>                                   mutual <span class="sc">+</span> <span class="fu">gwesp</span>(<span class="at">decay =</span> <span class="fl">0.5</span>, <span class="at">fixed =</span> T), </span>
+<span id="cb33-8"><a></a>                                 <span class="at">control =</span> <span class="fu">control.ergm</span>(<span class="at">MCMLE.maxit =</span> <span class="dv">20</span>,      </span>
+<span id="cb33-9"><a></a>                                                          <span class="at">MCMC.samplesize =</span> <span class="dv">5000</span>, </span>
+<span id="cb33-10"><a></a>                                                          <span class="at">MCMC.burnin =</span> <span class="dv">25000</span>,    </span>
+<span id="cb33-11"><a></a>                                                          <span class="at">MCMC.interval =</span> <span class="dv">10000</span>,  </span>
+<span id="cb33-12"><a></a>                                                          <span class="at">MCMC.effectiveSize =</span> <span class="dv">500</span>,</span>
+<span id="cb33-13"><a></a>                                                          <span class="at">seed =</span> <span class="dv">123</span></span>
+<span id="cb33-14"><a></a>                                                        ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="simulate-a-network-with-the-ergm-result" class="slide level2">
+<h2>Simulate a Network with the ERGM Result</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>sim_schoolnet <span class="ot">&lt;-</span> <span class="fu">simulate</span>(mod_homoph_mutual_gwesp1, <span class="at">nsim =</span> <span class="dv">1</span>, <span class="at">seed =</span> <span class="dv">1012</span>,</span>
+<span id="cb34-2"><a></a>                          <span class="at">control =</span> <span class="fu">control.simulate.ergm</span>(<span class="at">MCMC.burnin =</span> <span class="dv">100000</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="adding-gwesp-to-the-model-1" class="slide level2">
 <h2>Adding GWESP to the Model</h2>
 <ul>
-<li>plotting the last network from the MCMC sample.</li>
+<li>plotting the true network and simulated network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">plot</span>(mod_homoph_mutual_gwesp1<span class="sc">$</span>newnetwork) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb35-2"><a></a><span class="fu">plot</span>(school_net, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"True Network"</span>)</span>
+<span id="cb35-3"><a></a><span class="fu">plot</span>(sim_schoolnet, <span class="at">vertex.col =</span> <span class="st">"grade"</span>, <span class="at">main =</span> <span class="st">"Simulated Network"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="W12_presentation_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
@@ -725,7 +720,7 @@ AIC: 564  BIC: 603.2  (Smaller is better. MC Std. Err. = 0.224)</code></pre>
 <h2>Done!</h2>
 <ul>
 <li>Please check KLMS for the assignment of this week(til Friday)</li>
-<li>If you want to study in-depth knowledge for analyzing the two-mode analysis and hierarchical clustering for correspondence analysis, please check this week [Option] in the assignment</li>
+<li>If you want to study in-depth knowledge for statistical models of network, please check this week [Option] in the assignment</li>
 </ul>
 
 

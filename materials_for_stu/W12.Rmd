@@ -390,7 +390,7 @@ mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges +
                                                           seed = 123
                                                         ))
 
-control=control.ergm(MCMC.burnin=25000,        # These control options are not needed if the model works.                                  MCMC.samplesize=5000,                                  parallel=ncores,                                  parallel.type="PSOCK",                                  MCMLE.density.guard = exp(5)) 
+control=control.ergm(MCMC.burnin=25000,                     MCMC.samplesize=5000,                                  parallel=ncores,                                  parallel.type="PSOCK",                                  MCMLE.density.guard = exp(5)) 
                      
 ```
 
