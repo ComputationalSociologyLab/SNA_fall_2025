@@ -672,11 +672,11 @@ Dynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN depa
 <div class="cell-output cell-output-stdout">
 <pre><code>  time  s.num i.num num si.flow is.flow
 1    1 727.00 23.00 750     NaN     NaN
-2    2 725.50 24.50 750    2.00    0.50
-3    3 723.75 26.25 750    2.00    0.25
-4    4 722.00 28.00 750    1.75    0.00
-5    5 720.25 29.75 750    2.00    0.25
-6    6 718.25 31.75 750    2.25    0.25</code></pre>
+2    2 725.75 24.25 750    1.75    0.50
+3    3 724.25 25.75 750    1.75    0.25
+4    4 721.75 28.25 750    2.50    0.00
+5    5 719.75 30.25 750    2.25    0.25
+6    6 717.25 32.75 750    2.75    0.25</code></pre>
 </div>
 </div>
 </section>
@@ -704,12 +704,12 @@ Model Statistics
 ------------------------------
 Time: 100 
 ------------------------------ 
-           mean      sd    pct
-Suscept.  125.5  14.526  0.167
-Infect.   624.5  14.526  0.833
-Total     750.0   0.000  1.000
-S -&gt; I     10.5   4.933     NA
-I -&gt; S      5.5   2.082     NA
+            mean      sd    pct
+Suscept.  126.75  15.196  0.169
+Infect.   623.25  15.196  0.831
+Total     750.00   0.000  1.000
+S -&gt; I      7.00   2.708     NA
+I -&gt; S      8.75   2.630     NA
 ------------------------------ </code></pre>
 </div>
 </div>
@@ -722,15 +722,11 @@ I -&gt; S      5.5   2.082     NA
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
 <span id="cb48-2"><a></a><span class="fu">plot</span>(episim_baseline, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="960"></p>
-</figure>
+
 </div>
-</div>
-</div>
-<h3 id="varying-network-features">Varying Network Features</h3>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
+<section id="varying-network-features" class="slide level2">
+<h2>Varying Network Features</h2>
 <p>One key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>target_statistics_lowdegree <span class="ot">&lt;-</span> <span class="fu">round</span>(target_statistics_baseline <span class="sc">*</span> .<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -789,12 +785,12 @@ I -&gt; S      5.5   2.082     NA
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>compare_dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  period i.num.baseline i.num.lowdegree
-1     10          43.25           32.25
-2     25         100.00           48.50
-3     50         324.75           94.25
-4    100         624.50          254.50
-5    150         649.25          418.75
-6    300         647.75          546.25</code></pre>
+1     10          42.25           29.00
+2     25         110.25           44.25
+3     50         346.75           83.25
+4    100         623.25          220.00
+5    150         646.50          393.25
+6    300         649.75          553.25</code></pre>
 </div>
 </div>
 <p>Each row reports the number infected for each simulation for that time period. The second column reports the baseline model, run above (using mean degree of 3.707), while the third column reports the low degree simulation results. We can see that the low degree simulation has a lower number of infected at each time period, but the differences are striking around periods 50 to 150. We can also plot the difference in number infected between the two simulations.</p>
@@ -830,45 +826,12 @@ I -&gt; S      5.5   2.082     NA
 </div>
 </div>
 <p>Overall, the average number of partners in a time period clearly affects the diffusion potential. With fewer edges per period, the potential to become infected and pass it on is greatly diminished. The decrease in average number of partners affects both the final number of infected, as well as the pace of infection, creating large differentials in infection in the middle periods. This suggests that decreasing the number of partners per period can reduce epidemic potential, but even here (in the low degree case) we still see a high rate of cases infected by the end of the simulation (around 75%).</p>
-<h3 id="varying-epidemic-model">Varying Epidemic Model</h3>
-<p>Just as we were able to systematically vary the network model in the simulation, we can also vary the input parameters to the epidemic model. Here, we will keep the network the same as in the baseline model (so average degree is set to 3.707, based on the original ego network data). We will only alter the inputs to the epidemiological part of the simulation. We will focus on the activity rate parameter. This governs how many times two nodes with a connection interact in a given time period. Given a connection, node i and j may interact 0, 1, 2, 3… times in a given period, with increasing risk of infection as the number of interactions increases.</p>
-<p>Here we will create a new set of input parameters using the <code>param.net()</code> function. We will again set the infection probability to .025 and the recovery rate to .01. This time, however, we will lower the number of interactions per period (assuming i and j are connected) to .40. This effectively means that ij pairs who are connected will have .60 probability of having no risk events in a period and .40 probability of having one risk event (compare this to the previous simulation where all connected ij pairs had one risk event). Nodes thus have a relatively high degree, but lower probabilities of infection with each partner. Formally, we set the act.rate input to .40 in the <code>param.net()</code> function.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>input_to_episim_lowinteraction <span class="ot">&lt;-</span> <span class="fu">param.net</span>(<span class="at">inf.prob =</span> <span class="fl">0.025</span>, </span>
-<span id="cb62-2"><a></a>                                            <span class="at">act.rate =</span> .<span class="dv">40</span>, <span class="at">rec.rate =</span> <span class="fl">0.01</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>We now rerun the epidemic simulation, using the lower interaction inputs. All other inputs are the same as in the baseline model.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>episim_lowinteraction <span class="ot">&lt;-</span> <span class="fu">netsim</span>(<span class="at">x =</span> net_mod, </span>
-<span id="cb63-2"><a></a>                                <span class="at">param =</span> input_to_episim_lowinteraction,</span>
-<span id="cb63-3"><a></a>                                <span class="at">init =</span> initial_status_inputs, </span>
-<span id="cb63-4"><a></a>                                <span class="at">control =</span> control_episim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Now let’s plot the diffusion curves for the baseline simulation and the low interaction simulation on one plot.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb64-2"><a></a></span>
-<span id="cb64-3"><a></a><span class="fu">plot</span>(episim_baseline,  <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), </span>
-<span id="cb64-4"><a></a>     <span class="at">legend =</span> T, <span class="at">main =</span> <span class="st">"Baseline"</span>)</span>
-<span id="cb64-5"><a></a></span>
-<span id="cb64-6"><a></a><span class="fu">plot</span>(episim_lowinteraction, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), </span>
-<span id="cb64-7"><a></a>     <span class="at">legend =</span> T, <span class="at">main =</span> <span class="st">"Low Interactions"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-44-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can clearly see the effect of activity rate on epidemic size (looking at the “i.num” lines). When nodes have limited risk events in a given period (as the activity rate falls below 1), the potential for infection spread is greatly diminished. Even if nodes maintain a large set of partners, if they don’t interact with them at high rates (or do not engage in risky behavior), there is diminished chance for diffusion over the network. We thus begin to see the importance of distinguishing between relationships that exist and specific interactions that take place in a given period.</p>
-<p>Substantively, we have seen how average degree and number of interactions per period affect epidemic potential. By lowering both the number of partners and the number of interactions (within relationships), the pace of infection spread decreases. In each case, however, the number infected at the end of the simulation is still quite high. As a further analysis, we could uncover how low these two inputs (or other potential inputs) would have to be set to lower the final epidemic size. We could also use this simulation platform to ask different kinds of questions; for example we may be interested in seeing the rate of infection between urban and suburban actors. We may also want to know how the differences between urban/suburban change as the features of the simulation change, in terms of network features and epidemic behavior. Finally, note that the EpiModel package is quite flexible, making it possible to specify a wide range of network and disease spread processes. We have explored only a small part of the full range of possibilities. In the next tutorial, we will explore diffusion processes in the context of adopting a new innovation, shifting away from biological transmission to more social diffusion processes.</p>
 </section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
 <li>Please check KLMS for the assignment of this week(til Friday)</li>
-<li>If you want to study in-depth knowledge for statistical models of network, please check this week [Option] in the assignment</li>
+<li>If you want to study in-depth knowledge for epidemic models of network, please check this week [Option] in the assignment</li>
 </ul>
 
 

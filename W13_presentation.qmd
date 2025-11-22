@@ -291,7 +291,7 @@ par(mfrow = c(1, 1))
 plot(episim_baseline, y = c("i.num", "s.num"), legend = T) 
 ```
 
-### Varying Network Features
+## Varying Network Features
 One key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).
 
 ```{r}
@@ -375,44 +375,7 @@ plot(episim_lowdegree, y = c("i.num", "s.num"),
 
 Overall, the average number of partners in a time period clearly affects the diffusion potential. With fewer edges per period, the potential to become infected and pass it on is greatly diminished. The decrease in average number of partners affects both the final number of infected, as well as the pace of infection, creating large differentials in infection in the middle periods. This suggests that decreasing the number of partners per period can reduce epidemic potential, but even here (in the low degree case) we still see a high rate of cases infected by the end of the simulation (around 75%). 
 
-### Varying Epidemic Model
-Just as we were able to systematically vary the network model in the simulation, we can also vary the input parameters to the epidemic model. Here, we will keep the network the same as in the baseline model (so average degree is set to 3.707, based on the original ego network data). We will only alter the inputs to the epidemiological part of the simulation. We will focus on the activity rate parameter. This governs how many times two nodes with a connection interact in a given time period. Given a connection, node i and j may interact 0, 1, 2, 3... times in a given period, with increasing risk of infection as the number of interactions increases. 
-
-Here we will create a new set of input parameters using the `param.net()` function. We will again set the infection probability to .025 and the recovery rate to .01. This time, however, we will lower the number of interactions per period (assuming i and j are connected) to .40. This effectively means that ij pairs who are connected will have .60 probability of having no risk events in a period and .40 probability of having one risk event (compare this to the previous simulation where all connected ij pairs had one risk event). Nodes thus have a relatively high degree, but lower probabilities of infection with each partner. Formally, we set the act.rate input to .40 in the `param.net()` function.  
-
-```{r}
-input_to_episim_lowinteraction <- param.net(inf.prob = 0.025, 
-                                            act.rate = .40, rec.rate = 0.01) 
-```
-
-We now rerun the epidemic simulation, using the lower interaction inputs. All other inputs are the same as in the baseline model.
-
-```{r}
-episim_lowinteraction <- netsim(x = net_mod, 
-                                param = input_to_episim_lowinteraction,
-                                init = initial_status_inputs, 
-                                control = control_episim)
-```
-
-Now let's plot the diffusion curves for the baseline simulation and the low interaction simulation on one plot. 
-
-```{r}
-par(mfrow = c(1, 2))
-
-plot(episim_baseline,  y = c("i.num", "s.num"), 
-     legend = T, main = "Baseline")
-
-plot(episim_lowinteraction, y = c("i.num", "s.num"), 
-     legend = T, main = "Low Interactions")
-```
-
-We can clearly see the effect of activity rate on epidemic size (looking at the "i.num" lines). When nodes have limited risk events in a given period (as the activity rate falls below 1), the potential for infection spread is greatly diminished. Even if nodes maintain a large set of partners, if they don’t interact with them at high rates (or do not engage in risky behavior), there is diminished chance for diffusion over the network. We thus begin to see the importance of distinguishing between relationships that exist and specific interactions that take place in a given period. 
-
-Substantively, we have seen how average degree and number of interactions per period affect epidemic potential. By lowering both the number of partners and the number of interactions (within relationships), the pace of infection spread decreases. In each case, however, the number infected at the end of the simulation is still quite high. As a further analysis, we could uncover how low these two inputs (or other potential inputs) would have to be set to lower the final epidemic size. We could also use this simulation platform to ask different kinds of questions; for example we may be interested in seeing the rate of infection between urban and suburban actors. We may also want to know how the differences between urban/suburban change as the features of the simulation change, in terms of network features and epidemic behavior. Finally, note that the EpiModel package is quite flexible, making it possible to specify a wide range of network and disease spread processes. We have explored only a small part of the full range of possibilities. In the next tutorial, we will explore diffusion processes in the context of adopting a new innovation, shifting away from biological transmission to more social diffusion processes. 
-
-
-
 ## Done!
 
 -   Please check KLMS for the assignment of this week(til Friday)
--   If you want to study in-depth knowledge for statistical models of network, please check this week \[Option\] in the assignment
+-   If you want to study in-depth knowledge for epidemic models of network, please check this week \[Option\] in the assignment
