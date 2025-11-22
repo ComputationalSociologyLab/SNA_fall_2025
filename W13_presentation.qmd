@@ -14,8 +14,9 @@ execute:
 
 # Network Diffusion
 - Cover dynamic epidemiological models of diffusion
-- Apply the model to a case of infection spread through a risk network
+- Apply the model to simulate a case of infection spread through a risk network
   - How much does the epidemic potential decrease if the number of current partners decreases dramatically?
+
 
 ## Reading in Data 
 - Specify 
@@ -26,6 +27,7 @@ library(EpiModel)
 ```
 
 ## Reading in Data 
+- No exact edgelist
 - Use a faux ego network data set drawn from an at-risk population of drug users 
   - `degree` = number of current drug partners for ego
 ```{r}
@@ -50,7 +52,7 @@ epi_network <- network.initialize(n = num_nodes, directed = F)
 ```
 
 ## Specifying the Network Model 
-- Add some nodal attributes, based on the values seen in the observed data
+- Add some node attributes, based on the values seen in the observed data
 ```{r}
 epi_network <- set.vertex.attribute(epi_network, attrname = "location",
                                     value = ego_dat$location)
@@ -58,6 +60,7 @@ epi_network
 ```
 
 ## Specifying the Network Model 
+- Construct a simulated network based on the information we have
 - Specify a model that determines how ties form and break within the simulation
   - With tie formation formula (same kinds of terms used in the ERGM)
 
@@ -66,8 +69,8 @@ formation_formula <- formula(~ edges + nodefactor("location") +
                                nodematch("location"))
 ```
 
-## Specifying the Network Model 
-- Set the target statistics for each term in the formula
+## Calculate the Target Statistics
+- Set the target statistics for each term in the formula(`nodefactor("location")`, `nodematch("location")`)
   - Set the number of edges
   - Use the mean degree in the ego network data
 
@@ -76,292 +79,217 @@ mean_degree <- mean(ego_dat$degree)
 mean_degree 
 ```
 
-## Specifying the Network Model 
-- Take the mean degree, multiply it by the number of nodes, and divide it by 2 
-- (as the network is undirected) to get the total number of edges. 
-
+## Calculate the Target Statistics
+- Calculate the term `edge`
+  - Take the mean degree, multiply it by the number of nodes
+  - Divide it by 2 as the network is undirected to get the total number of edges
 ```{r}
 edges <- mean_degree * num_nodes / 2 
 edges
 ```
 
-## Specifying the Network Model 
-- Set the nodefactor term on location
-The nodefactor term is defined by the total number of ties emanating from one group. This is defined as: the mean degree of the group * the number of people in that group. Let's first calculate mean degree for those in the city and the suburbs. We will use a `tapply()` function to calculate mean degree by location.
-
+## Calculate the Target Statistics
+- Calculate the term `nodefactor("location")`
+  - Total number of ties emanating from one group. 
+  - the mean degree of the group * the number of people in that group
+  
 ```{r}
 mean_degree_location <- tapply(X = ego_dat$degree, INDEX = ego_dat$location, 
                                FUN = mean) 
-```
-
-```{r}
 mean_degree_location 
 ```
 
-We see those in the city have higher degree than those in the suburbs. Now, let's calculate the number in the city and the suburbs. We do a simple table on location to see how many are in the city versus the suburbs.
+## Calculate the Target Statistics
+- Check a simple table on location to see how many are in the city versus the suburbs
 
 ```{r}
 tab_location <- table(ego_dat$location) 
-```
-
-```{r}
 tab_location
 ```
 
-We now need to calculate the total number of edges for each group by multiplying the mean degree for each group by the size of each group.  
+## Calculate the Target Statistics
+- Total number of edges for each group * the mean degree for each group by the size of each group
 
 ```{r}
 edges_by_group <- mean_degree_location * tab_location
-```
-
-```{r}
+edges_suburbs <- edges_by_group[2] 
 edges_by_group 
 ```
 
-In this case, city will serve as the reference category (by default the first category) in the formula and we thus only need the number of edges for those in the suburbs. 
 
-```{r}
-edges_suburbs <- edges_by_group[2] 
-```
-
-Finally, let's set the target statistic for the nodematch term, showing how strong homophily is for location. We need to calculate the number of edges we expect to match on location (so ij are both in the city or both in the suburbs). To get this from the ego network data, we first calculate the proportion of ego-alter pairs where ego and alter are in the same location (city/suburb). We will then take that proportion and multiply it by the total number of edges in the network. We begin by determining if the respondent has the same or different location as each alter.
-
+## Calculate the Target Statistics
+- Calculate the term `nodematch("location")`
+  - The proportion of ego-alter pairs where ego and alter are in the same location
+  - Take the proportion and multiply it by the total number of edges in the network
 ```{r}
 location_cols <- c("location1", "location2", "location3")
 same_location <- ego_dat[, "location"] == ego_dat[, location_cols] 
-```
-
-```{r}
 head(same_location)
 ```
 
-This says that respondent 1 has 1 alter and they are in the same location; respondent 2 has 3 alters, and is in the same location as 1 and 3 but a different location as alter 2; and so on. Now, let's see what proportion of ego-alter pairs match on location. We will do a simple table on the data frame constructed above, with a `prop.table()` function applied to get the proportions:
+## Calculate the Target Statistics
+- See what proportion of ego-alter pairs match on location
+- Do a simple table on the data frame constructed above
 
 ```{r}
 prop_match <- prop.table(table(same_location))
-```
-
-```{r}
 prop_match 
 ```
 
-So, about .808 of edges should match on location. Note that we still need to calculate the number of edges we expect to match on location (so far we just have the proportion). We will take the proportion matching (the second element in `prop_match`) and multiply it by the total number of edges in the desired network:
+## Calculate the Target Statistics
+- Take the proportion matching and multiply it by the total number of edges in the desired network
 
 ```{r}
 num_match <- round(prop_match[[2]] * edges)
-```
-
-```{r}
 num_match 
 ```
 
-We see that 1124 edges should match on location. Now we put together the target statistics into one input vector.
+
+## Calculate the Target Statistics
+- Put together the target statistics into one input vector.
 
 ```{r}
 target_statistics_baseline <- c(edges = edges, 
                                 nodefactor.location = edges_suburbs, 
                                 nodematch.location = num_match) 
-```
-
-```{r}
 target_statistics_baseline
 ```
 
-This means that edges, in a given period, will form in a way consistent with these input statistics. For example, we would expect 1390 edges (or about 3.707 ties per person) in a given period, of which around 1124 should be within the same location. Note that we can alter these basic values in subsequent simulations, to see how shifting network formation patterns affect diffusion.
-
-We also need to specify a model that will dictate how edges are dropped over time. This is set via a `dissolution_coefs()` function. The arguments are: 
-
-- dissolution = a formula that determines how edges are dropped. This can take a number of forms. The simplest version is that all edges are dropped at the same rate; a more complicated model could allow edges of certain characteristics to end at different rates (so we may think that if two people share the same characteristic, then the edge may last longer). 
-- duration = the average duration of an edge in the simulation; this is recorded in arbitrary time units (but we can think of this as months for concreteness)
-- d.rate = the death rate of the population (so that nodes can leave the network across time, at least potentially). 
-
-Here, we create a fairly simple dissolution model. In this case, all edges dissolve at the same rate (set using `offset(edges)`), with average duration of 25 time units (not based on actual data, although it could be). The exit, or death rate, is set at .001.
-
+## Set Rules for Network Dissolution
+- Specify a model that will dictate how edges are dropped over time
 ```{r}
+# dissolution = a formula that determines how edges are dropped
+# dissolution = the average duration of an edge in the simulation
+# d.rate = the death rate of the population
 dissolution_coefs <- dissolution_coefs(dissolution = ~ offset(edges),
                                        duration = 25, d.rate = .001)
-```
-
-```{r}
 dissolution_coefs  
 ```
 
 ## Estimating the Network Model
-We now estimate the statistical network model that will be used in our epidemiological simulation. The function is `netest()`, which is a wrapper for the `ergm()` and `tergm()` functions explored in [Chapter 13](#ch13-Statistical-Models-Networks-R).  The main arguments are:
-
-- nw = network object used as basis for simulation 
-- formation = formula specifying formation of edges
-- target.stats = input target statistics corresponding to formation formula
-- coefs.diss = coefficients for dissolution of edges
-
-There are a number of other arguments which may be useful/necessary depending on the particular problem at hand. For example, it is possible to change the control parameters used in the estimation routine. Here, we set nw as the base network constructed above; formation is set to our formation formula; target.stats is set to our target statistics vector and coef.diss is set to our dissolution coefficients calculated above. We also use `set.seed()` to help in reproducing the model. 
-
+-  `netest()` : wrapper for the `ergm()` and `tergm()` functions 
 ```{r results='hide', warning=F, message=F}
+# nw = network object used as basis for simulation 
+# formation = formula specifying formation of edges
+# target.stats = input target statistics corresponding to formation formula
+# coefs.diss = coefficients for dissolution of edges
+
 set.seed(1002)
 net_mod <- netest(nw = epi_network, formation = formation_formula, 
                   target.stats = target_statistics_baseline, 
                   coef.diss = dissolution_coefs) 
-```
-
-```{r warning=F, message=F}
 summary(net_mod)
 ```
 
-Before we can use the model in a simulation, we need to make sure it is acting like we expect. We can use the `netdx()` function to see if the model is producing networks that match the target statistics, an indication that the model is working correctly. The `netdx()` function will simulate networks from the estimated model and compare the statistics from the simulated networks to the input target statistics. There are two basic versions of the comparison, one dynamic and one static. For the static comparison, the model simulates networks based on the underlying model for one time period, with no tie gain/loss over time. This is directly akin to looking at convergence in an ERG model. For the dynamic comparison, the model compares the target statistics in the simulated network to the input target statistics (per period), while adjusting for edge dissolution and creation. The main arguments to `netdx()` are:
-
-- x = model estimated from netest
-- nsims = number of simulated networks
-- dynamic = should look at dynamic statistics (T/F)?
-- nsteps = number of time periods in dynamic simulation
-- nwstats.formula = formula of statistics to test against, default is the target statistics specified in the formation formula. 
-
-First, we will check the fit in the static case, to see if the base model reproduces the target statistics. Note that we do not include a nsteps argument as the simulated networks are only based on a single time period. 
+## Estimating the Network Model
+- See if the model is producing networks that match the target statistics
+- `netdx()` function will simulate networks from the estimated model and compare the statistics from the simulated networks to the input target statistics
 
 ```{r message=F, results='hide'}
+# x = model estimated from netest
+# nsims = number of simulated networks
+# dynamic = should look at dynamic statistics (T/F)?
+  
 mod_fit1 <- netdx(x = net_mod, dynamic = F, nsims = 1000) 
 ```
 
+## Estimating the Network Model
 ```{r}
 plot(mod_fit1, legend = T) 
 ```
 
-The fit looks good, with the simulated networks matching the target statistics in the cross-section. Now, let's look at the target statistics when we allow ties to dissolve and form over time. In this case, we will set dynamic equal to T and set the number of time periods, here equal to 300. Note that with 300 time periods for each simulation, we want to keep the number of simulations (nsims) fairly low (given the run time); here we set nsims to 5. 
-
+## Estimating the Network Model
+- Let's look at the target statistics when we allow ties to dissolve and form over time
 ```{r message=F, results='hide'}
+# nsteps = number of time periods in dynamic simulation
 mod_fit2 <- netdx(x = net_mod, dynamic = T, nsims = 5, nsteps = 300) 
 ```
 
+## Estimating the Network Model
 ```{r}
-mod_fit2 
+plot(mod_fit2, legend = T)  
 ```
 
-We can see that there are two different sets of target statistics, one capturing the target statistics at different time points in the simulation and the second looking at the duration and dissolution of edges. Let's first look at the target statistics.
-
+## Estimating the Network Model
 ```{r}
-plot(mod_fit2, legend = T) 
-```
-
-This generally looks okay. Now, let's look at duration and dissolution of ties. We will first set up the plot to have two columns. To plot the statistics dealing with the duration of ties we set type = "duration". To plot the statistics dealing with the dissolution of ties we set type = "dissolution"
-
-```{r}
+# To plot the statistics dealing with the duration of ties, "duration"
+# To plot the statistics dealing with the dissolution of ties,"dissolution"
 par(mfrow = c(1, 2))
 plot(mod_fit2, type = "duration") 
 plot(mod_fit2, type = "dissolution") 
 ```
 
-The dotted line represents the expected duration of ties (set at 25 in this case).   We can also look at the bottom part of the output from above to see if the duration and dissolution target values match the simulation. 
-
-```{r}
-mod_fit2
-```
-
-We can see, for example, that the target percent of edges that dissolve is .04, matching what we see in the simulation (looking at the Sim Mean column). 
-
 ## Specifying the Epidemic Model
-The second main step is to specify the epidemic part of the simulation, determining the manner in which the infection spreads through social connections. EpiModel allows for a flexible range of models to be specified, although it is also possible to write additional code to extend the functionality of the package. Here, we will consider a simple contagion model, where actors, once infected, can pass it on to those they interact with (e.g., share needles with) in a given time period. In the language of epidemiological studies, we will consider a SIS model (susceptible-infected-susceptible) where actors are either infected or susceptible to be infected. We will assume that actors can be reinfected, once recovered. We could alternatively assume that actors cannot be reinfected, thus running an SIR model (susceptible-infected-recovered). To run an epidemiological simulation, in conjunction with our network model specified above, we need to create a number of inputs, shaping the features of the simulation. 
-
-As a first step, we need to create a vector that captures the initial state that each node is in at the start of the simulation. Each node must be set to a "s" "i" or "r" for susceptible, infected or recovered.  Here, let's randomly select 3% of the population to be infected. We will use a `sample()` function, randomly sampling an s, i, or r state for each node, with probability .97, .03 and 0 (so no one is recovered). We set size to num_nodes so that each node in the simulation will have an initial state. 
+- Identify how the infection spreads through social connections
+- EpiModel allows for a flexible range of models to be specified
 
 ```{r}
 initial_status <- sample(c("s", "i", "r"), size = num_nodes, 
                          replace = T, prob = c(.97, .03, 0)) 
-
-```
-
-```{r}
 table(initial_status)
 ```
 
-We then need to feed this vector of initial states to the `init.net()` function, with status.vector set to the vector of initial states.
+## Specifying the Epidemic Model
+- Feed this vector of initial states to the `init.net()` function, with status.vector set to the vector of initial states.
 
 ```{r}
 initial_status_inputs <- init.net(status.vector = initial_status)
 ```
 
-Now, we will go ahead and set the probabilities of infection and recovery using a `param.net()` function. The arguments are:
-
-- inf.prob = the probability of infection in a given interaction (or act)
-- act.rate = number of interactions (or acts) in a time period between i and j, assuming
-that i and j are connected in that period.
-- rec.rate = the rate of recovery in a time period
-
-Here we will we set the probability of infection to .025, so that in a given act between i and j (like sharing needles) the probability of infection is .025. We set the number of acts per period to 1. This means that a pair, ij, that have a relationship have 1 risk event per period. In each risk event, node i, if infected, can pass the infection to j. Finally, we set the recovery rate to .01, so that a node has a .01 probability of recovering in a given time period. These inputs could be informed by actual data or could represent theoretical inputs, as in this case (which could then be varied to see their effect on the epidemic potential). 
+## Specifying the Epidemic Model
+- Go ahead and set the probabilities of infection and recovery using a `param.net()` function
 
 ```{r}
+# inf.prob = the probability of infection in a given interaction (or act)
+# act.rate = number of interactions (or acts) in a time period between i and j, assuming that i and j are connected in that period.
+# rec.rate = the rate of recovery in a time period
+
 input_to_episim <- param.net(inf.prob = 0.025, act.rate = 1, rec.rate = 0.01) 
-```
-
-```{r}
 input_to_episim
 ```
 
-Finally, we need to create an object that controls the simulation itself. Here we use the `control.net()` function. The main arguments are:
-
-- type = SI, SIR, SIS 
-- nsteps = number of time periods for simulation
-- nsims = number of simulations to perform
-- ncores = number of processors to use in simulation (if multiple cores are to be used)
-
-Here we will we set type to "SIS", have a simulation with 300 time periods, do the simulation 4 times and run it over 2 processors. We would want to do this with more simulations in an actual analysis.
+## Specifying the Epidemic Model
+- Create an object that controls the simulation itself
+- Type to "SIS", have a simulation with 300 time periods, do the simulation 4 times and run it over 2 processors
 
 ```{r}
 control_episim <- control.net(type = "SIS", nsteps = 300, 
                               nsims = 4, ncores = 2)
-```
-
-```{r}
 control_episim
 ```
 
 ## Running Simulations
-
-### Running Baseline Model
-
-We can now run our epidemiological simulation using the `netsim()` function. The main arguments are:
-
-- x = fitted network model, based on `netest()` function
-- param = model parameters, based on `param.net()` function
-- init = initial status inputs, based on `init.net()` function
-- control = control object, based on `control.net()` function
-
-Let’s go ahead and run the simulation using the objects constructed above.
-
+- Run our epidemiological simulation using the `netsim()` function. The main arguments are:
+  - x = fitted network model, based on `netest()` function
+  - param = model parameters, based on `param.net()` function
+  - init = initial status inputs, based on `init.net()` function
+  - control = control object, based on `control.net()` function
 ```{r}
 episim_baseline <- netsim(x = net_mod, param = input_to_episim, 
                           init = initial_status_inputs, 
                           control = control_episim) 
 ```
 
-To get an initial sense of the results, we can do a quick summary on the simulation object. We will first convert the object to a data frame. We will use out = "mean" to tell R to output the mean values over all simulations. 
-
+## Running Simulations
+- Quick summary on the simulation object
 ```{r}
 summary_data_baseline <- as.data.frame(episim_baseline, out = "mean") 
-```
-
-```{r}
 head(summary_data_baseline)
 ```
 
-Each row in the data frame corresponds to a different time period in the simulation. The `s.num` column shows how many people in that period are susceptible (but not infected) while `i.num` shows how many people are infected. `i.num` shows the total number infected, while `si.flow` shows how many move from susceptible to infected (and `is.flow` shows the opposite) in a given period. The values correspond to the mean number over all simulations. We can also print the rate of infected and susceptible at particular days using a summary command and an at argument. Here we look at period 1.
+## Running Simulations
+- Quick summary on the simulation object, at time 100
 
 ```{r}
-summary(episim_baseline, at = 1) 
+summary(episim_baseline, at = 100) 
 ```
 
-Or period 100:
-
-```{r}
-summary(episim_baseline, at = 100)
-```
-
-We can also plot the number of infected and susceptible over time, generating the diffusion curve for the simulation. The basic inputs are the netsim object and then the items to plot. Here we want to plot the number infected and susceptible, denoted by "i.num" and "s.num". We also add legend = T. 
-
+## Running Simulations
+- Plot the number of infected and susceptible over time
 ```{r}
 par(mfrow = c(1, 1))
 plot(episim_baseline, y = c("i.num", "s.num"), legend = T) 
 ```
-
-We can see that in this particular simulation the infection spreads relatively quickly through the network, with over 80% infected by the 100th time period. 
 
 ### Varying Network Features
 One key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).

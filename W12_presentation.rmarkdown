@@ -1,0 +1,267 @@
+---
+title: "W12. Statistical models of networks"
+format: 
+  revealjs:
+    theme: default
+    slide-number: true
+    chalkboard: true
+execute:
+  echo: true
+  engine: knitr
+  fig-align: center
+  fig-asp: null
+---
+
+# Statistical models of networks 
+- Focus on the method ERGM(exponential-family random graph models)
+- Apply the model to a small school-based network(at one time point)
+  - Do boys tend to have more friends than girls? 
+  - Is gender homophily a strong driver of tie formation? 
+
+
+## Setting up the Session
+```{r message=F, warning=F}
+library(ergm)
+library(sna)
+library(car)
+```
+
+## Setting up the Session
+- Read in our example network data(high school friendship network)
+```{r}
+
+url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/example_schoolmat.csv"
+# adjacency matrix format
+school_mat <- read.csv(file = url1, row.names = 1) 
+school_mat <- as.matrix(school_mat)
+school_mat[1:5, 1:5] 
+```
+
+## Setting up the Session
+- Read in the attribute file
+```{r}
+url2 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/example_schooldata.csv"
+
+school_attributes <- read.csv(file = url2) 
+head(school_attributes)
+```
+
+
+## Setting up the Session
+- Recode the 0s and 1s into male and female
+```{r}
+school_attributes$gender_recode <- recode(school_attributes$gender, 
+                                          as.factor = F, 
+                                          "0 = 'male'; 1 = 'female'")
+attribute_list <- do.call(list, school_attributes) 
+attribute_list$gender_recode
+```
+
+## Setting up the Session
+- Construct a network(with network package)
+
+```{r}
+school_net <- network(x = school_mat, directed = T, 
+                      vertex.attr = attribute_list) 
+school_net
+```
+
+## Descriptive Analysis
+```{r fig.height=7.5, fig.width=7.5}
+plot(school_net)
+```
+
+## Descriptive Analysis
+```{r fig.height=7.5, fig.width=7.5}
+cols <- recode(school_attributes$gender, as.factor = F,
+               "0 = 'blue'; 1 = 'pink'")
+plot(school_net, vertex.col = cols) 
+```
+
+## Descriptive Analysis
+- social divisions by grade
+```{r fig.height=7.5, fig.width=7.5}
+plot(school_net, vertex.col = school_attributes$grade) 
+```
+
+
+
+## Fitting an ERGM
+- ERGM(Exponential Random Graph Model)
+- Predicts the presence/absence of a tie between all i-j pairs 
+- Interpret it as a network features like reciprocity and homophily
+
+## Fitting an ERGM
+- Calculate the probability of every possible network
+- The number of possible networks is unbelievably huge
+- Instead of looking at all possible networks,
+- Randomly sample some networks that the model is likely to produce
+
+## Fitting an ERGM
+- MCMC(Markov Chain Monte Carlo)
+  - Generates many random networks that follow the model’s rules
+  - Uses them to estimate how the model behaves
+
+## Fitting an ERGM
+- formula = the set of terms we want to include in the model
+- control = list of options used in the MCMC sample
+- constraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample
+
+## Simple ERGM
+- Run an ERGM with only edges as a predictor
+- Explain the school network as a function of the number of edges in the network 
+```{r, message=F, results='hide'}
+mod_rand <- ergm(formula = school_net ~ edges) 
+```
+
+## Simple ERGM
+- Let’s take a look at the model results. 
+- `exp(-1.946) / (1 + exp(-1.946))` = .125 (log-odds to probability)
+```{r}
+summary(mod_rand) 
+```
+
+
+## 1) Add options to ERGM
+- Let's add `nodematch` terms for gender and grade in formula
+  - Count the number of times that an edge exists where i and j have the same attribute
+```{r message=F, warning=F}
+mod_homoph1 <- ergm(school_net ~ edges + nodematch("gender_recode") + 
+                      nodematch("grade")) 
+```
+
+## 1) Add options to ERGM 
+```{r}
+summary(mod_homoph1)
+```
+
+## 2) Add options to ERGM
+- Whether boys (compared to girls) send out and/or receive more ties
+  - Add `nodeifactor` terms which capture if the mean number of ties coming in, `nodeofactor` for going out
+  - Add analogous terms for grade using `nodeicov` and `nodeocov`
+
+```{r message=F, warning=F}
+mod_homoph2 <- ergm(school_net ~ edges + nodematch("gender_recode") +
+                      nodematch("grade") + 
+                      nodeifactor("gender_recode") + 
+                      nodeofactor("gender_recode") +
+                      nodeicov("grade") + nodeocov("grade"))
+```
+
+## 2) Add options to ERGM
+```{r}
+summary(mod_homoph2) 
+```
+
+## 3) Add options to ERGM again
+- Add  a mutual term to the mode to identify reciprocity
+  - `mutual` term counts the number of pairs where i->j and j->i exist. 
+  - MCMC estimation : useful to set the input parameters to the estimation routine
+
+```{r message=F}
+mod_homoph_mutual1b <- ergm(school_net ~ edges + 
+                              nodematch("gender_recode") +
+                              nodematch("grade") + 
+                              nodeicov("grade") + nodeocov("grade") +
+                              #added!
+                              mutual(by = "gender_recode"),
+                            control = control.ergm(MCMC.burnin = 50000, 
+                                                   MCMC.samplesize = 6000))
+```
+
+## 3) Add options to ERGM again
+- Include a control for degree differences (by gender) in the model
+  - If boys are more likely to be involved in mutual dyads because they send out more ties or because expectations of reciprocity are higher among boys
+
+```{r message=F}
+mod_homoph_mutual1c <- ergm(school_net ~ edges +
+                              nodematch("gender_recode") + 
+                              nodematch("grade") + 
+                              nodeofactor("gender_recode") + 
+                              nodeicov("grade") + nodeocov("grade") + 
+                              #added!
+                              mutual(by = "gender_recode"),
+                            control = control.ergm(MCMC.burnin = 50000, 
+                                                   MCMC.samplesize = 6000))
+```
+
+
+## 3) Add options to ERGM again
+```{r}
+summary(mod_homoph_mutual1c)
+```
+## Goodness of Fit
+- Let's see if the specified model is fitting the network well
+  - Test whether the micro-level tie formation processes assumed in the model are sufficient to reproduce the features of the network as a whole 
+
+## Goodness of Fit
+-  `gof()` function will simulate a set of networks based on the estimated model
+- Take the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value
+
+```{r}
+gof_mod_homoph_mutual1 <- gof(mod_homoph_mutual1c, 
+                              GOF = ~ distance + espartners + model,
+                              control = control.gof.ergm(seed = 110)) 
+```
+
+## Goodness of Fit
+- Plot the goodness of fit statistics.
+  - boxplot for distribution of simulation results
+  - thick line plot for statistics in true network
+
+```{r}
+par(mfrow = c(1, 3)) 
+plot(gof_mod_homoph_mutual1)
+```
+
+## Adding GWESP to the Model
+- Add a Geometrically Weighted Edgewise Shared Partners to the model that will capture the tendency for nodes who are tied to have the same friends
+- A triangle is defined as all cases where i-j and j-k exist and then either k->i or i->k exist
+
+```{r message=F, warning=F}
+mod_homoph_mutual_gwesp1 <- ergm(school_net ~ edges + 
+                                   nodematch("gender_recode") + 
+                                   nodematch("grade") + 
+                                   nodeifactor("gender_recode") + 
+                                   nodeofactor("gender_recode") + 
+                                   nodeicov("grade") + nodeocov("grade") + 
+                                   mutual + gwesp(decay = 0.5, fixed = T), 
+                                 control = control.ergm(MCMLE.maxit = 20,      
+                                                          MCMC.samplesize = 5000, 
+                                                          MCMC.burnin = 25000,    
+                                                          MCMC.interval = 10000,  
+                                                          MCMC.effectiveSize = 500,
+                                                          seed = 123
+                                                        ))
+                     
+```
+
+
+## Adding GWESP to the Model
+```{r message=F, warning=F}
+summary(mod_homoph_mutual_gwesp1)
+```
+
+
+## Simulate a Network with the ERGM Result
+
+```{r message=F, warning=F}
+sim_schoolnet <- simulate(mod_homoph_mutual_gwesp1, nsim = 1, seed = 1012,
+                          control = control.simulate.ergm(MCMC.burnin = 100000))
+```
+
+
+## Simulate a Network with the ERGM Result
+- plotting the true network and simulated network
+```{r}
+par(mfrow = c(1, 2))
+plot(school_net, vertex.col = "grade", main = "True Network")
+plot(sim_schoolnet, vertex.col = "grade", main = "Simulated Network") 
+```
+
+
+## Done!
+
+-   Please check KLMS for the assignment of this week(til Friday)
+-   If you want to study in-depth knowledge for statistical models of network, please check this week \[Option\] in the assignment
+

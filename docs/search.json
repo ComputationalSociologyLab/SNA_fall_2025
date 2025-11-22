@@ -214,7 +214,7 @@
     "href": "W5_presentation.html#create-frienship-network-1",
     "title": "W5. Network Cohesion and Communities",
     "section": "Create Frienship Network",
-    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH f7a4b88 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from f7a4b88 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
+    "text": "Create Frienship Network\n\nCreate a igraph object using the edgelist and attribute data frames.\n\n\n# directed network\n# have the strength of the relationship\nnet182_friend &lt;- graph_from_data_frame(d = edgelist_friendship, directed = T, \n                                       vertices = class182_attributes) \nnet182_friend \n\nIGRAPH cb139e1 DN-- 16 62 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c), friend_tie\n| (e/n)\n+ edges from cb139e1 (vertex names):\n [1] 2 -&gt;1  2 -&gt;7  2 -&gt;8  2 -&gt;13 2 -&gt;14 3 -&gt;5  3 -&gt;6  3 -&gt;11 3 -&gt;14 3 -&gt;15\n[11] 5 -&gt;1  5 -&gt;3  5 -&gt;6  5 -&gt;8  5 -&gt;10 5 -&gt;11 6 -&gt;1  6 -&gt;3  6 -&gt;5  6 -&gt;7 \n[21] 6 -&gt;10 6 -&gt;11 6 -&gt;12 7 -&gt;2  7 -&gt;8  7 -&gt;13 7 -&gt;14 8 -&gt;2  8 -&gt;5  8 -&gt;7 \n[31] 8 -&gt;13 8 -&gt;14 8 -&gt;15 9 -&gt;1  9 -&gt;3  9 -&gt;10 9 -&gt;12 9 -&gt;15 10-&gt;1  10-&gt;9 \n[41] 10-&gt;12 10-&gt;15 11-&gt;1  11-&gt;3  11-&gt;5  11-&gt;6  11-&gt;10 12-&gt;1  12-&gt;9  12-&gt;15\n[51] 13-&gt;2  13-&gt;7  13-&gt;8  13-&gt;14 14-&gt;2  14-&gt;3  14-&gt;8  14-&gt;12 15-&gt;1  15-&gt;7 \n[61] 15-&gt;9  15-&gt;12"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists",
@@ -277,7 +277,7 @@
     "href": "W5_presentation.html#lets-see-if-cohesion-exists-7",
     "title": "W5. Network Cohesion and Communities",
     "section": "Let’s see if cohesion exists",
-    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH ad04530 UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from ad04530 (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
+    "text": "Let’s see if cohesion exists\n\nUtilize the vertex connectivity with undirected network\n\n\nnet182_friend_und &lt;- as.undirected(net182_friend, mode = \"collapse\") \nnet182_friend_und\n\nIGRAPH 3fa604b UN-- 16 42 -- \n+ attr: name (v/c), race (v/c), grade (v/n), gender (v/c)\n+ edges from 3fa604b (vertex names):\n [1] 1 --2  1 --5  3 --5  1 --6  3 --6  5 --6  2 --7  6 --7  2 --8  5 --8 \n[11] 7 --8  1 --9  3 --9  1 --10 5 --10 6 --10 9 --10 1 --11 3 --11 5 --11\n[21] 6 --11 10--11 1 --12 6 --12 9 --12 10--12 2 --13 7 --13 8 --13 2 --14\n[31] 3 --14 7 --14 8 --14 12--14 13--14 1 --15 3 --15 7 --15 8 --15 9 --15\n[41] 10--15 12--15"
   },
   {
     "objectID": "W5_presentation.html#lets-see-if-cohesion-exists-8",
@@ -431,7 +431,7 @@
     "href": "W3_presentation.html#detailed-information-of-our-network",
     "title": "W3. Visualization",
     "section": "Detailed information of our network",
-    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH b6bff02 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from b6bff02 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
+    "text": "Detailed information of our network\n\n# v/c : vertex attribute, character\n# v/n : vertex attribute, numeric\n# e/n : edge attribute, numeric\nclass_net\n\nIGRAPH e00fb26 DNW- 24 77 -- \n+ attr: name (v/c), gender (v/c), grade (v/n), race (v/c), weight (e/n)\n+ edges from e00fb26 (vertex names):\n [1] 1 -&gt;3  1 -&gt;5  1 -&gt;7  1 -&gt;21 2 -&gt;3  2 -&gt;6  3 -&gt;6  3 -&gt;8  3 -&gt;16 3 -&gt;24\n[11] 4 -&gt;13 4 -&gt;18 7 -&gt;1  7 -&gt;9  7 -&gt;10 7 -&gt;16 8 -&gt;3  8 -&gt;9  8 -&gt;13 9 -&gt;5 \n[21] 9 -&gt;8  10-&gt;6  10-&gt;14 10-&gt;19 10-&gt;20 10-&gt;24 11-&gt;12 11-&gt;15 11-&gt;18 11-&gt;24\n[31] 12-&gt;11 12-&gt;15 12-&gt;24 13-&gt;8  14-&gt;10 14-&gt;13 14-&gt;19 14-&gt;21 14-&gt;24 15-&gt;10\n[41] 15-&gt;11 15-&gt;13 15-&gt;14 15-&gt;24 16-&gt;3  16-&gt;5  16-&gt;9  16-&gt;19 17-&gt;8  17-&gt;13\n[51] 17-&gt;18 17-&gt;23 17-&gt;24 18-&gt;13 18-&gt;17 18-&gt;23 18-&gt;24 19-&gt;14 19-&gt;16 19-&gt;20\n[61] 19-&gt;21 20-&gt;19 20-&gt;21 20-&gt;24 21-&gt;5  21-&gt;19 21-&gt;20 22-&gt;23 23-&gt;5  23-&gt;13\n[71] 23-&gt;17 23-&gt;18 24-&gt;6  24-&gt;10 24-&gt;14 24-&gt;15 24-&gt;21"
   },
   {
     "objectID": "W3_presentation.html#plot-a-network-using-igraph",
@@ -574,205 +574,219 @@
     "text": "Done!\n\nPlease check KLMS for the assignment of this week\nThis week [Option] is a real fun\n\nyou can excercise how to draw dynamic graph!\n\nQuestions?"
   },
   {
-    "objectID": "W12_presentation.html#setting-up-the-session",
-    "href": "W12_presentation.html#setting-up-the-session",
-    "title": "W12. Statistical models of networks",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nlibrary(ergm)\nlibrary(sna)\nlibrary(car)"
+    "objectID": "W13_presentation.html#reading-in-data",
+    "href": "W13_presentation.html#reading-in-data",
+    "title": "W13. Network Diffusion",
+    "section": "Reading in Data",
+    "text": "Reading in Data\n\nSpecify\n\none related to the formation and breaking of network ties\none related to the spread of an infection through the network\n\n\n\nlibrary(EpiModel)"
   },
   {
-    "objectID": "W12_presentation.html#setting-up-the-session-1",
-    "href": "W12_presentation.html#setting-up-the-session-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nRead in our example network data(high school friendship network)\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/example_schoolmat.csv\"\n# adjacency matrix format\nschool_mat &lt;- read.csv(file = url1, row.names = 1) \nschool_mat &lt;- as.matrix(school_mat)\nschool_mat[1:5, 1:5] \n\n    id1 id2 id3 id4 id5\nid1   0   0   0   0   0\nid2   0   0   0   0   0\nid3   0   0   0   0   0\nid4   0   0   0   0   0\nid5   0   0   0   0   0"
+    "objectID": "W13_presentation.html#reading-in-data-1",
+    "href": "W13_presentation.html#reading-in-data-1",
+    "title": "W13. Network Diffusion",
+    "section": "Reading in Data",
+    "text": "Reading in Data\n\nNo exact edgelist\nUse a faux ego network data set drawn from an at-risk population of drug users\n\ndegree = number of current drug partners for ego\n\n\n\nurl1 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/ego_network_example_data.txt\"\nego_dat &lt;- read.table(file = url1, header = T, stringsAsFactors = FALSE)\nhead(ego_dat)\n\n  ids location degree location1 location2 location3\n1   1     city      1      city      &lt;NA&gt;      &lt;NA&gt;\n2   2     city      9      city   suburbs      city\n3   3     city      2      city      city      &lt;NA&gt;\n4   4     city      2      city      city      &lt;NA&gt;\n5   5     city      5      city      city      city\n6   6     city      5      city   suburbs      city"
   },
   {
-    "objectID": "W12_presentation.html#setting-up-the-session-2",
-    "href": "W12_presentation.html#setting-up-the-session-2",
-    "title": "W12. Statistical models of networks",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nRead in the attribute file\n\n\nurl2 &lt;- \"https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/example_schooldata.csv\"\n\nschool_attributes &lt;- read.csv(file = url2) \nhead(school_attributes)\n\n  ids gender grade ses\n1   1      1    12   7\n2   2      1    10   7\n3   3      0     8  10\n4   4      0    11   9\n5   5      1     7  10\n6   6      1    10   9"
+    "objectID": "W13_presentation.html#specifying-the-network-model",
+    "href": "W13_presentation.html#specifying-the-network-model",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Network Model",
+    "text": "Specifying the Network Model\n\nLet’s see how many people are in the sample:\n\n\nnum_nodes &lt;- nrow(ego_dat) \nnum_nodes\n\n[1] 750"
   },
   {
-    "objectID": "W12_presentation.html#setting-up-the-session-3",
-    "href": "W12_presentation.html#setting-up-the-session-3",
-    "title": "W12. Statistical models of networks",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nRecode the 0s and 1s into male and female\n\n\nschool_attributes$gender_recode &lt;- recode(school_attributes$gender, \n                                          as.factor = F, \n                                          \"0 = 'male'; 1 = 'female'\")\nattribute_list &lt;- do.call(list, school_attributes) \nattribute_list$gender_recode\n\n [1] \"female\" \"female\" \"male\"   \"male\"   \"female\" \"female\" \"male\"   \"female\"\n [9] \"female\" \"male\"   \"male\"   \"male\"   \"female\" \"female\" \"female\" \"female\"\n[17] \"male\"   \"female\" \"male\"   \"male\"   \"female\" \"male\"   \"male\"   \"male\"  \n[25] \"male\"   \"female\" \"female\" \"female\" \"male\"   \"male\"   \"female\" \"male\""
+    "objectID": "W13_presentation.html#specifying-the-network-model-1",
+    "href": "W13_presentation.html#specifying-the-network-model-1",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Network Model",
+    "text": "Specifying the Network Model\n\nCreate an empty, undirected network of size num_nodes\n\n\nepi_network &lt;- network.initialize(n = num_nodes, directed = F)"
   },
   {
-    "objectID": "W12_presentation.html#setting-up-the-session-4",
-    "href": "W12_presentation.html#setting-up-the-session-4",
-    "title": "W12. Statistical models of networks",
-    "section": "Setting up the Session",
-    "text": "Setting up the Session\n\nConstruct a network(with network package)\n\n\nschool_net &lt;- network(x = school_mat, directed = T, \n                      vertex.attr = attribute_list) \nschool_net\n\n Network attributes:\n  vertices = 32 \n  directed = TRUE \n  hyper = FALSE \n  loops = FALSE \n  multiple = FALSE \n  bipartite = FALSE \n  total edges= 124 \n    missing edges= 0 \n    non-missing edges= 124 \n\n Vertex attribute names: \n    gender gender_recode grade ids ses vertex.names \n\nNo edge attributes"
+    "objectID": "W13_presentation.html#specifying-the-network-model-2",
+    "href": "W13_presentation.html#specifying-the-network-model-2",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Network Model",
+    "text": "Specifying the Network Model\n\nAdd some node attributes, based on the values seen in the observed data\n\n\nepi_network &lt;- set.vertex.attribute(epi_network, attrname = \"location\",\n                                    value = ego_dat$location)\nepi_network \n\n Network attributes:\n  vertices = 750 \n  directed = FALSE \n  hyper = FALSE \n  loops = FALSE \n  multiple = FALSE \n  bipartite = FALSE \n  total edges= 0 \n    missing edges= 0 \n    non-missing edges= 0 \n\n Vertex attribute names: \n    location vertex.names \n\nNo edge attributes"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-analysis",
-    "href": "W12_presentation.html#descriptive-analysis",
-    "title": "W12. Statistical models of networks",
-    "section": "Descriptive Analysis",
-    "text": "Descriptive Analysis\n\nplot(school_net)"
+    "objectID": "W13_presentation.html#specifying-the-network-model-3",
+    "href": "W13_presentation.html#specifying-the-network-model-3",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Network Model",
+    "text": "Specifying the Network Model\n\nConstruct a simulated network based on the information we have\nSpecify a model that determines how ties form and break within the simulation\n\nWith tie formation formula (same kinds of terms used in the ERGM)\n\n\n\nformation_formula &lt;- formula(~ edges + nodefactor(\"location\") + \n                               nodematch(\"location\"))"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-analysis-1",
-    "href": "W12_presentation.html#descriptive-analysis-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Descriptive Analysis",
-    "text": "Descriptive Analysis\n\ncols &lt;- recode(school_attributes$gender, as.factor = F,\n               \"0 = 'blue'; 1 = 'pink'\")\nplot(school_net, vertex.col = cols)"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics",
+    "href": "W13_presentation.html#calculate-the-target-statistics",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nSet the target statistics for each term in the formula(nodefactor(\"location\"), nodematch(\"location\"))\n\nSet the number of edges\nUse the mean degree in the ego network data\n\n\n\nmean_degree &lt;- mean(ego_dat$degree) \nmean_degree \n\n[1] 3.706667"
   },
   {
-    "objectID": "W12_presentation.html#descriptive-analysis-2",
-    "href": "W12_presentation.html#descriptive-analysis-2",
-    "title": "W12. Statistical models of networks",
-    "section": "Descriptive Analysis",
-    "text": "Descriptive Analysis\n\nsocial divisions by grade\n\n\nplot(school_net, vertex.col = school_attributes$grade)"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-1",
+    "href": "W13_presentation.html#calculate-the-target-statistics-1",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nCalculate the term edge\n\nTake the mean degree, multiply it by the number of nodes\nDivide it by 2 as the network is undirected to get the total number of edges\n\n\n\nedges &lt;- mean_degree * num_nodes / 2 \nedges\n\n[1] 1390"
   },
   {
-    "objectID": "W12_presentation.html#fitting-an-ergm",
-    "href": "W12_presentation.html#fitting-an-ergm",
-    "title": "W12. Statistical models of networks",
-    "section": "Fitting an ERGM",
-    "text": "Fitting an ERGM\n\nERGM(Exponential Random Graph Model)\nPredicts the presence/absence of a tie between all i-j pairs\nInterpret it as a network features like reciprocity and homophily"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-2",
+    "href": "W13_presentation.html#calculate-the-target-statistics-2",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nCalculate the term nodefactor(\"location\")\n\nTotal number of ties emanating from one group.\nthe mean degree of the group * the number of people in that group\n\n\n\nmean_degree_location &lt;- tapply(X = ego_dat$degree, INDEX = ego_dat$location, \n                               FUN = mean) \nmean_degree_location \n\n   city suburbs \n   3.95    3.22"
   },
   {
-    "objectID": "W12_presentation.html#fitting-an-ergm-1",
-    "href": "W12_presentation.html#fitting-an-ergm-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Fitting an ERGM",
-    "text": "Fitting an ERGM\n\nCalculate the probability of every possible network\nThe number of possible networks is unbelievably huge\nInstead of looking at all possible networks,\nRandomly sample some networks that the model is likely to produce"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-3",
+    "href": "W13_presentation.html#calculate-the-target-statistics-3",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nCheck a simple table on location to see how many are in the city versus the suburbs\n\n\ntab_location &lt;- table(ego_dat$location) \ntab_location\n\n\n   city suburbs \n    500     250"
   },
   {
-    "objectID": "W12_presentation.html#fitting-an-ergm-2",
-    "href": "W12_presentation.html#fitting-an-ergm-2",
-    "title": "W12. Statistical models of networks",
-    "section": "Fitting an ERGM",
-    "text": "Fitting an ERGM\n\nMCMC(Markov Chain Monte Carlo)\n\nGenerates many random networks that follow the model’s rules\nUses them to estimate how the model behaves"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-4",
+    "href": "W13_presentation.html#calculate-the-target-statistics-4",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nTotal number of edges for each group * the mean degree for each group by the size of each group\n\n\nedges_by_group &lt;- mean_degree_location * tab_location\nedges_suburbs &lt;- edges_by_group[2] \nedges_by_group \n\n   city suburbs \n   1975     805"
   },
   {
-    "objectID": "W12_presentation.html#fitting-an-ergm-3",
-    "href": "W12_presentation.html#fitting-an-ergm-3",
-    "title": "W12. Statistical models of networks",
-    "section": "Fitting an ERGM",
-    "text": "Fitting an ERGM\n\nformula = the set of terms we want to include in the model\ncontrol = list of options used in the MCMC sample\nconstraints = a formula dictating if there should be any constraints on the networks generated in the MCMC sample"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-5",
+    "href": "W13_presentation.html#calculate-the-target-statistics-5",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nCalculate the term nodematch(\"location\")\n\nThe proportion of ego-alter pairs where ego and alter are in the same location\nTake the proportion and multiply it by the total number of edges in the network\n\n\n\nlocation_cols &lt;- c(\"location1\", \"location2\", \"location3\")\nsame_location &lt;- ego_dat[, \"location\"] == ego_dat[, location_cols] \nhead(same_location)\n\n     location1 location2 location3\n[1,]      TRUE        NA        NA\n[2,]      TRUE     FALSE      TRUE\n[3,]      TRUE      TRUE        NA\n[4,]      TRUE      TRUE        NA\n[5,]      TRUE      TRUE      TRUE\n[6,]      TRUE     FALSE      TRUE"
   },
   {
-    "objectID": "W12_presentation.html#simple-ergm",
-    "href": "W12_presentation.html#simple-ergm",
-    "title": "W12. Statistical models of networks",
-    "section": "Simple ERGM",
-    "text": "Simple ERGM\n\nRun an ERGM with only edges as a predictor\nExplain the school network as a function of the number of edges in the network\n\n\nmod_rand &lt;- ergm(formula = school_net ~ edges)"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-6",
+    "href": "W13_presentation.html#calculate-the-target-statistics-6",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nSee what proportion of ego-alter pairs match on location\nDo a simple table on the data frame constructed above\n\n\nprop_match &lt;- prop.table(table(same_location))\nprop_match \n\nsame_location\n    FALSE      TRUE \n0.1916966 0.8083034"
   },
   {
-    "objectID": "W12_presentation.html#simple-ergm-1",
-    "href": "W12_presentation.html#simple-ergm-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Simple ERGM",
-    "text": "Simple ERGM\n\nLet’s take a look at the model results.\nexp(-1.946) / (1 + exp(-1.946)) = .125 (log-odds to probability)\n\n\nsummary(mod_rand) \n\nCall:\nergm(formula = school_net ~ edges)\n\nMaximum Likelihood Results:\n\n      Estimate Std. Error MCMC % z value Pr(&gt;|z|)    \nedges   -1.946      0.096      0  -20.27   &lt;1e-04 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n     Null Deviance: 1375.2  on 992  degrees of freedom\n Residual Deviance:  747.5  on 991  degrees of freedom\n \nAIC: 749.5  BIC: 754.4  (Smaller is better. MC Std. Err. = 0)"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-7",
+    "href": "W13_presentation.html#calculate-the-target-statistics-7",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nTake the proportion matching and multiply it by the total number of edges in the desired network\n\n\nnum_match &lt;- round(prop_match[[2]] * edges)\nnum_match \n\n[1] 1124"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm",
-    "href": "W12_presentation.html#add-options-to-ergm",
-    "title": "W12. Statistical models of networks",
-    "section": "1) Add options to ERGM",
-    "text": "1) Add options to ERGM\n\nLet’s add nodematch terms for gender and grade in formula\n\nCount the number of times that an edge exists where i and j have the same attribute\n\n\n\nmod_homoph1 &lt;- ergm(school_net ~ edges + nodematch(\"gender_recode\") + \n                      nodematch(\"grade\"))"
+    "objectID": "W13_presentation.html#calculate-the-target-statistics-8",
+    "href": "W13_presentation.html#calculate-the-target-statistics-8",
+    "title": "W13. Network Diffusion",
+    "section": "Calculate the Target Statistics",
+    "text": "Calculate the Target Statistics\n\nPut together the target statistics into one input vector.\n\n\ntarget_statistics_baseline &lt;- c(edges = edges, \n                                nodefactor.location = edges_suburbs, \n                                nodematch.location = num_match) \ntarget_statistics_baseline\n\n                      edges nodefactor.location.suburbs \n                       1390                         805 \n         nodematch.location \n                       1124"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-1",
-    "href": "W12_presentation.html#add-options-to-ergm-1",
-    "title": "W12. Statistical models of networks",
-    "section": "1) Add options to ERGM",
-    "text": "1) Add options to ERGM\n\nsummary(mod_homoph1)\n\nCall:\nergm(formula = school_net ~ edges + nodematch(\"gender_recode\") + \n    nodematch(\"grade\"))\n\nMaximum Likelihood Results:\n\n                        Estimate Std. Error MCMC % z value Pr(&gt;|z|)    \nedges                    -2.6140     0.1703      0 -15.351   &lt;1e-04 ***\nnodematch.gender_recode   0.1137     0.2086      0   0.545    0.586    \nnodematch.grade           2.3088     0.2144      0  10.769   &lt;1e-04 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n     Null Deviance: 1375.2  on 992  degrees of freedom\n Residual Deviance:  635.7  on 989  degrees of freedom\n \nAIC: 641.7  BIC: 656.4  (Smaller is better. MC Std. Err. = 0)"
+    "objectID": "W13_presentation.html#set-rules-for-network-dissolution",
+    "href": "W13_presentation.html#set-rules-for-network-dissolution",
+    "title": "W13. Network Diffusion",
+    "section": "Set Rules for Network Dissolution",
+    "text": "Set Rules for Network Dissolution\n\nSpecify a model that will dictate how edges are dropped over time\n\n\n# dissolution = a formula that determines how edges are dropped\n# dissolution = the average duration of an edge in the simulation\n# d.rate = the death rate of the population\ndissolution_coefs &lt;- dissolution_coefs(dissolution = ~ offset(edges),\n                                       duration = 25, d.rate = .001)\ndissolution_coefs  \n\nDissolution Coefficients\n=======================\nDissolution Model: ~offset(edges)\nTarget Statistics: 25\nCrude Coefficient: 3.178054\nMortality/Exit Rate: 0.001\nAdjusted Coefficient: 3.229321"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-2",
-    "href": "W12_presentation.html#add-options-to-ergm-2",
-    "title": "W12. Statistical models of networks",
-    "section": "2) Add options to ERGM",
-    "text": "2) Add options to ERGM\n\nWhether boys (compared to girls) send out and/or receive more ties\n\nAdd nodeifactor terms which capture if the mean number of ties coming in, nodeofactor for going out\nAdd analogous terms for grade using nodeicov and nodeocov\n\n\n\nmod_homoph2 &lt;- ergm(school_net ~ edges + nodematch(\"gender_recode\") +\n                      nodematch(\"grade\") + \n                      nodeifactor(\"gender_recode\") + \n                      nodeofactor(\"gender_recode\") +\n                      nodeicov(\"grade\") + nodeocov(\"grade\"))"
+    "objectID": "W13_presentation.html#estimating-the-network-model",
+    "href": "W13_presentation.html#estimating-the-network-model",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\nnetest() : wrapper for the ergm() and tergm() functions\n\n\n# nw = network object used as basis for simulation \n# formation = formula specifying formation of edges\n# target.stats = input target statistics corresponding to formation formula\n# coefs.diss = coefficients for dissolution of edges\n\nset.seed(1002)\nnet_mod &lt;- netest(nw = epi_network, formation = formation_formula, \n                  target.stats = target_statistics_baseline, \n                  coef.diss = dissolution_coefs) \nsummary(net_mod)"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-3",
-    "href": "W12_presentation.html#add-options-to-ergm-3",
-    "title": "W12. Statistical models of networks",
-    "section": "2) Add options to ERGM",
-    "text": "2) Add options to ERGM\n\nsummary(mod_homoph2) \n\nCall:\nergm(formula = school_net ~ edges + nodematch(\"gender_recode\") + \n    nodematch(\"grade\") + nodeifactor(\"gender_recode\") + nodeofactor(\"gender_recode\") + \n    nodeicov(\"grade\") + nodeocov(\"grade\"))\n\nMaximum Likelihood Results:\n\n                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    \nedges                          -7.54896    0.82637      0  -9.135   &lt;1e-04 ***\nnodematch.gender_recode         0.03797    0.22294      0   0.170   0.8648    \nnodematch.grade                 2.49128    0.23497      0  10.603   &lt;1e-04 ***\nnodeifactor.gender_recode.male  0.45209    0.22428      0   2.016   0.0438 *  \nnodeofactor.gender_recode.male  0.55980    0.22467      0   2.492   0.0127 *  \nnodeicov.grade                  0.26617    0.06388      0   4.167   &lt;1e-04 ***\nnodeocov.grade                  0.18685    0.06275      0   2.978   0.0029 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n     Null Deviance: 1375.2  on 992  degrees of freedom\n Residual Deviance:  586.6  on 985  degrees of freedom\n \nAIC: 600.6  BIC: 634.9  (Smaller is better. MC Std. Err. = 0)"
+    "objectID": "W13_presentation.html#estimating-the-network-model-1",
+    "href": "W13_presentation.html#estimating-the-network-model-1",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\nSee if the model is producing networks that match the target statistics\nnetdx() function will simulate networks from the estimated model and compare the statistics from the simulated networks to the input target statistics\n\n\n# x = model estimated from netest\n# nsims = number of simulated networks\n# dynamic = should look at dynamic statistics (T/F)?\n  \nmod_fit1 &lt;- netdx(x = net_mod, dynamic = F, nsims = 1000)"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-again",
-    "href": "W12_presentation.html#add-options-to-ergm-again",
-    "title": "W12. Statistical models of networks",
-    "section": "3) Add options to ERGM again",
-    "text": "3) Add options to ERGM again\n\nAdd a mutual term to the mode to identify reciprocity\n\nmutual term counts the number of pairs where i-&gt;j and j-&gt;i exist.\nMCMC estimation : useful to set the input parameters to the estimation routine\n\n\n\nmod_homoph_mutual1b &lt;- ergm(school_net ~ edges + \n                              nodematch(\"gender_recode\") +\n                              nodematch(\"grade\") + \n                              nodeicov(\"grade\") + nodeocov(\"grade\") +\n                              #added!\n                              mutual(by = \"gender_recode\"),\n                            control = control.ergm(MCMC.burnin = 50000, \n                                                   MCMC.samplesize = 6000))"
+    "objectID": "W13_presentation.html#estimating-the-network-model-2",
+    "href": "W13_presentation.html#estimating-the-network-model-2",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\nplot(mod_fit1, legend = T)"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-again-1",
-    "href": "W12_presentation.html#add-options-to-ergm-again-1",
-    "title": "W12. Statistical models of networks",
-    "section": "3) Add options to ERGM again",
-    "text": "3) Add options to ERGM again\n\nInclude a control for degree differences (by gender) in the model\n\nIf boys are more likely to be involved in mutual dyads because they send out more ties or because expectations of reciprocity are higher among boys\n\n\n\nmod_homoph_mutual1c &lt;- ergm(school_net ~ edges +\n                              nodematch(\"gender_recode\") + \n                              nodematch(\"grade\") + \n                              nodeofactor(\"gender_recode\") + \n                              nodeicov(\"grade\") + nodeocov(\"grade\") + \n                              #added!\n                              mutual(by = \"gender_recode\"),\n                            control = control.ergm(MCMC.burnin = 50000, \n                                                   MCMC.samplesize = 6000))"
+    "objectID": "W13_presentation.html#estimating-the-network-model-3",
+    "href": "W13_presentation.html#estimating-the-network-model-3",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\nLet’s look at the target statistics when we allow ties to dissolve and form over time\n\n\n# nsteps = number of time periods in dynamic simulation\nmod_fit2 &lt;- netdx(x = net_mod, dynamic = T, nsims = 5, nsteps = 300)"
   },
   {
-    "objectID": "W12_presentation.html#add-options-to-ergm-again-2",
-    "href": "W12_presentation.html#add-options-to-ergm-again-2",
-    "title": "W12. Statistical models of networks",
-    "section": "3) Add options to ERGM again",
-    "text": "3) Add options to ERGM again\n\nsummary(mod_homoph_mutual1c)\n\nCall:\nergm(formula = school_net ~ edges + nodematch(\"gender_recode\") + \n    nodematch(\"grade\") + nodeofactor(\"gender_recode\") + nodeicov(\"grade\") + \n    nodeocov(\"grade\") + mutual(by = \"gender_recode\"), control = control.ergm(MCMC.burnin = 50000, \n    MCMC.samplesize = 6000))\n\nMonte Carlo Maximum Likelihood Results:\n\n                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    \nedges                          -6.35795    0.71793      0  -8.856  &lt; 1e-04 ***\nnodematch.gender_recode         0.05148    0.18855      0   0.273  0.78484    \nnodematch.grade                 1.70835    0.21157      0   8.074  &lt; 1e-04 ***\nnodeofactor.gender_recode.male  0.50198    0.29758      0   1.687  0.09163 .  \nnodeicov.grade                  0.21836    0.06942      0   3.145  0.00166 ** \nnodeocov.grade                  0.09846    0.06830      0   1.442  0.14944    \nmutual.by.gender_recode.female  1.15860    0.30117      0   3.847  0.00012 ***\nmutual.by.gender_recode.male    1.24840    0.23904      0   5.223  &lt; 1e-04 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n     Null Deviance: 1375.2  on 992  degrees of freedom\n Residual Deviance:  548.3  on 984  degrees of freedom\n \nAIC: 564.3  BIC: 603.5  (Smaller is better. MC Std. Err. = 0.2324)"
+    "objectID": "W13_presentation.html#estimating-the-network-model-4",
+    "href": "W13_presentation.html#estimating-the-network-model-4",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\nplot(mod_fit2, legend = T)"
   },
   {
-    "objectID": "W12_presentation.html#goodness-of-fit",
-    "href": "W12_presentation.html#goodness-of-fit",
-    "title": "W12. Statistical models of networks",
-    "section": "Goodness of Fit",
-    "text": "Goodness of Fit\n\nLet’s see if the specified model is fitting the network well\n\nTest whether the micro-level tie formation processes assumed in the model are sufficient to reproduce the features of the network as a whole"
+    "objectID": "W13_presentation.html#estimating-the-network-model-5",
+    "href": "W13_presentation.html#estimating-the-network-model-5",
+    "title": "W13. Network Diffusion",
+    "section": "Estimating the Network Model",
+    "text": "Estimating the Network Model\n\n# To plot the statistics dealing with the duration of ties, \"duration\"\n# To plot the statistics dealing with the dissolution of ties,\"dissolution\"\npar(mfrow = c(1, 2))\nplot(mod_fit2, type = \"duration\") \nplot(mod_fit2, type = \"dissolution\")"
   },
   {
-    "objectID": "W12_presentation.html#goodness-of-fit-1",
-    "href": "W12_presentation.html#goodness-of-fit-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Goodness of Fit",
-    "text": "Goodness of Fit\n\ngof() function will simulate a set of networks based on the estimated model\nTake the generated networks, calculate the macro features of interest (here distance and the shared partner distribution), and compare that to the true value\n\n\ngof_mod_homoph_mutual1 &lt;- gof(mod_homoph_mutual1c, \n                              GOF = ~ distance + espartners + model,\n                              control = control.gof.ergm(seed = 110))"
+    "objectID": "W13_presentation.html#specifying-the-epidemic-model",
+    "href": "W13_presentation.html#specifying-the-epidemic-model",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Epidemic Model",
+    "text": "Specifying the Epidemic Model\n\nIdentify how the infection spreads through social connections\nEpiModel allows for a flexible range of models to be specified\n\n\ninitial_status &lt;- sample(c(\"s\", \"i\", \"r\"), size = num_nodes, \n                         replace = T, prob = c(.97, .03, 0)) \ntable(initial_status)\n\ninitial_status\n  i   s \n 23 727"
   },
   {
-    "objectID": "W12_presentation.html#goodness-of-fit-2",
-    "href": "W12_presentation.html#goodness-of-fit-2",
-    "title": "W12. Statistical models of networks",
-    "section": "Goodness of Fit",
-    "text": "Goodness of Fit\n\nPlot the goodness of fit statistics.\n\nboxplot for distribution of simulation results\nthick line plot for statistics in true network\n\n\n\npar(mfrow = c(1, 3)) \nplot(gof_mod_homoph_mutual1)"
+    "objectID": "W13_presentation.html#specifying-the-epidemic-model-1",
+    "href": "W13_presentation.html#specifying-the-epidemic-model-1",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Epidemic Model",
+    "text": "Specifying the Epidemic Model\n\nFeed this vector of initial states to the init.net() function, with status.vector set to the vector of initial states.\n\n\ninitial_status_inputs &lt;- init.net(status.vector = initial_status)"
   },
   {
-    "objectID": "W12_presentation.html#adding-gwesp-to-the-model",
-    "href": "W12_presentation.html#adding-gwesp-to-the-model",
-    "title": "W12. Statistical models of networks",
-    "section": "Adding GWESP to the Model",
-    "text": "Adding GWESP to the Model\n\nAdd a Geometrically Weighted Edgewise Shared Partners to the model that will capture the tendency for nodes who are tied to have the same friends\nA triangle is defined as all cases where i-j and j-k exist and then either k-&gt;i or i-&gt;k exist\n\n\nmod_homoph_mutual_gwesp1 &lt;- ergm(school_net ~ edges + \n                                   nodematch(\"gender_recode\") + \n                                   nodematch(\"grade\") + \n                                   nodeifactor(\"gender_recode\") + \n                                   nodeofactor(\"gender_recode\") + \n                                   nodeicov(\"grade\") + nodeocov(\"grade\") + \n                                   mutual + gwesp(decay = 0.5, fixed = T), \n                                 control = control.ergm(MCMLE.maxit = 20,      \n                                                          MCMC.samplesize = 5000, \n                                                          MCMC.burnin = 25000,    \n                                                          MCMC.interval = 10000,  \n                                                          MCMC.effectiveSize = 500,\n                                                          seed = 123\n                                                        ))"
+    "objectID": "W13_presentation.html#specifying-the-epidemic-model-2",
+    "href": "W13_presentation.html#specifying-the-epidemic-model-2",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Epidemic Model",
+    "text": "Specifying the Epidemic Model\n\nGo ahead and set the probabilities of infection and recovery using a param.net() function\n\n\n# inf.prob = the probability of infection in a given interaction (or act)\n# act.rate = number of interactions (or acts) in a time period between i and j, assuming that i and j are connected in that period.\n# rec.rate = the rate of recovery in a time period\n\ninput_to_episim &lt;- param.net(inf.prob = 0.025, act.rate = 1, rec.rate = 0.01) \ninput_to_episim\n\nFixed Parameters\n---------------------------\ninf.prob = 0.025\nact.rate = 1\nrec.rate = 0.01"
   },
   {
-    "objectID": "W12_presentation.html#adding-gwesp-to-the-model-1",
-    "href": "W12_presentation.html#adding-gwesp-to-the-model-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Adding GWESP to the Model",
-    "text": "Adding GWESP to the Model\n\nsummary(mod_homoph_mutual_gwesp1)\n\nCall:\nergm(formula = school_net ~ edges + nodematch(\"gender_recode\") + \n    nodematch(\"grade\") + nodeifactor(\"gender_recode\") + nodeofactor(\"gender_recode\") + \n    nodeicov(\"grade\") + nodeocov(\"grade\") + mutual + gwesp(decay = 0.5, \n    fixed = T), control = control.ergm(MCMLE.maxit = 20, MCMC.samplesize = 5000, \n    MCMC.burnin = 25000, MCMC.interval = 10000, MCMC.effectiveSize = 500, \n    seed = 123))\n\nMonte Carlo Maximum Likelihood Results:\n\n                               Estimate Std. Error MCMC % z value Pr(&gt;|z|)    \nedges                          -5.13218    0.44885      0 -11.434   &lt;1e-04 ***\nnodematch.gender_recode         0.02581    0.19784      0   0.130   0.8962    \nnodematch.grade                 1.40642    0.17378      0   8.093   &lt;1e-04 ***\nnodeifactor.gender_recode.male  0.11296    0.21320      0   0.530   0.5962    \nnodeofactor.gender_recode.male  0.27324    0.21076      0   1.296   0.1948    \nnodeicov.grade                  0.10168    0.05738      0   1.772   0.0764 .  \nnodeocov.grade                  0.01121    0.05642      0   0.199   0.8426    \nmutual                          1.83183    0.38152      0   4.801   &lt;1e-04 ***\ngwesp.OTP.fixed.0.5             0.79911    0.13528      0   5.907   &lt;1e-04 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n     Null Deviance: 1375.2  on 992  degrees of freedom\n Residual Deviance:  510.5  on 983  degrees of freedom\n \nAIC: 528.5  BIC: 572.6  (Smaller is better. MC Std. Err. = 0.1652)"
+    "objectID": "W13_presentation.html#specifying-the-epidemic-model-3",
+    "href": "W13_presentation.html#specifying-the-epidemic-model-3",
+    "title": "W13. Network Diffusion",
+    "section": "Specifying the Epidemic Model",
+    "text": "Specifying the Epidemic Model\n\nCreate an object that controls the simulation itself\nType to “SIS”, have a simulation with 300 time periods, do the simulation 4 times and run it over 2 processors\n\n\ncontrol_episim &lt;- control.net(type = \"SIS\", nsteps = 300, \n                              nsims = 4, ncores = 2)\ncontrol_episim\n\nNetwork Model Control Settings\n===============================\ntype = SIS\nnsteps = 300\nstart = 1\nnsims = 4\nncores = 2\nresimulate.network = FALSE\ntergmLite = FALSE\ncumulative.edgelist = FALSE\ntruncate.el.cuml = 0\nmodule.order =\nsave.nwstats = TRUE\nnwstats.formula = formation\nsave.transmat = TRUE\nsave.run = FALSE\nsave.cumulative.edgelist = FALSE\nverbose = TRUE\nverbose.int = 1\nskip.check = FALSE\nraw.output = FALSE\ntergmLite.track.duration = FALSE\nsave.diss.stats = TRUE\nattr.rules = &lt;list&gt;\nsave.network = TRUE\nDynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN departures.FUN arrivals.FUN nwupdate.FUN prevalence.FUN"
   },
   {
-    "objectID": "W12_presentation.html#simulate-a-network-with-the-ergm-result",
-    "href": "W12_presentation.html#simulate-a-network-with-the-ergm-result",
-    "title": "W12. Statistical models of networks",
-    "section": "Simulate a Network with the ERGM Result",
-    "text": "Simulate a Network with the ERGM Result\n\nsim_schoolnet &lt;- simulate(mod_homoph_mutual_gwesp1, nsim = 1, seed = 1012,\n                          control = control.simulate.ergm(MCMC.burnin = 100000))"
+    "objectID": "W13_presentation.html#running-simulations",
+    "href": "W13_presentation.html#running-simulations",
+    "title": "W13. Network Diffusion",
+    "section": "Running Simulations",
+    "text": "Running Simulations\n\nRun our epidemiological simulation using the netsim() function. The main arguments are:\n\nx = fitted network model, based on netest() function\nparam = model parameters, based on param.net() function\ninit = initial status inputs, based on init.net() function\ncontrol = control object, based on control.net() function\n\n\n\nepisim_baseline &lt;- netsim(x = net_mod, param = input_to_episim, \n                          init = initial_status_inputs, \n                          control = control_episim)"
   },
   {
-    "objectID": "W12_presentation.html#simulate-a-network-with-the-ergm-result-1",
-    "href": "W12_presentation.html#simulate-a-network-with-the-ergm-result-1",
-    "title": "W12. Statistical models of networks",
-    "section": "Simulate a Network with the ERGM Result",
-    "text": "Simulate a Network with the ERGM Result\n\nplotting the true network and simulated network\n\n\npar(mfrow = c(1, 2))\nplot(school_net, vertex.col = \"grade\", main = \"True Network\")\nplot(sim_schoolnet, vertex.col = \"grade\", main = \"Simulated Network\")"
+    "objectID": "W13_presentation.html#running-simulations-1",
+    "href": "W13_presentation.html#running-simulations-1",
+    "title": "W13. Network Diffusion",
+    "section": "Running Simulations",
+    "text": "Running Simulations\n\nQuick summary on the simulation object\n\n\nsummary_data_baseline &lt;- as.data.frame(episim_baseline, out = \"mean\") \nhead(summary_data_baseline)\n\n  time  s.num i.num num si.flow is.flow\n1    1 727.00 23.00 750     NaN     NaN\n2    2 725.50 24.50 750    2.00    0.50\n3    3 723.75 26.25 750    2.00    0.25\n4    4 722.00 28.00 750    1.75    0.00\n5    5 720.25 29.75 750    2.00    0.25\n6    6 718.25 31.75 750    2.25    0.25"
   },
   {
-    "objectID": "W12_presentation.html#done",
-    "href": "W12_presentation.html#done",
-    "title": "W12. Statistical models of networks",
+    "objectID": "W13_presentation.html#running-simulations-2",
+    "href": "W13_presentation.html#running-simulations-2",
+    "title": "W13. Network Diffusion",
+    "section": "Running Simulations",
+    "text": "Running Simulations\n\nQuick summary on the simulation object, at time 100\n\n\nsummary(episim_baseline, at = 100) \n\n\nEpiModel Summary\n=======================\nModel class: netsim\n\nSimulation Details\n-----------------------\nModel type: SIS\nNo. simulations: 4\nNo. time steps: 300\nNo. NW groups: 1\n\nModel Statistics\n------------------------------\nTime: 100 \n------------------------------ \n           mean      sd    pct\nSuscept.  125.5  14.526  0.167\nInfect.   624.5  14.526  0.833\nTotal     750.0   0.000  1.000\nS -&gt; I     10.5   4.933     NA\nI -&gt; S      5.5   2.082     NA\n------------------------------"
+  },
+  {
+    "objectID": "W13_presentation.html#running-simulations-3",
+    "href": "W13_presentation.html#running-simulations-3",
+    "title": "W13. Network Diffusion",
+    "section": "Running Simulations",
+    "text": "Running Simulations\n\nPlot the number of infected and susceptible over time\n\n\npar(mfrow = c(1, 1))\nplot(episim_baseline, y = c(\"i.num\", \"s.num\"), legend = T) \n\n\n\n\n\n\n\n\nVarying Network Features\nOne key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).\n\ntarget_statistics_lowdegree &lt;- round(target_statistics_baseline * .5)\n\n\ntarget_statistics_lowdegree\n\n                      edges nodefactor.location.suburbs \n                        695                         402 \n         nodematch.location \n                        562 \n\n\nNow we run the network model using the new target statistics. All other inputs are the same.\n\nnet_mod_lowdegree &lt;- netest(nw = epi_network, formation = formation_formula,  \n                            target.stats = target_statistics_lowdegree, \n                            coef.diss = dissolution_coefs)\n\nAnd let’s check to make sure the model is working as expected.\n\nmod_fit_lowdegree &lt;- netdx(x = net_mod_lowdegree, dynamic = T, \n                           nsims = 5, nsteps = 300)\n\n\nplot(mod_fit_lowdegree, legend = T) \n\n\n\n\n\n\n\n\nLooks okay, so we can go ahead and use the dynamic network model in the epidemiological simulation. The inputs are the same as before but now we use the network model based on the lower mean degree.\n\nepisim_lowdegree &lt;- netsim(x = net_mod_lowdegree, param = input_to_episim,  \n                           init = initial_status_inputs, \n                           control = control_episim)\n\nLet’s get a summary data frame of the new, lower degree simulation:\n\nsummary_data_lowdegree &lt;- as.data.frame(episim_lowdegree, out = \"mean\")\n\nAnd let’s compare period 10, 25, 50, 100, 150 and 300 between the two simulations, just including the number infected (i.num in the summary data frames).\n\nperiod &lt;- c(10, 25, 50, 100, 150, 300)\ni.num.baseline &lt;-  summary_data_baseline[, \"i.num\"]\ni.num.lowdegree &lt;- summary_data_lowdegree[, \"i.num\"]\n\ncompare_dat &lt;- data.frame(period = period, \n                          i.num.baseline = i.num.baseline[period],\n                          i.num.lowdegree = i.num.lowdegree[period])\n\n\ncompare_dat\n\n  period i.num.baseline i.num.lowdegree\n1     10          43.25           32.25\n2     25         100.00           48.50\n3     50         324.75           94.25\n4    100         624.50          254.50\n5    150         649.25          418.75\n6    300         647.75          546.25\n\n\nEach row reports the number infected for each simulation for that time period. The second column reports the baseline model, run above (using mean degree of 3.707), while the third column reports the low degree simulation results. We can see that the low degree simulation has a lower number of infected at each time period, but the differences are striking around periods 50 to 150. We can also plot the difference in number infected between the two simulations.\n\ndiff_infected &lt;- i.num.baseline - i.num.lowdegree\n\nplot(1:300, diff_infected, xlab = \"period\", \n     ylab = \"Difference in Number Infected\",\n     main = \"Comparison of Baseline to Low Degree Simulation\")\n\n\n\n\n\n\n\n\nNow let’s plot the diffusion curves for the baseline simulation and the low degree simulation on one plot.\n\npar(mfrow = c(1, 2))\n\nplot(episim_baseline, y = c(\"i.num\", \"s.num\"), \n     legend = TRUE, main = \"Baseline\")\n\nplot(episim_lowdegree, y = c(\"i.num\", \"s.num\"), \n     legend = TRUE, main = \"Low Degree\")\n\n\n\n\n\n\n\n\nOverall, the average number of partners in a time period clearly affects the diffusion potential. With fewer edges per period, the potential to become infected and pass it on is greatly diminished. The decrease in average number of partners affects both the final number of infected, as well as the pace of infection, creating large differentials in infection in the middle periods. This suggests that decreasing the number of partners per period can reduce epidemic potential, but even here (in the low degree case) we still see a high rate of cases infected by the end of the simulation (around 75%).\nVarying Epidemic Model\nJust as we were able to systematically vary the network model in the simulation, we can also vary the input parameters to the epidemic model. Here, we will keep the network the same as in the baseline model (so average degree is set to 3.707, based on the original ego network data). We will only alter the inputs to the epidemiological part of the simulation. We will focus on the activity rate parameter. This governs how many times two nodes with a connection interact in a given time period. Given a connection, node i and j may interact 0, 1, 2, 3… times in a given period, with increasing risk of infection as the number of interactions increases.\nHere we will create a new set of input parameters using the param.net() function. We will again set the infection probability to .025 and the recovery rate to .01. This time, however, we will lower the number of interactions per period (assuming i and j are connected) to .40. This effectively means that ij pairs who are connected will have .60 probability of having no risk events in a period and .40 probability of having one risk event (compare this to the previous simulation where all connected ij pairs had one risk event). Nodes thus have a relatively high degree, but lower probabilities of infection with each partner. Formally, we set the act.rate input to .40 in the param.net() function.\n\ninput_to_episim_lowinteraction &lt;- param.net(inf.prob = 0.025, \n                                            act.rate = .40, rec.rate = 0.01) \n\nWe now rerun the epidemic simulation, using the lower interaction inputs. All other inputs are the same as in the baseline model.\n\nepisim_lowinteraction &lt;- netsim(x = net_mod, \n                                param = input_to_episim_lowinteraction,\n                                init = initial_status_inputs, \n                                control = control_episim)\n\nNow let’s plot the diffusion curves for the baseline simulation and the low interaction simulation on one plot.\n\npar(mfrow = c(1, 2))\n\nplot(episim_baseline,  y = c(\"i.num\", \"s.num\"), \n     legend = T, main = \"Baseline\")\n\nplot(episim_lowinteraction, y = c(\"i.num\", \"s.num\"), \n     legend = T, main = \"Low Interactions\")\n\n\n\n\n\n\n\n\nWe can clearly see the effect of activity rate on epidemic size (looking at the “i.num” lines). When nodes have limited risk events in a given period (as the activity rate falls below 1), the potential for infection spread is greatly diminished. Even if nodes maintain a large set of partners, if they don’t interact with them at high rates (or do not engage in risky behavior), there is diminished chance for diffusion over the network. We thus begin to see the importance of distinguishing between relationships that exist and specific interactions that take place in a given period.\nSubstantively, we have seen how average degree and number of interactions per period affect epidemic potential. By lowering both the number of partners and the number of interactions (within relationships), the pace of infection spread decreases. In each case, however, the number infected at the end of the simulation is still quite high. As a further analysis, we could uncover how low these two inputs (or other potential inputs) would have to be set to lower the final epidemic size. We could also use this simulation platform to ask different kinds of questions; for example we may be interested in seeing the rate of infection between urban and suburban actors. We may also want to know how the differences between urban/suburban change as the features of the simulation change, in terms of network features and epidemic behavior. Finally, note that the EpiModel package is quite flexible, making it possible to specify a wide range of network and disease spread processes. We have explored only a small part of the full range of possibilities. In the next tutorial, we will explore diffusion processes in the context of adopting a new innovation, shifting away from biological transmission to more social diffusion processes."
+  },
+  {
+    "objectID": "W13_presentation.html#done",
+    "href": "W13_presentation.html#done",
+    "title": "W13. Network Diffusion",
     "section": "Done!",
     "text": "Done!\n\nPlease check KLMS for the assignment of this week(til Friday)\nIf you want to study in-depth knowledge for statistical models of network, please check this week [Option] in the assignment"
   },
@@ -893,7 +907,7 @@
     "href": "W4_presentation.html#plotting-ego-networks-2",
     "title": "W4. Ego, Dyads and Triads",
     "section": "Plotting Ego Networks",
-    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 8095045 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 8095045 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 09b1aac UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 09b1aac (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH b1fdaea UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from b1fdaea (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
+    "text": "Plotting Ego Networks\nNow, let’s take a look at the first three ego networks.\n\nigraph_nets[1:3] \n\n$`19850001`\nIGRAPH 3da16c8 UN-- 6 15 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 3da16c8 (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--3   2--4   2--5   3--4   3--5   4--5  \n[11] 1--ego 2--ego 3--ego 4--ego 5--ego\n\n$`19850002`\nIGRAPH 9e8274d UN-- 6 13 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 9e8274d (vertex names):\n [1] 1--2   1--3   1--4   1--5   2--4   3--4   3--5   4--5   1--ego 2--ego\n[11] 3--ego 4--ego 5--ego\n\n$`19850003`\nIGRAPH 3d0f883 UN-- 6 11 -- \n+ attr: .egoID (g/n), name (v/c), AGE (v/n), EDUC (v/n), RACE (v/c),\n| SEX (v/c), RELIG (v/c), AGE_CATEGORICAL (v/c), EDUC_CATEGORICAL\n| (v/c), TALKTO (v/n), SPOUSE (v/n), KIN (v/n), WEIGHT (e/n)\n+ edges from 3d0f883 (vertex names):\n [1] 1--2   1--3   1--4   2--3   2--4   3--4   1--ego 2--ego 3--ego 4--ego\n[11] 5--ego"
   },
   {
     "objectID": "W4_presentation.html#plotting-ego-networks-3",
