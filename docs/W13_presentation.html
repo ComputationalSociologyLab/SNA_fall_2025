@@ -672,11 +672,11 @@ Dynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN depa
 <div class="cell-output cell-output-stdout">
 <pre><code>  time  s.num i.num num si.flow is.flow
 1    1 727.00 23.00 750     NaN     NaN
-2    2 725.75 24.25 750    1.75    0.50
-3    3 724.25 25.75 750    1.75    0.25
-4    4 721.75 28.25 750    2.50    0.00
-5    5 719.75 30.25 750    2.25    0.25
-6    6 717.25 32.75 750    2.75    0.25</code></pre>
+2    2 726.50 23.50 750    1.25    0.75
+3    3 724.25 25.75 750    2.75    0.50
+4    4 722.50 27.50 750    2.00    0.25
+5    5 720.75 29.25 750    2.25    0.50
+6    6 718.75 31.25 750    2.25    0.25</code></pre>
 </div>
 </div>
 </section>
@@ -704,12 +704,12 @@ Model Statistics
 ------------------------------
 Time: 100 
 ------------------------------ 
-            mean      sd    pct
-Suscept.  126.75  15.196  0.169
-Infect.   623.25  15.196  0.831
-Total     750.00   0.000  1.000
-S -&gt; I      7.00   2.708     NA
-I -&gt; S      8.75   2.630     NA
+            mean     sd    pct
+Suscept.  125.25  5.909  0.167
+Infect.   624.75  5.909  0.833
+Total     750.00  0.000  1.000
+S -&gt; I      7.75  2.062     NA
+I -&gt; S      5.75  0.500     NA
 ------------------------------ </code></pre>
 </div>
 </div>
@@ -725,108 +725,6 @@ I -&gt; S      8.75   2.630     NA
 
 </div>
 <img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
-<section id="varying-network-features" class="slide level2">
-<h2>Varying Network Features</h2>
-<p>One key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>target_statistics_lowdegree <span class="ot">&lt;-</span> <span class="fu">round</span>(target_statistics_baseline <span class="sc">*</span> .<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>target_statistics_lowdegree</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                      edges nodefactor.location.suburbs 
-                        695                         402 
-         nodematch.location 
-                        562 </code></pre>
-</div>
-</div>
-<p>Now we run the network model using the new target statistics. All other inputs are the same.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>net_mod_lowdegree <span class="ot">&lt;-</span> <span class="fu">netest</span>(<span class="at">nw =</span> epi_network, <span class="at">formation =</span> formation_formula,  </span>
-<span id="cb52-2"><a></a>                            <span class="at">target.stats =</span> target_statistics_lowdegree, </span>
-<span id="cb52-3"><a></a>                            <span class="at">coef.diss =</span> dissolution_coefs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>And let’s check to make sure the model is working as expected.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>mod_fit_lowdegree <span class="ot">&lt;-</span> <span class="fu">netdx</span>(<span class="at">x =</span> net_mod_lowdegree, <span class="at">dynamic =</span> T, </span>
-<span id="cb53-2"><a></a>                           <span class="at">nsims =</span> <span class="dv">5</span>, <span class="at">nsteps =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">plot</span>(mod_fit_lowdegree, <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-35-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Looks okay, so we can go ahead and use the dynamic network model in the epidemiological simulation. The inputs are the same as before but now we use the network model based on the lower mean degree.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>episim_lowdegree <span class="ot">&lt;-</span> <span class="fu">netsim</span>(<span class="at">x =</span> net_mod_lowdegree, <span class="at">param =</span> input_to_episim,  </span>
-<span id="cb55-2"><a></a>                           <span class="at">init =</span> initial_status_inputs, </span>
-<span id="cb55-3"><a></a>                           <span class="at">control =</span> control_episim)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Let’s get a summary data frame of the new, lower degree simulation:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>summary_data_lowdegree <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(episim_lowdegree, <span class="at">out =</span> <span class="st">"mean"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>And let’s compare period 10, 25, 50, 100, 150 and 300 between the two simulations, just including the number infected (<code>i.num</code> in the summary data frames).</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>period <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">300</span>)</span>
-<span id="cb57-2"><a></a>i.num.baseline <span class="ot">&lt;-</span>  summary_data_baseline[, <span class="st">"i.num"</span>]</span>
-<span id="cb57-3"><a></a>i.num.lowdegree <span class="ot">&lt;-</span> summary_data_lowdegree[, <span class="st">"i.num"</span>]</span>
-<span id="cb57-4"><a></a></span>
-<span id="cb57-5"><a></a>compare_dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">period =</span> period, </span>
-<span id="cb57-6"><a></a>                          <span class="at">i.num.baseline =</span> i.num.baseline[period],</span>
-<span id="cb57-7"><a></a>                          <span class="at">i.num.lowdegree =</span> i.num.lowdegree[period])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>compare_dat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  period i.num.baseline i.num.lowdegree
-1     10          42.25           29.00
-2     25         110.25           44.25
-3     50         346.75           83.25
-4    100         623.25          220.00
-5    150         646.50          393.25
-6    300         649.75          553.25</code></pre>
-</div>
-</div>
-<p>Each row reports the number infected for each simulation for that time period. The second column reports the baseline model, run above (using mean degree of 3.707), while the third column reports the low degree simulation results. We can see that the low degree simulation has a lower number of infected at each time period, but the differences are striking around periods 50 to 150. We can also plot the difference in number infected between the two simulations.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>diff_infected <span class="ot">&lt;-</span> i.num.baseline <span class="sc">-</span> i.num.lowdegree</span>
-<span id="cb60-2"><a></a></span>
-<span id="cb60-3"><a></a><span class="fu">plot</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">300</span>, diff_infected, <span class="at">xlab =</span> <span class="st">"period"</span>, </span>
-<span id="cb60-4"><a></a>     <span class="at">ylab =</span> <span class="st">"Difference in Number Infected"</span>,</span>
-<span id="cb60-5"><a></a>     <span class="at">main =</span> <span class="st">"Comparison of Baseline to Low Degree Simulation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-40-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Now let’s plot the diffusion curves for the baseline simulation and the low degree simulation on one plot.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb61-2"><a></a></span>
-<span id="cb61-3"><a></a><span class="fu">plot</span>(episim_baseline, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), </span>
-<span id="cb61-4"><a></a>     <span class="at">legend =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">"Baseline"</span>)</span>
-<span id="cb61-5"><a></a></span>
-<span id="cb61-6"><a></a><span class="fu">plot</span>(episim_lowdegree, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), </span>
-<span id="cb61-7"><a></a>     <span class="at">legend =</span> <span class="cn">TRUE</span>, <span class="at">main =</span> <span class="st">"Low Degree"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-41-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Overall, the average number of partners in a time period clearly affects the diffusion potential. With fewer edges per period, the potential to become infected and pass it on is greatly diminished. The decrease in average number of partners affects both the final number of infected, as well as the pace of infection, creating large differentials in infection in the middle periods. This suggests that decreasing the number of partners per period can reduce epidemic potential, but even here (in the low degree case) we still see a high rate of cases infected by the end of the simulation (around 75%).</p>
-</section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>
