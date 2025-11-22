@@ -532,7 +532,7 @@ gtrans(sim_strong_homophily)
 
 We can see that the network with stronger homophily has higher transitivity, so that a friend of a friend is more likely to be a friend. In this case, homophily on grade created groups in the network. Three people in the same grade are all likely to be friends, raising the potential for a friend of a friend to also be a friend. More generally, the results demonstrate how shifting patterns of homophily can affect network structure. We can imagine exploring a number of other questions using this kind of simulation platform; for example, we could ask how network cohesion changes as we alter the way actors form ties, based on mechanisms like homophily, hierarchy, or balance.
 
-# 13, Part 2. Longitudinal Network Models: STERGM {.unnumbered #ch13-Longitudinal-Network-Models-STERGM-R}
+# [OPTION] 13, Part 2. Longitudinal Network Models: STERGM {.unnumbered #ch13-Longitudinal-Network-Models-STERGM-R}
 
 This is the second tutorial for Chapter 13 on statistical network models. The first tutorial covered the case of [cross-sectional network data](#ch13-Cross-Sectional-Network-Models-ERGM-R). Here, we assume that a researcher has data on at least two time points and is interested in modeling change in the network over time. In this tutorial, we will walk through the estimation and interpretation of separable temporal exponential random graph models (STERGM). We can think of STERGM as a longitudinal extension to ERGM (see previous tutorial). 
 
@@ -860,7 +860,7 @@ Looks okay on the whole, although we might consider adding additional homophliy 
 
 Overall, our results suggest that seating arrangements structure the formation of interaction ties. Individuals sitting close together are likely to initiate interactions.  Gender and race have relatively weak effects on the formation of ties. For example, even though there is one group of isolated girls, the overall effect of gender on formation of ties is not particularly strong. We also see that students tend to form new ties to people in their social cluster, with students initiating talking relationships with other students who have the same (current) partners as themselves. The tie persistence results are less clear, with few good predictors in the persistence model. In sum, the results suggest that classroom interactions are largely based on opportunity structure and norms of interaction: one tends to talk to other students in close proximity (socially or physically); once an initial discussion relationship is prompted, however, the interaction between i-j has its own internal dynamics largely independent of other, external factors.
 
-# 13, Part 3. Two-mode Network Models {.unnumbered #ch13-Two-mode-Network-Models-ERGM-STERGM-R}
+# [OPTION] # 13, Part 3. Two-mode Network Models {.unnumbered #ch13-Two-mode-Network-Models-ERGM-STERGM-R}
 
 This is the third tutorial for Chapter 13, covering statistical network models in R. The first two tutorials covered network models for one-mode networks. [Part 1](#ch13-Cross-Sectional-Network-Models-ERGM-R) covered cross-sectional network models (ERGM), while [Part 2](#ch13-Longitudinal-Network-Models-STERGM-R) covered longitudinal network models (STERGM). In this tutorial, we will apply ERGMs and STERGMs to two-mode network data. Two-mode, or bipartite, networks are based on two types of actors (e.g., students and clubs). Ties exist between actors of different modes, but there are no ties between actors of the same mode. See [Chapter 11](#ch11-Two-mode-Networks) for details. We will draw heavily on the ERGM and STERGM tutorials, demonstrating how the specification and interpretation of the models must be rethought for two-mode networks. For example, even simple terms, like those capturing homophily, are not so simple when there are two kinds of actors in the network. We will cover cross-sectional models (ERGM) first, to get a sense of the model mechanics for two-mode networks. We will then cover longitudinal models (STERGM), appropriate for over time two-mode data. 
 
@@ -1375,109 +1375,13 @@ stergm_mod2 <- tergm(net_dynamic_9697 ~
 summary(stergm_mod2)
 ```
 
-And now let's go ahead and add nodefactor and nodematch terms for our club attributes. We will also include a nodefactor term for whether the club is a feeder club, part of a clear developmental trajectory in the school (e.g., low French feeds high French). 
-
-```{r message=F, warning=F, results='hide'}
-set.seed(104)
-
-stergm_mod3 <- tergm(net_dynamic_9697 ~ 
-                       Form(~ edges + Offset(~ edgecov("missing_dyad"), 
-                                             coef = offset_coef_miss) + 
-                              Offset(~ nodemix("studentgender_clubgender", 
-                                               levels2 = gender_terms), 
-                                               coef = offset_coefs_gender) + 
-                              Offset(~ nodemix("studentgrade97_clubgrade", 
-                                               levels2 = grade_terms_9697), 
-                                               coef = offset_coefs_grade_9697) + 
-                              b2factor("club_type_detailed", levels = -2) + 
-                              b2nodematch("club_type_detailed", beta = .25) + 
-                              b2factor("club_profile", levels = c(3, 1, 4)) + 
-                              b2nodematch("club_profile", beta = .25) + 
-                              b2factor("club_feeder")) + 
-                       Persist(~ edges + Offset(~ edgecov("missing_dyad"), 
-                                             coef = offset_coef_miss) + 
-                              Offset(~ nodemix("studentgender_clubgender", 
-                                               levels2 = gender_terms), 
-                                               coef = offset_coefs_gender) + 
-                              Offset(~ nodemix("studentgrade97_clubgrade", 
-                                               levels2 = grade_terms_9697), 
-                                               coef = offset_coefs_grade_9697) + 
-                                 b2factor("club_type_detailed", levels = -2) +
-                                 b2nodematch("club_type_detailed", beta = .25) +
-                                 b2factor("club_profile", levels = c(3, 1, 4)) +
-                                 b2nodematch("club_profile", beta = .25) + 
-                                 b2factor("club_feeder")), 
-                     estimate = "CMLE", times = 0:1, 
-                     control = control.tergm(CMLE.ergm = 
-                                               control.ergm(MCMC.burnin = 50000,
-                                                        MCMC.samplesize = 4000, 
-                                                        parallel = 4, 
-                                                      parallel.type = "PSOCK")))
-```
-
-```{r}
-summary(stergm_mod3)
-```
-
-Looking at the formation model, we see that students join service clubs at high rates (compared to academic interest clubs, the reference) while there are relatively small differences in the rate of joining across low to high profile clubs (looking at the b2factor terms). For the nodematch terms, we see that students join clubs in a manner consistent with homophily, in terms of club type and club profile. Students are more likely to join a club if that club is similar to the clubs they are already members of (thus creating a two-step that matches on club type). Students who are members of one team sport (varsity football) in 1996 are likely to join another team sport in 1997. There is also homophily on club profile, as students in high profile clubs (in 1996) are likely to join other high profile clubs (in 1997).
-
-Moving to the persistence model, we see that students tend to stay in clubs (or persist) when the clubs are the same type and profile. Students are thus more likely to leave clubs when their memberships are not of the same type/profile. For example, a student in quiz bowl and academic decathlon is more likely to remain in quiz bowl than a student in quiz bowl and boys basketball. Students thus join clubs consistent with their general membership milieu and drop clubs when there are contradictions. We also see that high profile clubs are more likely to keep their members (looking at the b2factor terms on profile, with low as the reference), as are service clubs. Thus, while high profile clubs do not necessarily recruit members at higher rates (based on the formation results), they are more likely to retain members over time. We also see that feeder clubs lose members at high rates (as students develop, moving from the feeder club to the next level; e.g., low French to high French). 
-
-More generally, we can see that service clubs tend to be integrating in the school, as students join and stay in these clubs at high rates. This is partly due to the low level of commitment, serving as easy to join 'blow-off' clubs. Still, as we saw in [Chapter 11](#ch11-Two-mode-Networks), these clubs are heterogeneous along gender and grade lines, serving a potentially important role in bringing disparate parts of the school together. The fact that students tend to stay in these clubs makes the integrating story more compelling. On the other hand, we see how high profile clubs serve, if anything, to divide the school: high profile clubs tend to be smaller and exclusive, and members are likely to remain members through time.
-
-
-Looks generally okay, so let's move to our fourth model, where we add nodefactor and nodematch terms for race. To limit the run time of this model, we will only include nodefactor terms for the club features (although the results are substantively similar if we also included nodematch terms for `club_type_detailed` and `club_profile`). We will also tweak some of the control arguments.
-
-```{r message=F, warning=F, results='hide'}
-stergm_mod4 <- tergm(net_dynamic_9697~ 
-                       Form(~ edges + Offset(~ edgecov("missing_dyad"), 
-                                             coef = offset_coef_miss) + 
-                              Offset(~ nodemix("studentgender_clubgender", 
-                                               levels2 = gender_terms), 
-                                               coef = offset_coefs_gender) + 
-                              Offset(~ nodemix("studentgrade97_clubgrade", 
-                                               levels2 = grade_terms_9697), 
-                                               coef = offset_coefs_grade_9697) + 
-                              b2factor("club_type_detailed", levels = -2) + 
-                              b2factor("club_profile", levels = c(3, 1, 4)) + 
-                              b2factor("club_feeder") + 
-                              b1factor("race", levels = -c(1, 3, 4)) + 
-                              b1nodematch("race", beta = .15)) + 
-                       Persist(~ edges + Offset(~ edgecov("missing_dyad"), 
-                                             coef = offset_coef_miss) + 
-                              Offset(~ nodemix("studentgender_clubgender", 
-                                               levels2 = gender_terms), 
-                                               coef = offset_coefs_gender) + 
-                              Offset(~ nodemix("studentgrade97_clubgrade", 
-                                               levels2 = grade_terms_9697), 
-                                               coef = offset_coefs_grade_9697) +  
-                                 b2factor("club_type_detailed", levels = -2) +  
-                                 b2factor("club_profile", levels = c(3, 1, 4)) +
-                                 b2factor("club_feeder") + 
-                                 b1factor("race", levels = -c(1, 3, 4)) + 
-                                 b1nodematch("race", beta = .15)), 
-                     estimate = "CMLE", times = 0:1, 
-                     control = control.tergm(CMLE.ergm = 
-                                               control.ergm(MCMC.burnin = 50000,
-                                                        MCMC.samplesize = 4000, 
-                                                        parallel = 4, 
-                                                      parallel.type = "PSOCK",
-                                                      MCMLE.confidence.boost = 1.25)))
-```
-
-```{r}
-summary(stergm_mod4)
-```
-
-We see that the results for tie formation (joining clubs) are different than for tie persistence (staying in clubs). Race only really matters for tie formation and adds very little to the persistence model. We see in the formation model that students join clubs based on race, joining clubs where they match the race of the current members (looking at b1nodematch.race). This likely happens because students are recruited into clubs through friendship and friendships are homophilous in terms of race. See the work of Miller McPherson, as well as Chapter 11 in this book (the main text), particularly the discussion of ecological niches and voluntary affiliations [@McPherson1983]. On the other hand, there is a much weaker effect of racial homophily in the persistence model. Students may leave clubs because they are racially different than other members, but this tendency is much weaker than the tendency to avoid racially discordant clubs in the first place. Students thus tend to avoid clubs where they are racially different than most other students; but once that initial leap happens, they are not especially likely to leave. 
-
 Overall, our longitudinal models offer a number of insights into the school. We find that club attributes operate fairly consistently across the formation and persistence models. Students join clubs that are of the same type and profile, and leave if they are part of clubs that are incongruent along these lines. More generally, we see how club features serve to constrain students. Students join certain types of clubs and leave when they 'mistakenly' join incongruent ones (joining a sports team and performance art). This suggests that there are clear patterns of club memberships that students are allowed to take on, with students joining and dropping clubs to be consistent with such rules. 
 
 Homophily looks very different in the case of student attributes, with students joining, but not leaving, clubs based on the racial makeup. Demographic sorting is thus an impediment to integration, but once students overcome this initial sorting, the organization can potentially act to bring people together from different backgrounds. This is important as we might think that segregation along racial lines could be weakened (i.e., if a school took specific steps to create integrated clubs), while other kinds of segregation, based on patterns of club membership, status, etc., may be harder to alleviate.
 
 There are a number of other questions we could address with these kinds of data and models. For example, we could add information about friendships between students. We could then ask if students recruit their friends into clubs, and whether they are more likely to stay if they have friends in the club. This would allow us to test the hypothesis we posed about racial homophily and club membership (that homophily arises in clubs because there is homophily in friendship and students recruit their friends into clubs). We could also examine the clustering of clubs between students, asking if pairs of students tend to join the same clubs (gwb1nsp instead of gwb2nsp). And similarly, we could add terms to capture differential homophily. We could ask, for example, if students in team sports are especially likely to join other team sports; compared to say, academic interest, where the tendency to match (i.e., join other academic clubs) might be weaker. 
 
-# 13, Part 4. Relational Event Models {.unnumbered #ch13-Relational-Event-Models-R}
+# [OPTION] # 13, Part 4. Relational Event Models {.unnumbered #ch13-Relational-Event-Models-R}
 
 This is the fourth tutorial for Chapter 13 on statistical network models. The first tutorial covered the case of [cross-sectional network data](#ch13-Cross-Sectional-Network-Models-ERGM-R). The second tutorial covered statistical models for discrete, [longitudinal networks](#ch13-Longitudinal-Network-Models-STERGM-R). The third tutorial covered statistical models for [two-mode networks](#ch13-Two-mode-Network-Models-ERGM-STERGM-R). Here, we will walk through relational event models, appropriate for continuous-time network data. Relational event models are based on micro-interaction data. The model assumes that there is time-stamped (or at least ordered) information on the interactions between a set of actors. This shifts the focus from discrete relationships (friend, advice, etc.) to the specific interactions between actors in a setting. The goal of the model is to predict what the next event is likely to be, based on the interactional tendencies, or rules, of behavior in the setting. Compare this to STERGM, where the goal is to predict the adding/dropping of ties from one period to the next, based on discretely defined networks. 
 
