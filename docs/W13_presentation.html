@@ -202,8 +202,8 @@
 
 </section>
 <section>
-<section id="network-diffusion" class="title-slide slide level1 center">
-<h1>Network Diffusion</h1>
+<section id="network-diffusion-infectious-diseases" class="title-slide slide level1 center">
+<h1>Network Diffusion : Infectious Diseases</h1>
 <ul>
 <li>Cover dynamic epidemiological models of diffusion</li>
 <li>Apply the model to simulate a case of infection spread through a risk network
@@ -215,10 +215,10 @@
 <section id="reading-in-data" class="slide level2">
 <h2>Reading in Data</h2>
 <ul>
-<li>Specify
+<li><code>EpiModel</code> specify
 <ul>
-<li>one related to the formation and breaking of network ties</li>
-<li>one related to the spread of an infection through the network</li>
+<li>the formation and breaking of network ties</li>
+<li>the spread of an infection through the network</li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -228,8 +228,7 @@
 <section id="reading-in-data-1" class="slide level2">
 <h2>Reading in Data</h2>
 <ul>
-<li>No exact edgelist</li>
-<li>Use a faux ego network data set drawn from an at-risk population of drug users
+<li>Use a faux ego network data drawn from an at-risk population of drug users(No exact edgelist)
 <ul>
 <li><code>degree</code> = number of current drug partners for ego</li>
 </ul></li>
@@ -252,86 +251,49 @@
 <section id="specifying-the-network-model" class="slide level2">
 <h2>Specifying the Network Model</h2>
 <ul>
-<li>Let’s see how many people are in the sample:</li>
+<li>Create an empty, undirected network of size <code>num_nodes</code></li>
 </ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>num_nodes <span class="ot">&lt;-</span> <span class="fu">nrow</span>(ego_dat) </span>
-<span id="cb4-2"><a></a>num_nodes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 750</code></pre>
-</div>
+<span id="cb4-2"><a></a>epi_network <span class="ot">&lt;-</span> <span class="fu">network.initialize</span>(<span class="at">n =</span> num_nodes, <span class="at">directed =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="specifying-the-network-model-1" class="slide level2">
 <h2>Specifying the Network Model</h2>
 <ul>
-<li>Create an empty, undirected network of size <code>num_nodes</code></li>
+<li>Add some node attributes, based on the values seen in the observed data</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>epi_network <span class="ot">&lt;-</span> <span class="fu">network.initialize</span>(<span class="at">n =</span> num_nodes, <span class="at">directed =</span> F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>epi_network <span class="ot">&lt;-</span> <span class="fu">set.vertex.attribute</span>(epi_network, <span class="at">attrname =</span> <span class="st">"location"</span>,</span>
+<span id="cb5-2"><a></a>                                    <span class="at">value =</span> ego_dat<span class="sc">$</span>location)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="specifying-the-network-model-2" class="slide level2">
 <h2>Specifying the Network Model</h2>
 <ul>
-<li>Add some node attributes, based on the values seen in the observed data</li>
+<li>Baseline network model</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>epi_network <span class="ot">&lt;-</span> <span class="fu">set.vertex.attribute</span>(epi_network, <span class="at">attrname =</span> <span class="st">"location"</span>,</span>
-<span id="cb7-2"><a></a>                                    <span class="at">value =</span> ego_dat<span class="sc">$</span>location)</span>
-<span id="cb7-3"><a></a>epi_network </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Network attributes:
-  vertices = 750 
-  directed = FALSE 
-  hyper = FALSE 
-  loops = FALSE 
-  multiple = FALSE 
-  bipartite = FALSE 
-  total edges= 0 
-    missing edges= 0 
-    non-missing edges= 0 
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">plot</span>(epi_network) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
- Vertex attribute names: 
-    location vertex.names 
-
-No edge attributes</code></pre>
 </div>
-</div>
-</section>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch"></section>
 <section id="specifying-the-network-model-3" class="slide level2">
 <h2>Specifying the Network Model</h2>
 <ul>
 <li>Construct a simulated network based on the information we have</li>
 <li>Specify a model that determines how ties form and break within the simulation
 <ul>
-<li>With tie formation formula (same kinds of terms used in the ERGM)</li>
+<li>With tie formation formula (<code>edges</code>, <code>nodefactor("location")</code>, <code>nodematch("location")</code>)</li>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>formation_formula <span class="ot">&lt;-</span> <span class="fu">formula</span>(<span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodefactor</span>(<span class="st">"location"</span>) <span class="sc">+</span> </span>
-<span id="cb9-2"><a></a>                               <span class="fu">nodematch</span>(<span class="st">"location"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>formation_formula <span class="ot">&lt;-</span> <span class="fu">formula</span>(<span class="sc">~</span> edges <span class="sc">+</span> <span class="fu">nodefactor</span>(<span class="st">"location"</span>) <span class="sc">+</span> </span>
+<span id="cb7-2"><a></a>                               <span class="fu">nodematch</span>(<span class="st">"location"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="calculate-the-target-statistics" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
-<ul>
-<li>Set the target statistics for each term in the formula(<code>nodefactor("location")</code>, <code>nodematch("location")</code>)
-<ul>
-<li>Set the number of edges</li>
-<li>Use the mean degree in the ego network data</li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>mean_degree <span class="ot">&lt;-</span> <span class="fu">mean</span>(ego_dat<span class="sc">$</span>degree) </span>
-<span id="cb10-2"><a></a>mean_degree </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.706667</code></pre>
-</div>
-</div>
-</section>
-<section id="calculate-the-target-statistics-1" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-4" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Calculate the term <code>edge</code>
 <ul>
@@ -340,40 +302,47 @@ No edge attributes</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>edges <span class="ot">&lt;-</span> mean_degree <span class="sc">*</span> num_nodes <span class="sc">/</span> <span class="dv">2</span> </span>
-<span id="cb12-2"><a></a>edges</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>mean_degree <span class="ot">&lt;-</span> <span class="fu">mean</span>(ego_dat<span class="sc">$</span>degree) </span>
+<span id="cb8-2"><a></a>edges <span class="ot">&lt;-</span> mean_degree <span class="sc">*</span> num_nodes <span class="sc">/</span> <span class="dv">2</span> </span>
+<span id="cb8-3"><a></a>mean_degree</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.706667</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>edges</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1390</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-2" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-5" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Calculate the term <code>nodefactor("location")</code>
 <ul>
-<li>Total number of ties emanating from one group.</li>
-<li>the mean degree of the group * the number of people in that group</li>
+<li>The mean degree of ties connected with same type of location</li>
+<li>The mean degree of the group * the number of people in that group</li>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>mean_degree_location <span class="ot">&lt;-</span> <span class="fu">tapply</span>(<span class="at">X =</span> ego_dat<span class="sc">$</span>degree, <span class="at">INDEX =</span> ego_dat<span class="sc">$</span>location, </span>
-<span id="cb14-2"><a></a>                               <span class="at">FUN =</span> mean) </span>
-<span id="cb14-3"><a></a>mean_degree_location </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># calculate the mean degree of the group</span></span>
+<span id="cb12-2"><a></a>mean_degree_location <span class="ot">&lt;-</span> <span class="fu">tapply</span>(<span class="at">X =</span> ego_dat<span class="sc">$</span>degree, <span class="at">INDEX =</span> ego_dat<span class="sc">$</span>location, </span>
+<span id="cb12-3"><a></a>                               <span class="at">FUN =</span> mean) </span>
+<span id="cb12-4"><a></a>mean_degree_location </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   city suburbs 
    3.95    3.22 </code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-3" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-6" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Check a simple table on location to see how many are in the city versus the suburbs</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>tab_location <span class="ot">&lt;-</span> <span class="fu">table</span>(ego_dat<span class="sc">$</span>location) </span>
-<span id="cb16-2"><a></a>tab_location</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="co"># calculate the number of people in that group</span></span>
+<span id="cb14-2"><a></a>tab_location <span class="ot">&lt;-</span> <span class="fu">table</span>(ego_dat<span class="sc">$</span>location) </span>
+<span id="cb14-3"><a></a>tab_location</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    city suburbs 
@@ -381,23 +350,23 @@ No edge attributes</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-4" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-7" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Total number of edges for each group * the mean degree for each group by the size of each group</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>edges_by_group <span class="ot">&lt;-</span> mean_degree_location <span class="sc">*</span> tab_location</span>
-<span id="cb18-2"><a></a>edges_suburbs <span class="ot">&lt;-</span> edges_by_group[<span class="dv">2</span>] </span>
-<span id="cb18-3"><a></a>edges_by_group </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>edges_by_group <span class="ot">&lt;-</span> mean_degree_location <span class="sc">*</span> tab_location</span>
+<span id="cb16-2"><a></a>edges_suburbs <span class="ot">&lt;-</span> edges_by_group[<span class="dv">2</span>] </span>
+<span id="cb16-3"><a></a>edges_by_group </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   city suburbs 
    1975     805 </code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-5" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-8" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Calculate the term <code>nodematch("location")</code>
 <ul>
@@ -406,9 +375,9 @@ No edge attributes</code></pre>
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>location_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>, <span class="st">"location3"</span>)</span>
-<span id="cb20-2"><a></a>same_location <span class="ot">&lt;-</span> ego_dat[, <span class="st">"location"</span>] <span class="sc">==</span> ego_dat[, location_cols] </span>
-<span id="cb20-3"><a></a><span class="fu">head</span>(same_location)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>location_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>, <span class="st">"location3"</span>)</span>
+<span id="cb18-2"><a></a>same_location <span class="ot">&lt;-</span> ego_dat[, <span class="st">"location"</span>] <span class="sc">==</span> ego_dat[, location_cols] </span>
+<span id="cb18-3"><a></a><span class="fu">head</span>(same_location)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     location1 location2 location3
 [1,]      TRUE        NA        NA
@@ -420,15 +389,15 @@ No edge attributes</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-6" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-9" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>See what proportion of ego-alter pairs match on location</li>
 <li>Do a simple table on the data frame constructed above</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>prop_match <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(same_location))</span>
-<span id="cb22-2"><a></a>prop_match </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>prop_match <span class="ot">&lt;-</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(same_location))</span>
+<span id="cb20-2"><a></a>prop_match </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>same_location
     FALSE      TRUE 
@@ -436,29 +405,29 @@ No edge attributes</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-7" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-10" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Take the proportion matching and multiply it by the total number of edges in the desired network</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>num_match <span class="ot">&lt;-</span> <span class="fu">round</span>(prop_match[[<span class="dv">2</span>]] <span class="sc">*</span> edges)</span>
-<span id="cb24-2"><a></a>num_match </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>num_match <span class="ot">&lt;-</span> <span class="fu">round</span>(prop_match[[<span class="dv">2</span>]] <span class="sc">*</span> edges)</span>
+<span id="cb22-2"><a></a>num_match </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1124</code></pre>
 </div>
 </div>
 </section>
-<section id="calculate-the-target-statistics-8" class="slide level2">
-<h2>Calculate the Target Statistics</h2>
+<section id="specifying-the-network-model-11" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
 <li>Put together the target statistics into one input vector.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>target_statistics_baseline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">edges =</span> edges, </span>
-<span id="cb26-2"><a></a>                                <span class="at">nodefactor.location =</span> edges_suburbs, </span>
-<span id="cb26-3"><a></a>                                <span class="at">nodematch.location =</span> num_match) </span>
-<span id="cb26-4"><a></a>target_statistics_baseline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>target_statistics_baseline <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">edges =</span> edges, </span>
+<span id="cb24-2"><a></a>                                <span class="at">nodefactor.location =</span> edges_suburbs, </span>
+<span id="cb24-3"><a></a>                                <span class="at">nodematch.location =</span> num_match) </span>
+<span id="cb24-4"><a></a>target_statistics_baseline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                      edges nodefactor.location.suburbs 
                        1390                         805 
@@ -467,18 +436,18 @@ No edge attributes</code></pre>
 </div>
 </div>
 </section>
-<section id="set-rules-for-network-dissolution" class="slide level2">
-<h2>Set Rules for Network Dissolution</h2>
+<section id="specifying-the-network-model-12" class="slide level2">
+<h2>Specifying the Network Model</h2>
 <ul>
-<li>Specify a model that will dictate how edges are dropped over time</li>
+<li>Specify a model on how edges are dropped over time</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># dissolution = a formula that determines how edges are dropped</span></span>
-<span id="cb28-2"><a></a><span class="co"># dissolution = the average duration of an edge in the simulation</span></span>
-<span id="cb28-3"><a></a><span class="co"># d.rate = the death rate of the population</span></span>
-<span id="cb28-4"><a></a>dissolution_coefs <span class="ot">&lt;-</span> <span class="fu">dissolution_coefs</span>(<span class="at">dissolution =</span> <span class="sc">~</span> <span class="fu">offset</span>(edges),</span>
-<span id="cb28-5"><a></a>                                       <span class="at">duration =</span> <span class="dv">25</span>, <span class="at">d.rate =</span> .<span class="dv">001</span>)</span>
-<span id="cb28-6"><a></a>dissolution_coefs  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># dissolution = a formula that determines how edges are dropped</span></span>
+<span id="cb26-2"><a></a><span class="co"># dissolution = the average duration of an edge in the simulation</span></span>
+<span id="cb26-3"><a></a><span class="co"># d.rate = the death rate of the population</span></span>
+<span id="cb26-4"><a></a>dissolution_coefs <span class="ot">&lt;-</span> <span class="fu">dissolution_coefs</span>(<span class="at">dissolution =</span> <span class="sc">~</span> <span class="fu">offset</span>(edges),</span>
+<span id="cb26-5"><a></a>                                       <span class="at">duration =</span> <span class="dv">25</span>, <span class="at">d.rate =</span> .<span class="dv">001</span>)</span>
+<span id="cb26-6"><a></a>dissolution_coefs  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Dissolution Coefficients
 =======================
@@ -496,67 +465,67 @@ Adjusted Coefficient: 3.229321</code></pre>
 <li><code>netest()</code> : wrapper for the <code>ergm()</code> and <code>tergm()</code> functions</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># nw = network object used as basis for simulation </span></span>
-<span id="cb30-2"><a></a><span class="co"># formation = formula specifying formation of edges</span></span>
-<span id="cb30-3"><a></a><span class="co"># target.stats = input target statistics corresponding to formation formula</span></span>
-<span id="cb30-4"><a></a><span class="co"># coefs.diss = coefficients for dissolution of edges</span></span>
-<span id="cb30-5"><a></a></span>
-<span id="cb30-6"><a></a><span class="fu">set.seed</span>(<span class="dv">1002</span>)</span>
-<span id="cb30-7"><a></a>net_mod <span class="ot">&lt;-</span> <span class="fu">netest</span>(<span class="at">nw =</span> epi_network, <span class="at">formation =</span> formation_formula, </span>
-<span id="cb30-8"><a></a>                  <span class="at">target.stats =</span> target_statistics_baseline, </span>
-<span id="cb30-9"><a></a>                  <span class="at">coef.diss =</span> dissolution_coefs) </span>
-<span id="cb30-10"><a></a><span class="fu">summary</span>(net_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># nw = network object used as basis for simulation </span></span>
+<span id="cb28-2"><a></a><span class="co"># formation = formula specifying formation of edges</span></span>
+<span id="cb28-3"><a></a><span class="co"># target.stats = input target statistics corresponding to formation formula</span></span>
+<span id="cb28-4"><a></a><span class="co"># coefs.diss = coefficients for dissolution of edges</span></span>
+<span id="cb28-5"><a></a></span>
+<span id="cb28-6"><a></a><span class="fu">set.seed</span>(<span class="dv">1002</span>)</span>
+<span id="cb28-7"><a></a>net_mod <span class="ot">&lt;-</span> <span class="fu">netest</span>(<span class="at">nw =</span> epi_network, <span class="at">formation =</span> formation_formula, </span>
+<span id="cb28-8"><a></a>                  <span class="at">target.stats =</span> target_statistics_baseline, </span>
+<span id="cb28-9"><a></a>                  <span class="at">coef.diss =</span> dissolution_coefs) </span>
+<span id="cb28-10"><a></a><span class="fu">summary</span>(net_mod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="estimating-the-network-model-1" class="slide level2">
 <h2>Estimating the Network Model</h2>
 <ul>
-<li>See if the model is producing networks that match the target statistics</li>
+<li>Check if the model is producing networks that match the target statistics</li>
 <li><code>netdx()</code> function will simulate networks from the estimated model and compare the statistics from the simulated networks to the input target statistics</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="co"># x = model estimated from netest</span></span>
-<span id="cb31-2"><a></a><span class="co"># nsims = number of simulated networks</span></span>
-<span id="cb31-3"><a></a><span class="co"># dynamic = should look at dynamic statistics (T/F)?</span></span>
-<span id="cb31-4"><a></a>  </span>
-<span id="cb31-5"><a></a>mod_fit1 <span class="ot">&lt;-</span> <span class="fu">netdx</span>(<span class="at">x =</span> net_mod, <span class="at">dynamic =</span> F, <span class="at">nsims =</span> <span class="dv">1000</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="co"># x = model estimated from netest</span></span>
+<span id="cb29-2"><a></a><span class="co"># nsims = number of simulated networks</span></span>
+<span id="cb29-3"><a></a><span class="co"># dynamic = should look at dynamic statistics (T/F)?</span></span>
+<span id="cb29-4"><a></a>  </span>
+<span id="cb29-5"><a></a>mod_fit1 <span class="ot">&lt;-</span> <span class="fu">netdx</span>(<span class="at">x =</span> net_mod, <span class="at">dynamic =</span> F, <span class="at">nsims =</span> <span class="dv">1000</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="estimating-the-network-model-2" class="slide level2">
 <h2>Estimating the Network Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">plot</span>(mod_fit1, <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">plot</span>(mod_fit1, <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-19-1.png" width="960" class="r-stretch"></section>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-18-1.png" width="960" class="r-stretch"></section>
 <section id="estimating-the-network-model-3" class="slide level2">
 <h2>Estimating the Network Model</h2>
 <ul>
 <li>Let’s look at the target statistics when we allow ties to dissolve and form over time</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co"># nsteps = number of time periods in dynamic simulation</span></span>
-<span id="cb33-2"><a></a>mod_fit2 <span class="ot">&lt;-</span> <span class="fu">netdx</span>(<span class="at">x =</span> net_mod, <span class="at">dynamic =</span> T, <span class="at">nsims =</span> <span class="dv">5</span>, <span class="at">nsteps =</span> <span class="dv">300</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="co"># nsteps = number of time periods in dynamic simulation</span></span>
+<span id="cb31-2"><a></a>mod_fit2 <span class="ot">&lt;-</span> <span class="fu">netdx</span>(<span class="at">x =</span> net_mod, <span class="at">dynamic =</span> T, <span class="at">nsims =</span> <span class="dv">5</span>, <span class="at">nsteps =</span> <span class="dv">300</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="estimating-the-network-model-4" class="slide level2">
 <h2>Estimating the Network Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">legend =</span> T)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">legend =</span> T)  </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-20-1.png" width="960" class="r-stretch"></section>
 <section id="estimating-the-network-model-5" class="slide level2">
 <h2>Estimating the Network Model</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="co"># To plot the statistics dealing with the duration of ties, "duration"</span></span>
-<span id="cb35-2"><a></a><span class="co"># To plot the statistics dealing with the dissolution of ties,"dissolution"</span></span>
-<span id="cb35-3"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb35-4"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">type =</span> <span class="st">"duration"</span>) </span>
-<span id="cb35-5"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">type =</span> <span class="st">"dissolution"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co"># "duration" : the duration of ties</span></span>
+<span id="cb33-2"><a></a><span class="co"># "dissolution" :the dissolution of tie</span></span>
+<span id="cb33-3"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb33-4"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">type =</span> <span class="st">"duration"</span>) </span>
+<span id="cb33-5"><a></a><span class="fu">plot</span>(mod_fit2, <span class="at">type =</span> <span class="st">"dissolution"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-22-1.png" width="960" class="r-stretch"></section>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-21-1.png" width="960" class="r-stretch"></section>
 <section id="specifying-the-epidemic-model" class="slide level2">
 <h2>Specifying the Epidemic Model</h2>
 <ul>
@@ -564,9 +533,10 @@ Adjusted Coefficient: 3.229321</code></pre>
 <li>EpiModel allows for a flexible range of models to be specified</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>initial_status <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"s"</span>, <span class="st">"i"</span>, <span class="st">"r"</span>), <span class="at">size =</span> num_nodes, </span>
-<span id="cb36-2"><a></a>                         <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">97</span>, .<span class="dv">03</span>, <span class="dv">0</span>)) </span>
-<span id="cb36-3"><a></a><span class="fu">table</span>(initial_status)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="co"># "s" "i" or "r" for susceptible, infected or recovered</span></span>
+<span id="cb34-2"><a></a>initial_status <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"s"</span>, <span class="st">"i"</span>, <span class="st">"r"</span>), <span class="at">size =</span> num_nodes, </span>
+<span id="cb34-3"><a></a>                         <span class="at">replace =</span> T, <span class="at">prob =</span> <span class="fu">c</span>(.<span class="dv">97</span>, .<span class="dv">03</span>, <span class="dv">0</span>)) </span>
+<span id="cb34-4"><a></a><span class="fu">table</span>(initial_status)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>initial_status
   i   s 
@@ -580,7 +550,7 @@ Adjusted Coefficient: 3.229321</code></pre>
 <li>Feed this vector of initial states to the <code>init.net()</code> function, with status.vector set to the vector of initial states.</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>initial_status_inputs <span class="ot">&lt;-</span> <span class="fu">init.net</span>(<span class="at">status.vector =</span> initial_status)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>initial_status_inputs <span class="ot">&lt;-</span> <span class="fu">init.net</span>(<span class="at">status.vector =</span> initial_status)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="specifying-the-epidemic-model-2" class="slide level2">
@@ -589,12 +559,12 @@ Adjusted Coefficient: 3.229321</code></pre>
 <li>Go ahead and set the probabilities of infection and recovery using a <code>param.net()</code> function</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># inf.prob = the probability of infection in a given interaction (or act)</span></span>
-<span id="cb39-2"><a></a><span class="co"># act.rate = number of interactions (or acts) in a time period between i and j, assuming that i and j are connected in that period.</span></span>
-<span id="cb39-3"><a></a><span class="co"># rec.rate = the rate of recovery in a time period</span></span>
-<span id="cb39-4"><a></a></span>
-<span id="cb39-5"><a></a>input_to_episim <span class="ot">&lt;-</span> <span class="fu">param.net</span>(<span class="at">inf.prob =</span> <span class="fl">0.025</span>, <span class="at">act.rate =</span> <span class="dv">1</span>, <span class="at">rec.rate =</span> <span class="fl">0.01</span>) </span>
-<span id="cb39-6"><a></a>input_to_episim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="co"># inf.prob = the probability of infection in a given interaction (or act)</span></span>
+<span id="cb37-2"><a></a><span class="co"># act.rate = number of interactions (or acts) in a time period between i and j, assuming that i and j are connected in that period.</span></span>
+<span id="cb37-3"><a></a><span class="co"># rec.rate = the rate of recovery in a time period</span></span>
+<span id="cb37-4"><a></a></span>
+<span id="cb37-5"><a></a>input_to_episim <span class="ot">&lt;-</span> <span class="fu">param.net</span>(<span class="at">inf.prob =</span> <span class="fl">0.025</span>, <span class="at">act.rate =</span> <span class="dv">1</span>, <span class="at">rec.rate =</span> <span class="fl">0.01</span>) </span>
+<span id="cb37-6"><a></a>input_to_episim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Fixed Parameters
 ---------------------------
@@ -607,13 +577,14 @@ rec.rate = 0.01</code></pre>
 <section id="specifying-the-epidemic-model-3" class="slide level2">
 <h2>Specifying the Epidemic Model</h2>
 <ul>
-<li>Create an object that controls the simulation itself</li>
+<li>Set options to control the simulation itself</li>
 <li>Type to “SIS”, have a simulation with 300 time periods, do the simulation 4 times and run it over 2 processors</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>control_episim <span class="ot">&lt;-</span> <span class="fu">control.net</span>(<span class="at">type =</span> <span class="st">"SIS"</span>, <span class="at">nsteps =</span> <span class="dv">300</span>, </span>
-<span id="cb41-2"><a></a>                              <span class="at">nsims =</span> <span class="dv">4</span>, <span class="at">ncores =</span> <span class="dv">2</span>)</span>
-<span id="cb41-3"><a></a>control_episim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co"># SIS : susceptible -&gt; infected -&gt; susceptible</span></span>
+<span id="cb39-2"><a></a>control_episim <span class="ot">&lt;-</span> <span class="fu">control.net</span>(<span class="at">type =</span> <span class="st">"SIS"</span>, <span class="at">nsteps =</span> <span class="dv">300</span>, </span>
+<span id="cb39-3"><a></a>                              <span class="at">nsims =</span> <span class="dv">4</span>, <span class="at">ncores =</span> <span class="dv">2</span>)</span>
+<span id="cb39-4"><a></a>control_episim</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Network Model Control Settings
 ===============================
@@ -656,9 +627,11 @@ Dynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN depa
 </ul></li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>episim_baseline <span class="ot">&lt;-</span> <span class="fu">netsim</span>(<span class="at">x =</span> net_mod, <span class="at">param =</span> input_to_episim, </span>
-<span id="cb43-2"><a></a>                          <span class="at">init =</span> initial_status_inputs, </span>
-<span id="cb43-3"><a></a>                          <span class="at">control =</span> control_episim) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>episim_baseline <span class="ot">&lt;-</span> <span class="fu">netsim</span>(<span class="at">x =</span> net_mod, <span class="co">#simulated network</span></span>
+<span id="cb41-2"><a></a>                          <span class="at">init =</span> initial_status_inputs, <span class="co"># initial status</span></span>
+<span id="cb41-3"><a></a>                          <span class="at">param =</span> input_to_episim, <span class="co"># param for infection and recovery</span></span>
+<span id="cb41-4"><a></a>                          <span class="at">control =</span> control_episim <span class="co"># sim option</span></span>
+<span id="cb41-5"><a></a>                          ) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="running-simulations-1" class="slide level2">
@@ -667,16 +640,16 @@ Dynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN depa
 <li>Quick summary on the simulation object</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>summary_data_baseline <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(episim_baseline, <span class="at">out =</span> <span class="st">"mean"</span>) </span>
-<span id="cb44-2"><a></a><span class="fu">head</span>(summary_data_baseline)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>summary_data_baseline <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(episim_baseline, <span class="at">out =</span> <span class="st">"mean"</span>) </span>
+<span id="cb42-2"><a></a><span class="fu">head</span>(summary_data_baseline)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  time  s.num i.num num si.flow is.flow
 1    1 727.00 23.00 750     NaN     NaN
-2    2 726.50 23.50 750    1.25    0.75
-3    3 724.25 25.75 750    2.75    0.50
-4    4 722.50 27.50 750    2.00    0.25
-5    5 720.75 29.25 750    2.25    0.50
-6    6 718.75 31.25 750    2.25    0.25</code></pre>
+2    2 725.25 24.75 750    2.25    0.50
+3    3 722.50 27.50 750    3.00    0.25
+4    4 720.50 29.50 750    2.00    0.00
+5    5 717.00 33.00 750    4.00    0.50
+6    6 715.25 34.75 750    2.00    0.25</code></pre>
 </div>
 </div>
 </section>
@@ -686,7 +659,7 @@ Dynamic Modules: resim_nets.FUN summary_nets.FUN infection.FUN recovery.FUN depa
 <li>Quick summary on the simulation object, at time 100</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">summary</span>(episim_baseline, <span class="at">at =</span> <span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">summary</span>(episim_baseline, <span class="at">at =</span> <span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 EpiModel Summary
@@ -704,12 +677,12 @@ Model Statistics
 ------------------------------
 Time: 100 
 ------------------------------ 
-            mean     sd    pct
-Suscept.  125.25  5.909  0.167
-Infect.   624.75  5.909  0.833
-Total     750.00  0.000  1.000
-S -&gt; I      7.75  2.062     NA
-I -&gt; S      5.75  0.500     NA
+            mean      sd    pct
+Suscept.  119.25  11.955  0.159
+Infect.   630.75  11.955  0.841
+Total     750.00   0.000  1.000
+S -&gt; I      6.50   3.697     NA
+I -&gt; S      9.25   5.620     NA
 ------------------------------ </code></pre>
 </div>
 </div>
@@ -720,11 +693,11 @@ I -&gt; S      5.75  0.500     NA
 <li>Plot the number of infected and susceptible over time</li>
 </ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
-<span id="cb48-2"><a></a><span class="fu">plot</span>(episim_baseline, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb46-2"><a></a><span class="fu">plot</span>(episim_baseline, <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"i.num"</span>, <span class="st">"s.num"</span>), <span class="at">legend =</span> T) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
-<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
+<img data-src="W13_presentation_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
 <section id="done" class="slide level2">
 <h2>Done!</h2>
 <ul>

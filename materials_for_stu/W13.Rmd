@@ -375,7 +375,7 @@ plot(episim_baseline, y = c("i.num", "s.num"), legend = T)
 
 We can see that in this particular simulation the infection spreads relatively quickly through the network, with over 80% infected by the 100th time period. 
 
-### Varying Network Features
+### [OPTION] Varying Network Features
 One key advantage of a simulation is that we can systematically alter the input parameters (while holding other things constant), allowing us to see how shifting conditions could, theoretically, affect diffusion through the population. Here, we will keep the basic epidemiological simulation the same but tweak the network features to see how this changes the epidemic potential. In particular, we will ask how the spread of infection through the population is affected when the number of partners per person decreases substantially. We will assume that the number of edges in the network in a given time period is cut in half. Here individuals have, on average, degree of 1.854, rather than 3.707. To construct inputs for the simulation, we will take the target statistics used originally and simply multiple all of them by .5. This will directly cut the number of edges in half. It will also ensure that all of the other target statistics, like nodematch on location, are based on the new desired number of edges (here half the original).
 
 ```{r}
@@ -459,7 +459,7 @@ plot(episim_lowdegree, y = c("i.num", "s.num"),
 
 Overall, the average number of partners in a time period clearly affects the diffusion potential. With fewer edges per period, the potential to become infected and pass it on is greatly diminished. The decrease in average number of partners affects both the final number of infected, as well as the pace of infection, creating large differentials in infection in the middle periods. This suggests that decreasing the number of partners per period can reduce epidemic potential, but even here (in the low degree case) we still see a high rate of cases infected by the end of the simulation (around 75%). 
 
-### Varying Epidemic Model
+### [OPTION] Varying Epidemic Model
 Just as we were able to systematically vary the network model in the simulation, we can also vary the input parameters to the epidemic model. Here, we will keep the network the same as in the baseline model (so average degree is set to 3.707, based on the original ego network data). We will only alter the inputs to the epidemiological part of the simulation. We will focus on the activity rate parameter. This governs how many times two nodes with a connection interact in a given time period. Given a connection, node i and j may interact 0, 1, 2, 3... times in a given period, with increasing risk of infection as the number of interactions increases. 
 
 Here we will create a new set of input parameters using the `param.net()` function. We will again set the infection probability to .025 and the recovery rate to .01. This time, however, we will lower the number of interactions per period (assuming i and j are connected) to .40. This effectively means that ij pairs who are connected will have .60 probability of having no risk events in a period and .40 probability of having one risk event (compare this to the previous simulation where all connected ij pairs had one risk event). Nodes thus have a relatively high degree, but lower probabilities of infection with each partner. Formally, we set the act.rate input to .40 in the `param.net()` function.  

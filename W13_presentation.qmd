@@ -12,23 +12,22 @@ execute:
   fig-asp: null
 ---
 
-# Network Diffusion
+# Network Diffusion : Infectious Diseases
 - Cover dynamic epidemiological models of diffusion
 - Apply the model to simulate a case of infection spread through a risk network
   - How much does the epidemic potential decrease if the number of current partners decreases dramatically?
 
 
 ## Reading in Data 
-- Specify 
-  - one related to the formation and breaking of network ties
-  - one related to the spread of an infection through the network
+- `EpiModel` specify 
+  - the formation and breaking of network ties
+  - the spread of an infection through the network
 ```{r message=F, warning=F}
 library(EpiModel)
 ```
 
 ## Reading in Data 
-- No exact edgelist
-- Use a faux ego network data set drawn from an at-risk population of drug users 
+- Use a faux ego network data drawn from an at-risk population of drug users(No exact edgelist)
   - `degree` = number of current drug partners for ego
 ```{r}
 url1 <- "https://github.com/JeffreyAlanSmith/Integrated_Network_Science/raw/master/data/ego_network_example_data.txt"
@@ -37,17 +36,10 @@ head(ego_dat)
 ```
 
 ## Specifying the Network Model 
-- Let's see how many people are in the sample: 
-
-```{r}
-num_nodes <- nrow(ego_dat) 
-num_nodes
-```
-
-## Specifying the Network Model 
 - Create an empty, undirected network of size `num_nodes`
 
 ```{r}
+num_nodes <- nrow(ego_dat) 
 epi_network <- network.initialize(n = num_nodes, directed = F)
 ```
 
@@ -56,58 +48,58 @@ epi_network <- network.initialize(n = num_nodes, directed = F)
 ```{r}
 epi_network <- set.vertex.attribute(epi_network, attrname = "location",
                                     value = ego_dat$location)
-epi_network 
+ 
 ```
 
 ## Specifying the Network Model 
+- Baseline network model 
+```{r}
+plot(epi_network) 
+```
+
+## Specifying the Network Model
 - Construct a simulated network based on the information we have
 - Specify a model that determines how ties form and break within the simulation
-  - With tie formation formula (same kinds of terms used in the ERGM)
+  - With tie formation formula (`edges`, `nodefactor("location")`, `nodematch("location")`)
 
 ```{r}
 formation_formula <- formula(~ edges + nodefactor("location") + 
                                nodematch("location"))
 ```
 
-## Calculate the Target Statistics
-- Set the target statistics for each term in the formula(`nodefactor("location")`, `nodematch("location")`)
-  - Set the number of edges
-  - Use the mean degree in the ego network data
-
-```{r}
-mean_degree <- mean(ego_dat$degree) 
-mean_degree 
-```
-
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Calculate the term `edge`
   - Take the mean degree, multiply it by the number of nodes
   - Divide it by 2 as the network is undirected to get the total number of edges
 ```{r}
+mean_degree <- mean(ego_dat$degree) 
 edges <- mean_degree * num_nodes / 2 
+mean_degree
 edges
 ```
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Calculate the term `nodefactor("location")`
-  - Total number of ties emanating from one group. 
-  - the mean degree of the group * the number of people in that group
+  - The mean degree of ties connected with same type of location
+  - The mean degree of the group * the number of people in that group
   
 ```{r}
+# calculate the mean degree of the group
 mean_degree_location <- tapply(X = ego_dat$degree, INDEX = ego_dat$location, 
                                FUN = mean) 
 mean_degree_location 
 ```
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Check a simple table on location to see how many are in the city versus the suburbs
 
 ```{r}
+# calculate the number of people in that group
 tab_location <- table(ego_dat$location) 
 tab_location
 ```
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Total number of edges for each group * the mean degree for each group by the size of each group
 
 ```{r}
@@ -117,7 +109,7 @@ edges_by_group
 ```
 
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Calculate the term `nodematch("location")`
   - The proportion of ego-alter pairs where ego and alter are in the same location
   - Take the proportion and multiply it by the total number of edges in the network
@@ -127,7 +119,7 @@ same_location <- ego_dat[, "location"] == ego_dat[, location_cols]
 head(same_location)
 ```
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - See what proportion of ego-alter pairs match on location
 - Do a simple table on the data frame constructed above
 
@@ -136,7 +128,7 @@ prop_match <- prop.table(table(same_location))
 prop_match 
 ```
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Take the proportion matching and multiply it by the total number of edges in the desired network
 
 ```{r}
@@ -145,7 +137,7 @@ num_match
 ```
 
 
-## Calculate the Target Statistics
+## Specifying the Network Model
 - Put together the target statistics into one input vector.
 
 ```{r}
@@ -155,8 +147,8 @@ target_statistics_baseline <- c(edges = edges,
 target_statistics_baseline
 ```
 
-## Set Rules for Network Dissolution
-- Specify a model that will dictate how edges are dropped over time
+## Specifying the Network Model
+- Specify a model on how edges are dropped over time
 ```{r}
 # dissolution = a formula that determines how edges are dropped
 # dissolution = the average duration of an edge in the simulation
@@ -182,7 +174,7 @@ summary(net_mod)
 ```
 
 ## Estimating the Network Model
-- See if the model is producing networks that match the target statistics
+- Check if the model is producing networks that match the target statistics
 - `netdx()` function will simulate networks from the estimated model and compare the statistics from the simulated networks to the input target statistics
 
 ```{r message=F, results='hide'}
@@ -212,8 +204,8 @@ plot(mod_fit2, legend = T)
 
 ## Estimating the Network Model
 ```{r}
-# To plot the statistics dealing with the duration of ties, "duration"
-# To plot the statistics dealing with the dissolution of ties,"dissolution"
+# "duration" : the duration of ties
+# "dissolution" :the dissolution of tie
 par(mfrow = c(1, 2))
 plot(mod_fit2, type = "duration") 
 plot(mod_fit2, type = "dissolution") 
@@ -224,6 +216,7 @@ plot(mod_fit2, type = "dissolution")
 - EpiModel allows for a flexible range of models to be specified
 
 ```{r}
+# "s" "i" or "r" for susceptible, infected or recovered
 initial_status <- sample(c("s", "i", "r"), size = num_nodes, 
                          replace = T, prob = c(.97, .03, 0)) 
 table(initial_status)
@@ -249,10 +242,11 @@ input_to_episim
 ```
 
 ## Specifying the Epidemic Model
-- Create an object that controls the simulation itself
+- Set options to control the simulation itself
 - Type to "SIS", have a simulation with 300 time periods, do the simulation 4 times and run it over 2 processors
 
 ```{r}
+# SIS : susceptible -> infected -> susceptible
 control_episim <- control.net(type = "SIS", nsteps = 300, 
                               nsims = 4, ncores = 2)
 control_episim
@@ -265,9 +259,11 @@ control_episim
   - init = initial status inputs, based on `init.net()` function
   - control = control object, based on `control.net()` function
 ```{r}
-episim_baseline <- netsim(x = net_mod, param = input_to_episim, 
-                          init = initial_status_inputs, 
-                          control = control_episim) 
+episim_baseline <- netsim(x = net_mod, #simulated network
+                          init = initial_status_inputs, # initial status
+                          param = input_to_episim, # param for infection and recovery
+                          control = control_episim # sim option
+                          ) 
 ```
 
 ## Running Simulations
